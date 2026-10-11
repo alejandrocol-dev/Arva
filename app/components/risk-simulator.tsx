@@ -47,6 +47,9 @@ export function RiskSimulator({
   // Axis always reaches below the liquidation price so the zone is reachable.
   const min = Math.max(40, Math.min(200, Math.floor((liqPrice - 25) / 10) * 10, Math.floor((base - 80) / 10) * 10));
   const clamp = (p: number) => Math.min(MAX, Math.max(min, Math.round(p)));
+  const vmax = TONS * MAX * 1.08;
+  const x = (p: number) => PAD_X + ((p - min) / (MAX - min)) * (W - PAD_X * 2);
+  const y = (v: number) => H - (v / vmax) * H;
   const [picked, setPicked] = useState<number | null>(null);
   const [auto, setAuto] = useState(true);
   const [wrapRef, inView] = useInView<HTMLDivElement>("200px");
@@ -134,9 +137,6 @@ export function RiskSimulator({
   const buffer = priceBuffer(hf);
   const change = price / base - 1;
 
-  const vmax = TONS * MAX * 1.08;
-  const x = (p: number) => PAD_X + ((p - min) / (MAX - min)) * (W - PAD_X * 2);
-  const y = (v: number) => H - (v / vmax) * H;
   const line = `M ${x(min)} ${y(TONS * min)} L ${x(MAX)} ${y(TONS * MAX)}`;
   const area = `${line} L ${x(MAX)} ${H} L ${x(min)} ${H} Z`;
   const ticks: number[] = [];

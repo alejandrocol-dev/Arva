@@ -15,6 +15,7 @@ import { useFmt, useT } from "@/lib/i18n";
 import { useView } from "@/lib/nav";
 import { useAsyncData } from "@/lib/use-async";
 import { shortenAddress } from "@/lib/format";
+import { StarterKitButton } from "@/components/starter-kit";
 import { TxDialog } from "@/components/tx-dialog";
 import { WalletButton } from "@/components/wallet-button";
 import { Button, Card, Field, Input, Notice, PageHeader, Select } from "@/components/ui";
@@ -199,6 +200,16 @@ export function CertifierView() {
         </Card>
 
         <div className="space-y-5 lg:col-span-2">
+          {(notCertifier || !owner) && !issued && (
+            <section className="av-night av-glow-line relative overflow-hidden rounded-(--radius-card) p-5 text-white shadow-(--shadow-float) sm:p-6">
+              <div aria-hidden className="pointer-events-none absolute -right-12 -top-14 size-40 rounded-full bg-brand/40 blur-3xl" />
+              <div className="relative">
+                <p className="font-display text-base font-bold">{t("kit.cert.title")}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-white/70">{t("kit.cert.body")}</p>
+                <StarterKitButton className="mt-4 w-full" />
+              </div>
+            </section>
+          )}
           {issued && (
             <Notice
               tone="brand"

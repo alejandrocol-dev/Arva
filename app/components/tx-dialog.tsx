@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { toast } from "sonner";
-import { ChevronDown, CircleCheck, CircleX, LoaderCircle, ShieldCheck, X } from "lucide-react";
+import { ChevronDown, CircleX, LoaderCircle, ShieldCheck, X } from "lucide-react";
 import { notifyDataChanged } from "@/lib/data-bus";
 import { translateError, type FriendlyError } from "@/lib/errors";
 import { useT } from "@/lib/i18n";
@@ -61,6 +61,14 @@ export function TxDialog(props: TxDialogProps) {
   const [armed, setArmed] = useState(false);
   const [signature, setSignature] = useState<string | null>(null);
   const [error, setError] = useState<FriendlyError | null>(null);
+  const [startedAt, setStartedAt] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
+
+  useEffect(() => {
+    if (phase !== "pending") return;
+    const id = window.setInterval(() => setElapsed((Date.now() - startedAt) / 1000), 100);
+    return () => window.clearInterval(id);
+  }, [phase, startedAt]);
 
   // Reset every time the dialog opens; arm the confirm button after a short beat
   // so a stray double-click can't sign something unread.
@@ -76,9 +84,13 @@ export function TxDialog(props: TxDialogProps) {
   }, [open]);
 
   const confirm = useCallback(async () => {
+    const t0 = Date.now();
+    setStartedAt(t0);
+    setElapsed(0);
     setPhase("pending");
     try {
       const { signature: sig } = await action();
+      setElapsed((Date.now() - t0) / 1000);
       setSignature(sig);
       setPhase("done");
       notifyDataChanged();
@@ -174,17 +186,43 @@ export function TxDialog(props: TxDialogProps) {
           )}
 
           {phase === "pending" && (
-            <div className="flex flex-col items-center gap-3 py-8 text-center">
-              <LoaderCircle className="size-10 animate-spin text-brand-strong" aria-hidden />
-              <p className="max-w-xs text-sm text-mute">{t("tx.waiting.body")}</p>
+            <div className="flex flex-col items-center gap-4 py-8 text-center">
+              <div className="relative grid size-16 place-items-center">
+                <span aria-hidden className="absolute inset-0 animate-ping rounded-full bg-brand/15" />
+                <span className="relative grid size-16 place-items-center rounded-full bg-brand/10 ring-1 ring-brand/30">
+                  <LoaderCircle className="size-8 animate-spin text-brand-strong" aria-hidden />
+                </span>
+              </div>
+              <ol className="w-full max-w-xs space-y-2 text-left text-sm">
+                <li className="flex items-center gap-2.5 rounded-xl border border-line bg-sunken px-3 py-2 text-ink">
+                  <span className="grid size-5 place-items-center rounded-full bg-brand text-[11px] font-bold text-white">1</span>
+                  {t("tx.waiting.step1")}
+                </li>
+                <li className="flex items-center gap-2.5 rounded-xl border border-line px-3 py-2 text-mute">
+                  <span className="grid size-5 place-items-center rounded-full border border-line-strong text-[11px] font-bold">2</span>
+                  {t("tx.waiting.step2")}
+                </li>
+              </ol>
+              <p className="font-mono text-xs tabular-nums text-faint">{elapsed.toFixed(1)} s</p>
             </div>
           )}
 
           {phase === "done" && (
             <div className="space-y-4">
               <div className="flex flex-col items-center gap-3 py-4 text-center">
-                <CircleCheck className="size-12 text-brand-strong" aria-hidden />
+                <div className="relative grid size-16 place-items-center">
+                  <span aria-hidden className="av-success-ring absolute inset-0 rounded-full bg-mint/30" />
+                  <span className="relative grid size-16 place-items-center rounded-full bg-gradient-to-br from-mint to-emerald-500 text-white shadow-[0_10px_30px_-10px_rgba(61,214,140,0.8)]">
+                    <svg viewBox="0 0 24 24" className="av-success-check size-8" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <path d="M5 12.5l4.5 4.5L19 7.5" />
+                    </svg>
+                  </span>
+                </div>
                 <p className="text-sm text-ink">{successText ?? t("tx.done.body")}</p>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-mint/40 bg-mint/10 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                  <span className="size-1.5 rounded-full bg-mint" aria-hidden />
+                  {t("tx.done.time", { s: elapsed.toFixed(1) })}
+                </span>
               </div>
               {signature && (
                 <div className="flex items-center justify-between gap-3 rounded-xl border border-line bg-sunken px-4 py-3">

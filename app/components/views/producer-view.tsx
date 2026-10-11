@@ -23,6 +23,7 @@ import { useView } from "@/lib/nav";
 import { positionRisk, projectedDebt } from "@/lib/risk";
 import { useAsyncData } from "@/lib/use-async";
 import { PositionGauge, RiskBanner } from "@/components/risk";
+import { StarterKitButton } from "@/components/starter-kit";
 import { TxDialog } from "@/components/tx-dialog";
 import { WalletButton } from "@/components/wallet-button";
 import {
@@ -89,7 +90,14 @@ export function ProducerView() {
           icon={<FileCheck2 className="size-6" aria-hidden />}
           title={t("borrow.empty.title")}
           body={t("borrow.empty.body")}
-          action={<Button onClick={() => setView("certifier")}>{t("borrow.empty.cta")}</Button>}
+          action={
+            <div className="flex flex-col items-center gap-3">
+              <StarterKitButton size="lg" />
+              <button type="button" onClick={() => setView("certifier")} className="text-xs font-semibold text-mute hover:text-ink">
+                {t("borrow.empty.cta")}
+              </button>
+            </div>
+          }
         />
       ) : data ? (
         <div className="space-y-5">
@@ -326,6 +334,7 @@ function OpenPosition({
   const t = useT();
   const f = useFmt();
   const [repayOpen, setRepayOpen] = useState(false);
+  const [, setView] = useView();
   const now = useNowSec();
   const risk = positionRisk(warrant, loan, config, now);
   const interest = risk.debt - loan.principal;
@@ -403,6 +412,7 @@ function OpenPosition({
         ]}
         confirmLabel={t("borrow.repay.confirm", { amount: f.usdc(risk.debt) })}
         successText={t("borrow.success.repay")}
+        nextAction={{ label: t("borrow.success.next"), onClick: () => setView("overview") }}
         action={() => arva.repay(warrant.address)}
       />
     </div>

@@ -19,6 +19,7 @@ import { PROGRAM_ID } from "@/lib/constants";
 import { explorerAddressUrl, shortenAddress } from "@/lib/format";
 import { cx } from "@/components/ui";
 import { GuidedTour, useTourAutoStart } from "./guided-tour";
+import { JourneyDock } from "./journey-dock";
 import { LocaleSwitch } from "./locale-switch";
 import { ArvaLockup, ArvaMark } from "./logo";
 import { SiteFooter } from "./site-footer";
@@ -187,6 +188,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <SiteFooter />
       </div>
 
+      <JourneyDock hidden={tourOpen} />
       {tourOpen && (
         <GuidedTour
           key={view}

@@ -8,6 +8,7 @@ import { arva } from "@/lib/arva";
 import { shortenAddress } from "@/lib/format";
 import { useFmt, useT } from "@/lib/i18n";
 import { useAsyncData } from "@/lib/use-async";
+import { StarterKitButton } from "@/components/starter-kit";
 import { Button, CopyButton } from "@/components/ui";
 
 /**
@@ -72,6 +73,9 @@ export function WalletButton({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
               </div>
             </div>
           )}
+          <div className="px-2 pb-2">
+            <StarterKitButton size="sm" variant="secondary" className="w-full" />
+          </div>
           <div className="px-2 pb-2">
             <CopyButton value={address} label={t("wallet.copyAddress")} />
           </div>

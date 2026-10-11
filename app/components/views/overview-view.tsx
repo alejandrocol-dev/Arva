@@ -1,34 +1,35 @@
 "use client";
 
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import {
   ArrowRight,
   CircleCheck,
   Coins,
   Gauge,
-  Gavel,
+  Gift,
+  LoaderCircle,
   Lock,
+  SlidersHorizontal,
   Stamp,
-  TrendingDown,
   Undo2,
   Vault,
+  Wallet,
   Wheat,
   type LucideIcon,
 } from "lucide-react";
 import {
   arva,
-  DEFAULT_PRICE_PER_TON,
-  LoanStatus,
   WarrantStatus,
   type Config,
   type PoolStats,
   type Warrant,
 } from "@/lib/arva";
 import { useFmt, useT, type MessageKey } from "@/lib/i18n";
+import { useJourney } from "@/lib/journey";
 import { useView, type View } from "@/lib/nav";
 import { useAsyncData } from "@/lib/use-async";
-import { positionRisk } from "@/lib/risk";
 import { ActivityFeed } from "@/components/activity-feed";
+import { useStarterKit } from "@/components/starter-kit";
 import { BarList, Donut, Legend } from "@/components/charts";
 import { ArvaMark } from "@/components/logo";
 import { Badge, Button, Card, IconTile, Notice, ProgressBar, Skeleton, cx, type IconTileTone } from "@/components/ui";
@@ -115,43 +116,24 @@ export function OverviewView() {
 
 /* --------------------------------- Hero / demo ------------------------------- */
 
-const STEP_STYLE: Array<{ tile: string; icon: LucideIcon; view: View }> = [
-  { tile: "bg-tile-lime", icon: Stamp, view: "certifier" },
-  { tile: "bg-tile-sky", icon: Coins, view: "borrow" },
-  { tile: "bg-tile-amber", icon: TrendingDown, view: "admin" },
-  { tile: "bg-tile-lilac", icon: Gavel, view: "borrow" },
+const STEP_STYLE: Array<{ tile: string; icon: LucideIcon }> = [
+  { tile: "bg-tile-lime", icon: Wallet },
+  { tile: "bg-tile-sky", icon: Gift },
+  { tile: "bg-tile-amber", icon: Coins },
+  { tile: "bg-tile-lilac", icon: Undo2 },
 ];
 
 function DemoHero({ onGo }: { onGo: (v: View) => void }) {
   const t = useT();
-  const { publicKey } = useWallet();
-  const owner = publicKey?.toBase58() ?? null;
-
-  const { data } = useAsyncData(async () => {
-    if (!owner) return null;
-    const [positions, config, openLoans] = await Promise.all([
-      arva.getMyWarrants(owner),
-      arva.getConfig(),
-      arva.getOpenLoans(),
-    ]);
-    const mine = positions.filter((p) => p.warrant.owner === owner);
-    const underwater = openLoans.some(
-      (o) => positionRisk(o.warrant, o.loan, config).tier === "liquidatable",
-    );
-    return {
-      issued: mine.length > 0,
-      borrowed: mine.some((p) => p.loan),
-      priceDropped:
-        config.pricePerTon < DEFAULT_PRICE_PER_TON ||
-        underwater ||
-        mine.some((p) => p.warrant.status === WarrantStatus.Liquidated),
-      closed: mine.some((p) => p.loan && p.loan.status !== LoanStatus.Open),
-    };
-  }, owner);
-
-  const done = [!!data?.issued, !!data?.borrowed, !!data?.priceDropped, !!data?.closed];
-  const current = done.findIndex((d) => !d);
-  const count = done.filter(Boolean).length;
+  const { setVisible } = useWalletModal();
+  const kit = useStarterKit();
+  const { done, current, count, owner } = useJourney();
+  const actions: Array<() => void> = [
+    () => setVisible(true),
+    () => void kit.run(),
+    () => onGo("borrow"),
+    () => onGo("borrow"),
+  ];
 
   return (
     <section id="demo" data-tour="demo" className="av-night av-glow-line relative overflow-hidden rounded-[24px] p-6 text-white shadow-(--shadow-float) sm:p-8">
@@ -176,7 +158,16 @@ function DemoHero({ onGo }: { onGo: (v: View) => void }) {
               <div className="h-full rounded-full bg-gradient-to-r from-brand-glow via-brand to-cyan shadow-[0_0_12px_rgba(180,169,255,0.7)] transition-[width] duration-700" style={{ width: `${count * 25}%` }} />
             </div>
           </div>
-          {!publicKey && <p className="mt-4 text-xs text-white/50">{t("demo.needWallet")}</p>}
+          {!owner && <p className="mt-4 text-xs text-white/50">{t("demo.needWallet")}</p>}
+          <button
+            type="button"
+            onClick={() => onGo("admin")}
+            className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-brand-glow hover:text-white"
+          >
+            <SlidersHorizontal className="size-3.5" aria-hidden />
+            {t("demo.extra")}
+            <ArrowRight className="size-3.5" aria-hidden />
+          </button>
         </div>
 
         <ol className="grid grid-cols-2 gap-3 xl:grid-cols-4">
@@ -212,14 +203,18 @@ function DemoHero({ onGo }: { onGo: (v: View) => void }) {
                   ) : (
                     <button
                       type="button"
-                      onClick={() => onGo(s.view)}
+                      onClick={actions[i]}
+                      disabled={i === 1 && kit.busy}
                       className={cx(
-                        "inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-colors",
+                        "inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-colors disabled:opacity-70",
                         isCurrent ? "bg-brand text-white shadow-[0_6px_14px_-6px_rgba(99,85,246,0.8)] hover:bg-brand-strong" : "bg-white/70 text-navy hover:bg-white",
                       )}
                     >
-                      {t("demo.go")}
-                      <ArrowRight className="size-3.5" aria-hidden />
+                      {i === 1 && kit.busy ? (
+                        <LoaderCircle className="size-3.5 animate-spin" aria-hidden />
+                      ) : null}
+                      {t(`demo.step${n}.cta` as MessageKey)}
+                      {!(i === 1 && kit.busy) && <ArrowRight className="size-3.5" aria-hidden />}
                     </button>
                   )}
                 </div>
@@ -258,9 +253,9 @@ function Kpis({
   const tons = warrants.reduce((s, w) => s + w.tons, 0);
   const items: Array<{ icon: LucideIcon; tone: IconTileTone; accent: string; label: string; value: string; hint: string }> = [
     { icon: Vault, tone: "lime", accent: "#6355f6", label: t("overview.kpi.liquidity"), value: f.usdcRound(stats.available), hint: t("overview.kpi.liquidityHint") },
-    { icon: Coins, tone: "sky", accent: "#0ea5e9", label: t("overview.kpi.debt"), value: f.usdcRound(stats.outstandingDebt), hint: t("overview.kpi.debtHint") },
-    { icon: Wheat, tone: "amber", accent: "#f59e0b", label: t("overview.kpi.tons"), value: f.tons(tons), hint: t("overview.kpi.tonsHint") },
-    { icon: Gauge, tone: "lilac", accent: "#e8799b", label: t("overview.kpi.ltv"), value: f.bps(config.ltvBps), hint: t("overview.kpi.ltvHint", { liq: f.bps(config.liqThresholdBps) }) },
+    { icon: Coins, tone: "sky", accent: "#22d3ee", label: t("overview.kpi.debt"), value: f.usdcRound(stats.outstandingDebt), hint: t("overview.kpi.debtHint") },
+    { icon: Wheat, tone: "amber", accent: "#ffb38a", label: t("overview.kpi.tons"), value: f.tons(tons), hint: t("overview.kpi.tonsHint") },
+    { icon: Gauge, tone: "lilac", accent: "#8f83ff", label: t("overview.kpi.ltv"), value: f.bps(config.ltvBps), hint: t("overview.kpi.ltvHint", { liq: f.bps(config.liqThresholdBps) }) },
   ];
   return (
     <section aria-label="Live metrics" className="grid grid-cols-2 gap-4 lg:grid-cols-4">

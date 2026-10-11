@@ -112,6 +112,22 @@ h1, h2, h3, blockquote, .font-display {
 .av-rise { animation: av-rise 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 .av-float { animation: av-float 6s ease-in-out infinite; }
 .av-view { animation: av-rise 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.av-dock { animation: av-rise 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+
+/* Transaction success: ring burst + check stroke */
+@keyframes av-check-draw {
+  from { stroke-dashoffset: 30; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes av-burst {
+  from { transform: scale(0.6); opacity: 0.7; }
+  to { transform: scale(1.6); opacity: 0; }
+}
+.av-success-ring { animation: av-burst 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.av-success-check path { stroke-dasharray: 30; animation: av-check-draw 420ms 160ms ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .av-dock, .av-success-ring, .av-success-check path { animation: none; }
+}
 .av-skeleton {
   background: linear-gradient(90deg, rgba(23, 19, 43,0.04) 25%, rgba(23, 19, 43,0.08) 37%, rgba(23, 19, 43,0.04) 63%);
   background-size: 200% 100%;
