@@ -5,7 +5,7 @@
  */
 export const en = {
   // ---- common
-  "common.brand": "Zafra",
+  "common.brand": "Arva",
   "common.connectWallet": "Connect wallet",
   "common.loading": "Loading…",
   "common.retry": "Try again",
@@ -57,7 +57,7 @@ export const en = {
   "overview.eyebrow": "Grain-backed credit on Solana",
   "overview.title": "Cash today against the grain you already stored.",
   "overview.subtitle":
-    "Zafra turns a grain warrant — the certificate for grain sitting in a silo — into collateral for an instant USDC loan from open on-chain liquidity.",
+    "Arva turns a grain warrant — the certificate for grain sitting in a silo — into collateral for an instant USDC loan from open on-chain liquidity.",
   "overview.ctaTry": "Try the demo",
   "overview.ctaHow": "How it works",
   "overview.kpi.liquidity": "Pool liquidity",
@@ -88,7 +88,7 @@ export const en = {
   "overview.why.3": "Auditable: every loan and payment is a public transaction.",
   "overview.honest.title": "What's simulated in this demo",
   "overview.honest.body":
-    "The certifier and the price oracle are simulated by the Zafra team, the USDC is a test token and the contract is not audited. In production a licensed warrant issuer and a real price feed would take those roles.",
+    "The certifier and the price oracle are simulated by the Arva team, the USDC is a test token and the contract is not audited. In production a licensed warrant issuer and a real price feed would take those roles.",
   "demo.title": "Try it in 4 steps",
   "demo.subtitle": "Each step ticks automatically once your wallet completes it on-chain.",
   "demo.needWallet": "Connect Phantom (devnet) to track your progress.",
@@ -267,7 +267,7 @@ export const en = {
   // ---- certifier
   "cert.banner.title": "Simulated role",
   "cert.banner.body":
-    "In production a licensed warehouse or warrant issuer signs this. In the demo, the Zafra team plays that role so you can try the flow.",
+    "In production a licensed warehouse or warrant issuer signs this. In the demo, the Arva team plays that role so you can try the flow.",
   "cert.title": "Issue a grain warrant",
   "cert.subtitle": "Registers the grain and mints one warrant token per ton to the producer.",
   "cert.silo": "Silo ID",
@@ -359,7 +359,7 @@ export const en = {
   "shell.backToSite": "Back to the website",
 
   // ---- dashboard
-  "dash.hero.hello": "Welcome to Zafra",
+  "dash.hero.hello": "Welcome to Arva",
   "dash.hero.title": "Your harvest, turned into capital.",
   "dash.hero.body": "Walk the full on-chain cycle in 4 steps: issue a warrant, borrow, drop the price and close the position.",
   "dash.hero.progress": "{done} of 4 steps done",
@@ -505,7 +505,7 @@ export const en = {
   "landing.preview.b1": "Pool, warrants and loans read live from the chain",
   "landing.preview.b2": "Built-in guide for first-time users",
   "landing.preview.b3": "In English and Spanish",
-  "landing.preview.alt": "Zafra dashboard showing live devnet data",
+  "landing.preview.alt": "Arva dashboard showing live devnet data",
   "landing.speed.eyebrow": "Speed",
   "landing.speed.title": "From warrant to dollars in one transaction.",
   "landing.speed.body": "The point isn't a cheaper rate. It's money that arrives when the season needs it.",
@@ -514,15 +514,15 @@ export const en = {
   "landing.speed.old.2": "Paperwork and manual approval",
   "landing.speed.old.3": "Business hours and bank timelines",
   "landing.speed.old.4": "Terms negotiated case by case",
-  "landing.speed.new.title": "With Zafra",
+  "landing.speed.new.title": "With Arva",
   "landing.speed.new.1": "Open pool: anyone can supply capital",
   "landing.speed.new.2": "Lock the warrant and receive USDC in the same transaction",
   "landing.speed.new.3": "Solana settles in seconds, 24/7",
   "landing.speed.new.4": "Public rules, identical for everyone",
   "landing.legal.eyebrow": "Legal framework",
-  "landing.legal.title": "The warrant is already law. Zafra makes it liquid.",
+  "landing.legal.title": "The warrant is already law. Arva makes it liquid.",
   "landing.legal.body":
-    "Zafra doesn't need a new legal figure. It builds on a 111-year-old instrument that recent reforms opened up to electronic platforms.",
+    "Arva doesn't need a new legal figure. It builds on a 111-year-old instrument that recent reforms opened up to electronic platforms.",
   "landing.legal.l1.title": "Law 9,643",
   "landing.legal.l1.body": "Creates warrants and deposit certificates over agricultural products. Still in force.",
   "landing.legal.l2.title": "Decree 70/2023",
@@ -530,12 +530,12 @@ export const en = {
   "landing.legal.l3.title": "Decree 640/2024",
   "landing.legal.l3.body": "Lets warrants be issued and traded electronically, on the issuer's own or third-party platforms, public or private.",
   "landing.legal.note":
-    "Zafra is a prototype and holds no registration. In production, warrants would be issued by a warehouse company listed in the official registry.",
+    "Arva is a prototype and holds no registration. In production, warrants would be issued by a warehouse company listed in the official registry.",
   "landing.faq.eyebrow": "FAQ",
   "landing.faq.title": "What everyone asks.",
   "landing.faq.q1": "Is this real money?",
   "landing.faq.a1":
-    "No. Zafra runs on Solana devnet, Solana's test network. The USDC is test money with no value, but every action is a real transaction you can verify.",
+    "No. Arva runs on Solana devnet, Solana's test network. The USDC is test money with no value, but every action is a real transaction you can verify.",
   "landing.faq.q2": "Is the contract audited?",
   "landing.faq.a2": "Not yet. It's a hackathon prototype and we say so up front. An audit comes before any real money.",
   "landing.faq.q3": "Who issues the warrants?",
@@ -593,7 +593,7 @@ export const en = {
   "landing.pos.eyebrow": "The precedent",
   "landing.pos.quote": "Banks already lend against tokenised grain. Nobody has opened up the liquidity.",
   "landing.pos.body":
-    "Since 2022, Santander, Galicia and Grupo Petersen's banks have lent against grain tokens alongside Agrotoken. Always bilateral: one bank, one producer, one approval. Zafra adds the missing layer: an open pool anyone can fund, with automatic liquidation under public rules.",
+    "Since 2022, Santander, Galicia and Grupo Petersen's banks have lent against grain tokens alongside Agrotoken. Always bilateral: one bank, one producer, one approval. Arva adds the missing layer: an open pool anyone can fund, with automatic liquidation under public rules.",
   "landing.pos.source": "Sources: Santander press release (March 2022), Infobae, BeInCrypto.",
   "landing.trust.eyebrow": "Transparency",
   "landing.trust.title": "What's real and what's simulated.",
@@ -610,7 +610,7 @@ export const en = {
   "landing.trust.s.pending": "Not audited",
   "landing.trust.s.missing": "Not yet",
   "landing.cta.title": "The harvest exists. The capital doesn't.",
-  "landing.cta.body": "Zafra closes that gap. Try it on devnet in two minutes: connect Phantom, issue a test warrant and take your first loan.",
+  "landing.cta.body": "Arva closes that gap. Try it on devnet in two minutes: connect Phantom, issue a test warrant and take your first loan.",
   "landing.cta.github": "View the code",
   "landing.footer.tagline": "Because the harvest doesn't wait.",
   "landing.footer.photos": "Photos: Fabian Holub, Paz Arando and Roger Starnes Sr on Unsplash.",
@@ -626,9 +626,9 @@ export const en = {
   "tour.skip": "Skip guide",
   "tour.nextTab": "Next: {screen}",
   "tour.finish": "Back to overview",
-  "tour.overview.1.title": "Welcome to Zafra",
+  "tour.overview.1.title": "Welcome to Arva",
   "tour.overview.1.body":
-    "Zafra lends USDC against grain warrants on Solana devnet. This guide walks you through each screen in under a minute. Reopen it anytime with the Guide button, top right.",
+    "Arva lends USDC against grain warrants on Solana devnet. This guide walks you through each screen in under a minute. Reopen it anytime with the Guide button, top right.",
   "tour.overview.2.title": "The full cycle in 4 steps",
   "tour.overview.2.body":
     "These cards are the demo path: issue a warrant, borrow, simulate a price drop, then repay or liquidate. They tick themselves by reading your wallet on-chain.",
@@ -643,7 +643,7 @@ export const en = {
     "To act, use Phantom set to devnet — Solana's test network, where funds have no real value — with a little test SOL from the faucet for fees.",
   "tour.certifier.1.title": "A simulated role, on purpose",
   "tour.certifier.1.body":
-    "In production a licensed warehouse issues warrants. Here the contract only accepts the Zafra team's certifier wallet: with your own wallet you'll see the form, but signing is blocked.",
+    "In production a licensed warehouse issues warrants. Here the contract only accepts the Arva team's certifier wallet: with your own wallet you'll see the form, but signing is blocked.",
   "tour.certifier.2.title": "Issue a warrant",
   "tour.certifier.2.body":
     "A unique Silo ID, the tons stored and the producer's wallet. Signing mints 1 token per ton straight into the producer's wallet.",
@@ -677,7 +677,7 @@ export type MessageKey = keyof typeof en;
 
 export const es: Record<MessageKey, string> = {
   // ---- common
-  "common.brand": "Zafra",
+  "common.brand": "Arva",
   "common.connectWallet": "Conectar wallet",
   "common.loading": "Cargando…",
   "common.retry": "Reintentar",
@@ -729,7 +729,7 @@ export const es: Record<MessageKey, string> = {
   "overview.eyebrow": "Crédito respaldado por granos en Solana",
   "overview.title": "Cobrá hoy contra la cosecha que ya tenés guardada.",
   "overview.subtitle":
-    "Zafra convierte un warrant de granos —el certificado de la mercadería guardada en un silo— en garantía de un préstamo instantáneo en USDC, con liquidez abierta on-chain.",
+    "Arva convierte un warrant de granos —el certificado de la mercadería guardada en un silo— en garantía de un préstamo instantáneo en USDC, con liquidez abierta on-chain.",
   "overview.ctaTry": "Probar la demo",
   "overview.ctaHow": "Cómo funciona",
   "overview.kpi.liquidity": "Liquidez del fondo",
@@ -760,7 +760,7 @@ export const es: Record<MessageKey, string> = {
   "overview.why.3": "Auditable: cada préstamo y cada pago es una transacción pública.",
   "overview.honest.title": "Qué es simulado en esta demo",
   "overview.honest.body":
-    "La certificadora y el oráculo de precio los simula el equipo de Zafra, el USDC es un token de prueba y el contrato no está auditado. En producción, una warrantera habilitada y un feed de precios real ocuparían esos roles.",
+    "La certificadora y el oráculo de precio los simula el equipo de Arva, el USDC es un token de prueba y el contrato no está auditado. En producción, una warrantera habilitada y un feed de precios real ocuparían esos roles.",
   "demo.title": "Probalo en 4 pasos",
   "demo.subtitle": "Cada paso se tilda solo cuando tu wallet lo completa on-chain.",
   "demo.needWallet": "Conectá Phantom (devnet) para seguir tu progreso.",
@@ -939,7 +939,7 @@ export const es: Record<MessageKey, string> = {
   // ---- certifier
   "cert.banner.title": "Rol simulado",
   "cert.banner.body":
-    "En producción esto lo firma una warrantera o certificadora habilitada. En la demo lo hace el equipo de Zafra para que puedas probar el flujo.",
+    "En producción esto lo firma una warrantera o certificadora habilitada. En la demo lo hace el equipo de Arva para que puedas probar el flujo.",
   "cert.title": "Emitir un warrant de granos",
   "cert.subtitle": "Registra el grano y emite un token de warrant por tonelada al productor.",
   "cert.silo": "Silo ID",
@@ -1031,7 +1031,7 @@ export const es: Record<MessageKey, string> = {
   "shell.backToSite": "Volver al sitio",
 
   // ---- dashboard
-  "dash.hero.hello": "Bienvenido a Zafra",
+  "dash.hero.hello": "Bienvenido a Arva",
   "dash.hero.title": "Tu cosecha, convertida en capital.",
   "dash.hero.body": "Recorré el ciclo completo on-chain en 4 pasos: emitir un warrant, pedir el préstamo, bajar el precio y cerrar la posición.",
   "dash.hero.progress": "{done} de 4 pasos listos",
@@ -1177,7 +1177,7 @@ export const es: Record<MessageKey, string> = {
   "landing.preview.b1": "Fondo, warrants y préstamos leídos en vivo de la cadena",
   "landing.preview.b2": "Guía integrada para quien entra por primera vez",
   "landing.preview.b3": "En español e inglés",
-  "landing.preview.alt": "Panel de Zafra con datos en vivo de devnet",
+  "landing.preview.alt": "Panel de Arva con datos en vivo de devnet",
   "landing.speed.eyebrow": "Velocidad",
   "landing.speed.title": "Del warrant a los dólares en una sola transacción.",
   "landing.speed.body": "La diferencia no es una tasa más baja. Es que la plata llega cuando la campaña la necesita.",
@@ -1186,15 +1186,15 @@ export const es: Record<MessageKey, string> = {
   "landing.speed.old.2": "Papeles y aprobación manual",
   "landing.speed.old.3": "Horario y tiempos bancarios",
   "landing.speed.old.4": "Condiciones negociadas caso por caso",
-  "landing.speed.new.title": "Con Zafra",
+  "landing.speed.new.title": "Con Arva",
   "landing.speed.new.1": "Fondo abierto: cualquiera puede aportar capital",
   "landing.speed.new.2": "Bloqueás el warrant y recibís USDC en la misma transacción",
   "landing.speed.new.3": "Solana liquida en segundos, todos los días a toda hora",
   "landing.speed.new.4": "Reglas públicas, iguales para todos",
   "landing.legal.eyebrow": "Marco legal",
-  "landing.legal.title": "El warrant ya es ley. Zafra lo vuelve líquido.",
+  "landing.legal.title": "El warrant ya es ley. Arva lo vuelve líquido.",
   "landing.legal.body":
-    "Zafra no necesita una figura legal nueva. Se apoya en un instrumento de 111 años que las reformas recientes abrieron a las plataformas electrónicas.",
+    "Arva no necesita una figura legal nueva. Se apoya en un instrumento de 111 años que las reformas recientes abrieron a las plataformas electrónicas.",
   "landing.legal.l1.title": "Ley 9.643",
   "landing.legal.l1.body": "Crea los warrants y certificados de depósito sobre productos agrícolas. Sigue vigente.",
   "landing.legal.l2.title": "DNU 70/2023",
@@ -1202,12 +1202,12 @@ export const es: Record<MessageKey, string> = {
   "landing.legal.l3.title": "Decreto 640/2024",
   "landing.legal.l3.body": "Permite emitir y negociar warrants de forma electrónica, en plataformas propias o de terceros, públicas o privadas.",
   "landing.legal.note":
-    "Zafra es un prototipo y no tiene ninguna inscripción. En producción, los warrants los emitiría una warrantera inscripta en el registro oficial.",
+    "Arva es un prototipo y no tiene ninguna inscripción. En producción, los warrants los emitiría una warrantera inscripta en el registro oficial.",
   "landing.faq.eyebrow": "Preguntas frecuentes",
   "landing.faq.title": "Lo que todos preguntan.",
   "landing.faq.q1": "¿Es plata real?",
   "landing.faq.a1":
-    "No. Zafra corre en Solana devnet, la red de prueba de Solana. El USDC es de prueba y no vale nada, pero cada acción es una transacción real que podés verificar.",
+    "No. Arva corre en Solana devnet, la red de prueba de Solana. El USDC es de prueba y no vale nada, pero cada acción es una transacción real que podés verificar.",
   "landing.faq.q2": "¿El contrato está auditado?",
   "landing.faq.a2": "Todavía no. Es un prototipo de hackathon y lo decimos de entrada. La auditoría va antes de cualquier plata real.",
   "landing.faq.q3": "¿Quién emite los warrants?",
@@ -1265,7 +1265,7 @@ export const es: Record<MessageKey, string> = {
   "landing.pos.eyebrow": "El precedente",
   "landing.pos.quote": "Los bancos ya prestan contra grano tokenizado. Nadie abrió la liquidez.",
   "landing.pos.body":
-    "Desde 2022, Santander, Galicia y los bancos del Grupo Petersen prestan contra tokens de granos junto a Agrotoken. Siempre bilateral: un banco, un productor, una aprobación. Zafra suma la capa que falta: un fondo abierto al que cualquiera puede aportar, con liquidación automática y reglas públicas.",
+    "Desde 2022, Santander, Galicia y los bancos del Grupo Petersen prestan contra tokens de granos junto a Agrotoken. Siempre bilateral: un banco, un productor, una aprobación. Arva suma la capa que falta: un fondo abierto al que cualquiera puede aportar, con liquidación automática y reglas públicas.",
   "landing.pos.source": "Fuentes: comunicado de Santander (marzo 2022), Infobae, BeInCrypto.",
   "landing.trust.eyebrow": "Transparencia",
   "landing.trust.title": "Qué es real y qué es simulado.",
@@ -1282,7 +1282,7 @@ export const es: Record<MessageKey, string> = {
   "landing.trust.s.pending": "Sin auditar",
   "landing.trust.s.missing": "Todavía falta",
   "landing.cta.title": "La cosecha existe. El capital, no.",
-  "landing.cta.body": "Zafra une las dos puntas. Probalo en devnet en dos minutos: conectá Phantom, emití un warrant de prueba y pedí tu primer préstamo.",
+  "landing.cta.body": "Arva une las dos puntas. Probalo en devnet en dos minutos: conectá Phantom, emití un warrant de prueba y pedí tu primer préstamo.",
   "landing.cta.github": "Ver el código",
   "landing.footer.tagline": "Porque la zafra no espera.",
   "landing.footer.photos": "Fotos: Fabian Holub, Paz Arando y Roger Starnes Sr en Unsplash.",
@@ -1298,9 +1298,9 @@ export const es: Record<MessageKey, string> = {
   "tour.skip": "Saltear guía",
   "tour.nextTab": "Siguiente: {screen}",
   "tour.finish": "Volver al inicio",
-  "tour.overview.1.title": "Bienvenido a Zafra",
+  "tour.overview.1.title": "Bienvenido a Arva",
   "tour.overview.1.body":
-    "Zafra presta USDC contra warrants de grano en Solana devnet. Esta guía te muestra cada pantalla en menos de un minuto. Podés volver a abrirla con el botón Guía, arriba a la derecha.",
+    "Arva presta USDC contra warrants de grano en Solana devnet. Esta guía te muestra cada pantalla en menos de un minuto. Podés volver a abrirla con el botón Guía, arriba a la derecha.",
   "tour.overview.2.title": "El ciclo completo en 4 pasos",
   "tour.overview.2.body":
     "Estas tarjetas son el recorrido de la demo: emitir un warrant, pedir el préstamo, simular una caída de precio y devolver o liquidar. Se tildan solas leyendo tu wallet on-chain.",

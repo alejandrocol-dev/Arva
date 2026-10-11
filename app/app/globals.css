@@ -1,42 +1,47 @@
 @import "tailwindcss";
 
-/* Zafra design tokens (docs/DESIGN.md §3). Components use these, not raw hex.
-   Palette comes from the logo: navy #06193d + lime #85da07. */
+/* Arva design tokens (docs/DESIGN.md §3). Components use these, not raw hex.
+   Palette comes from the ARVA mark: violet #6355f6 + violet night #1b1440. */
 @theme {
-  --color-bg: #f4f6f9;
+  --color-bg: #faf9f5;
   --color-surface: #ffffff;
   --color-elevated: #ffffff;
-  --color-sunken: #f2f4f8;
-  --color-line: rgba(6, 25, 61, 0.08);
-  --color-line-strong: rgba(6, 25, 61, 0.15);
-  --color-ink: #0b1b36;
-  --color-mute: #56617a;
-  --color-faint: #8a93a7;
+  --color-sunken: #f4f2ec;
+  --color-line: rgba(23, 19, 43, 0.08);
+  --color-line-strong: rgba(23, 19, 43, 0.15);
+  --color-ink: #17132b;
+  --color-mute: #5a5c70;
+  --color-faint: #8b8da0;
 
-  --color-navy: #06193d;
-  --color-navy-soft: #102b5c;
-  --color-navy-deep: #030f26;
-  --color-brand: #85da07;
-  --color-brand-strong: #3f7100;
-  --color-brand-ink: #06193d;
-  --color-lime-soft: #eef9d9;
+  --color-navy: #1b1440;
+  --color-navy-soft: #2a1f6b;
+  --color-navy-deep: #0f0b28;
+  --color-brand: #6355f6;
+  --color-brand-strong: #4437d9;
+  --color-brand-ink: #ffffff;
+  --color-lime-soft: #efedff;
+  --color-brand-glow: #b4a9ff;
 
   --color-warn: #b45309;
   --color-danger: #e11d48;
   --color-info: #0369a1;
 
-  --color-tile-lime: #e9f7cf;
-  --color-tile-sky: #dcebfb;
+  --color-peach: #ffb38a;
+  --color-cyan: #22d3ee;
+  --color-mint: #10b981;
+
+  --color-tile-lime: #ebe8ff;
+  --color-tile-sky: #dcf0fb;
   --color-tile-amber: #fdf0d2;
-  --color-tile-lilac: #e8e4fb;
+  --color-tile-lilac: #fde4ea;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-geist), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   --radius-card: 18px;
-  --shadow-card: 0 1px 2px rgba(6, 25, 61, 0.04), 0 8px 28px -12px rgba(6, 25, 61, 0.12);
-  --shadow-float: 0 2px 6px rgba(6, 25, 61, 0.06), 0 24px 60px -20px rgba(6, 25, 61, 0.35);
+  --shadow-card: 0 1px 2px rgba(23, 19, 43, 0.04), 0 8px 28px -12px rgba(23, 19, 43, 0.12);
+  --shadow-float: 0 2px 6px rgba(23, 19, 43, 0.06), 0 24px 60px -20px rgba(23, 19, 43, 0.35);
 }
 
 :root {
@@ -61,7 +66,7 @@ h1, h2, h3, blockquote, .font-display {
 }
 
 ::selection {
-  background: rgba(133, 218, 7, 0.4);
+  background: rgba(99, 85, 246, 0.4);
 }
 
 :focus-visible {
@@ -108,7 +113,7 @@ h1, h2, h3, blockquote, .font-display {
 .av-float { animation: av-float 6s ease-in-out infinite; }
 .av-view { animation: av-rise 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 .av-skeleton {
-  background: linear-gradient(90deg, rgba(6,25,61,0.04) 25%, rgba(6,25,61,0.08) 37%, rgba(6,25,61,0.04) 63%);
+  background: linear-gradient(90deg, rgba(23, 19, 43,0.04) 25%, rgba(23, 19, 43,0.08) 37%, rgba(23, 19, 43,0.04) 63%);
   background-size: 200% 100%;
   animation: av-shimmer 1.4s linear infinite;
 }
@@ -129,8 +134,8 @@ h1, h2, h3, blockquote, .font-display {
   100% { left: 88%; opacity: 0; }
 }
 @keyframes av-ping-ring {
-  0% { box-shadow: 0 0 0 0 rgba(133, 218, 7, 0.55); }
-  14%, 100% { box-shadow: 0 0 0 14px rgba(133, 218, 7, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(99, 85, 246, 0.55); }
+  14%, 100% { box-shadow: 0 0 0 14px rgba(99, 85, 246, 0); }
 }
 @keyframes av-glint {
   0%, 70% { transform: translateX(-120%) skewX(-18deg); }
@@ -161,7 +166,7 @@ h1, h2, h3, blockquote, .font-display {
   background-size: 22px 22px;
 }
 .av-grid-ink {
-  background-image: radial-gradient(rgba(6, 25, 61, 0.09) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(23, 19, 43, 0.09) 1px, transparent 1px);
   background-size: 22px 22px;
 }
 
@@ -170,7 +175,41 @@ input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 
-input[type="range"] { accent-color: var(--color-navy); }
+input[type="range"] { accent-color: var(--color-brand); }
+
+/* ARVA surfaces */
+.av-night {
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(99, 85, 246, 0.55), transparent 55%),
+    radial-gradient(80% 70% at 100% 100%, rgba(255, 179, 138, 0.22), transparent 60%),
+    radial-gradient(60% 60% at 85% 0%, rgba(34, 211, 238, 0.14), transparent 60%),
+    linear-gradient(135deg, #2a1f6b 0%, #1b1440 55%, #0f0b28 100%);
+}
+.av-glow-line { position: relative; }
+.av-glow-line::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(180, 169, 255, 0.8), rgba(34, 211, 238, 0.6), transparent);
+}
+.av-grad-text {
+  background: linear-gradient(90deg, #b4a9ff, #ffb38a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.av-lift { transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; }
+.av-lift:hover { transform: translateY(-2px); box-shadow: 0 2px 6px rgba(23, 19, 43, 0.05), 0 18px 40px -18px rgba(99, 85, 246, 0.35); border-color: rgba(99, 85, 246, 0.25); }
+main::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 420px;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(60% 100% at 70% 0%, rgba(99, 85, 246, 0.08), transparent 70%);
+}
 
 /* Wallet adapter — match the app (light). */
 .wallet-adapter-button {
@@ -191,7 +230,7 @@ input[type="range"] { accent-color: var(--color-navy); }
 }
 .wallet-adapter-button-trigger { background-color: var(--color-navy) !important; color: #fff !important; border-color: transparent !important; }
 .wallet-adapter-button-trigger:not([disabled]):hover { background-color: var(--color-navy-soft) !important; }
-.wallet-adapter-modal-overlay { background: rgba(6, 25, 61, 0.45) !important; backdrop-filter: blur(4px); }
+.wallet-adapter-modal-overlay { background: rgba(23, 19, 43, 0.45) !important; backdrop-filter: blur(4px); }
 .wallet-adapter-modal-wrapper { background-color: var(--color-surface) !important; color: var(--color-ink) !important; font-family: inherit; border: 1px solid var(--color-line); box-shadow: var(--shadow-float) !important; border-radius: 20px !important; }
 .wallet-adapter-modal-title { color: var(--color-ink) !important; font-family: var(--font-display) !important; }
 .wallet-adapter-modal-button-close { background: var(--color-sunken) !important; }

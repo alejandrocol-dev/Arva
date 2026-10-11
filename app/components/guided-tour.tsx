@@ -163,7 +163,7 @@ export function GuidedTour({
             left: rect.left - PAD,
             width: rect.width + PAD * 2,
             height: rect.height + PAD * 2,
-            boxShadow: "0 0 0 9999px rgba(6, 25, 61, 0.55)",
+            boxShadow: "0 0 0 9999px rgba(23,19,43, 0.55)",
           }}
         />
       )}

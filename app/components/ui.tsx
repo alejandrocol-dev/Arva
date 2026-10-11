@@ -76,7 +76,7 @@ export function Card({
     <section
       data-tour={tour}
       className={cx(
-        "rounded-(--radius-card) border bg-surface p-5 shadow-(--shadow-card) sm:p-6",
+        "av-lift rounded-(--radius-card) border bg-surface p-5 shadow-(--shadow-card) sm:p-6",
         tone === "warn" ? "border-warn/40" : tone === "danger" ? "border-danger/40" : "border-line",
         className,
       )}
@@ -270,8 +270,8 @@ type ButtonVariant = "primary" | "lime" | "secondary" | "danger" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
 
 const buttonVariants: Record<ButtonVariant, string> = {
-  primary: "bg-navy text-white hover:bg-navy-soft font-semibold shadow-[0_1px_2px_rgba(6,25,61,0.2)]",
-  lime: "bg-brand text-brand-ink hover:brightness-95 font-semibold shadow-[0_1px_2px_rgba(6,25,61,0.15)]",
+  primary: "bg-gradient-to-b from-brand to-brand-strong text-white hover:brightness-110 font-semibold shadow-[0_1px_2px_rgba(23,19,43,0.2),0_8px_20px_-10px_rgba(99,85,246,0.7)]",
+  lime: "bg-brand text-brand-ink hover:brightness-95 font-semibold shadow-[0_1px_2px_rgba(23,19,43,0.15)]",
   secondary: "border border-line-strong bg-surface text-ink hover:bg-sunken font-medium",
   danger: "bg-danger text-white hover:bg-danger/85 font-semibold",
   ghost: "text-mute hover:text-ink hover:bg-ink/5 font-medium",
@@ -388,12 +388,12 @@ export function Notice({
 export type IconTileTone = "lime" | "sky" | "amber" | "lilac" | "navy" | "danger" | "brand";
 
 const TILE_STYLE: Record<IconTileTone, string> = {
-  brand: "bg-gradient-to-br from-brand to-[#57ad04] text-navy ring-white/25",
-  lime: "bg-gradient-to-br from-[#f7fdea] to-tile-lime text-brand-strong ring-brand/25",
+  brand: "bg-gradient-to-br from-[#7c72ff] to-brand-strong text-white ring-white/25",
+  lime: "bg-gradient-to-br from-[#f6f4ff] to-tile-lime text-brand-strong ring-brand/25",
   sky: "bg-gradient-to-br from-[#f0f8fe] to-tile-sky text-info ring-info/25",
   amber: "bg-gradient-to-br from-[#fef9ea] to-tile-amber text-warn ring-warn/25",
-  lilac: "bg-gradient-to-br from-[#f5f3fe] to-tile-lilac text-[#5b4bb3] ring-[#8b7bd8]/30",
-  navy: "bg-gradient-to-br from-navy-soft to-navy text-brand ring-white/10",
+  lilac: "bg-gradient-to-br from-[#fff4f6] to-tile-lilac text-[#c2416b] ring-[#e8799b]/30",
+  navy: "bg-gradient-to-br from-[#7c72ff] via-brand to-navy-soft text-white ring-white/15",
   danger: "bg-gradient-to-br from-rose-50 to-rose-100/80 text-danger ring-danger/25",
 };
 
@@ -434,7 +434,7 @@ export function EmptyState({
   return (
     <div className="flex flex-col items-center rounded-(--radius-card) border border-dashed border-line-strong bg-surface/60 px-6 py-12 text-center">
       {icon && (
-        <div className="mb-4 grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-[#f7fdea] to-tile-lime text-brand-strong shadow-sm ring-1 ring-inset ring-brand/25">
+        <div className="mb-4 grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-[#f6f4ff] to-tile-lime text-brand-strong shadow-sm ring-1 ring-inset ring-brand/25">
           {icon}
         </div>
       )}

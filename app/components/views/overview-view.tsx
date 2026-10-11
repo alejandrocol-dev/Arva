@@ -99,7 +99,7 @@ export function OverviewView() {
           <ul className="space-y-3 text-sm text-mute">
             {(["overview.why.1", "overview.why.2", "overview.why.3"] as const).map((k) => (
               <li key={k} className="flex gap-2.5">
-                <CircleCheck className="mt-0.5 size-4 shrink-0 text-brand-strong" aria-hidden />
+                <CircleCheck className="mt-0.5 size-4 shrink-0 text-mint" aria-hidden />
                 {t(k)}
               </li>
             ))}
@@ -154,22 +154,26 @@ function DemoHero({ onGo }: { onGo: (v: View) => void }) {
   const count = done.filter(Boolean).length;
 
   return (
-    <section id="demo" data-tour="demo" className="relative overflow-hidden rounded-[24px] bg-navy p-6 text-white shadow-(--shadow-float) sm:p-8">
+    <section id="demo" data-tour="demo" className="av-night av-glow-line relative overflow-hidden rounded-[24px] p-6 text-white shadow-(--shadow-float) sm:p-8">
       <div aria-hidden className="av-grid pointer-events-none absolute inset-0 opacity-50" />
-      <div aria-hidden className="pointer-events-none absolute -left-20 -top-24 size-72 rounded-full bg-brand/25 blur-3xl" />
+      <div aria-hidden className="av-float pointer-events-none absolute -left-20 -top-24 size-72 rounded-full bg-brand/30 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -bottom-24 right-10 size-64 rounded-full bg-peach/15 blur-3xl" />
       <ZafraMark white className="pointer-events-none absolute -bottom-10 left-[36%] hidden size-52 opacity-[0.06] lg:block" />
       <div className="relative grid gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.6fr)] lg:items-center">
         <div>
-          <p className="text-sm font-medium text-white/60">{t("dash.hero.hello")}</p>
-          <h1 className="mt-2 text-[28px] font-extrabold leading-[1.15] sm:text-[34px]">{t("dash.hero.title")}</h1>
+          <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-brand-glow backdrop-blur">
+            <span className="size-1.5 rounded-full bg-mint shadow-[0_0_8px_var(--color-mint)]" />
+            {t("dash.hero.hello")}
+          </p>
+          <h1 className="mt-4 text-[28px] font-extrabold leading-[1.15] sm:text-[34px]">{t("dash.hero.title")}</h1>
           <p className="mt-3 max-w-md text-sm leading-relaxed text-white/70">{t("dash.hero.body")}</p>
           <div className="mt-6 max-w-xs">
             <div className="mb-2 flex items-center justify-between text-xs font-semibold">
               <span className="text-white/70">{t("dash.hero.progress", { done: count })}</span>
-              <span className="text-brand">{count * 25}%</span>
+              <span className="av-grad-text">{count * 25}%</span>
             </div>
             <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
-              <div className="h-full rounded-full bg-brand transition-[width] duration-700" style={{ width: `${count * 25}%` }} />
+              <div className="h-full rounded-full bg-gradient-to-r from-brand-glow via-brand to-cyan shadow-[0_0_12px_rgba(180,169,255,0.7)] transition-[width] duration-700" style={{ width: `${count * 25}%` }} />
             </div>
           </div>
           {!publicKey && <p className="mt-4 text-xs text-white/50">{t("demo.needWallet")}</p>}
@@ -185,9 +189,9 @@ function DemoHero({ onGo }: { onGo: (v: View) => void }) {
               <li
                 key={i}
                 className={cx(
-                  "flex min-h-[188px] flex-col rounded-2xl p-4 text-navy transition-transform",
+                  "flex min-h-[188px] flex-col rounded-2xl p-4 text-navy shadow-[0_10px_30px_-14px_rgba(0,0,0,0.5)] transition-transform hover:-translate-y-1",
                   s.tile,
-                  isCurrent && "ring-2 ring-brand ring-offset-2 ring-offset-navy xl:-translate-y-1",
+                  isCurrent && "ring-2 ring-brand-glow ring-offset-2 ring-offset-navy shadow-[0_0_0_6px_rgba(180,169,255,0.15),0_16px_40px_-12px_rgba(99,85,246,0.8)] xl:-translate-y-1",
                 )}
               >
                 <div className="flex items-center justify-between">
@@ -211,7 +215,7 @@ function DemoHero({ onGo }: { onGo: (v: View) => void }) {
                       onClick={() => onGo(s.view)}
                       className={cx(
                         "inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-colors",
-                        isCurrent ? "bg-navy text-white hover:bg-navy-soft" : "bg-white/70 text-navy hover:bg-white",
+                        isCurrent ? "bg-brand text-white shadow-[0_6px_14px_-6px_rgba(99,85,246,0.8)] hover:bg-brand-strong" : "bg-white/70 text-navy hover:bg-white",
                       )}
                     >
                       {t("demo.go")}
@@ -252,17 +256,22 @@ function Kpis({
       </div>
     );
   const tons = warrants.reduce((s, w) => s + w.tons, 0);
-  const items: Array<{ icon: LucideIcon; tone: IconTileTone; label: string; value: string; hint: string }> = [
-    { icon: Vault, tone: "lime", label: t("overview.kpi.liquidity"), value: f.usdcRound(stats.available), hint: t("overview.kpi.liquidityHint") },
-    { icon: Coins, tone: "sky", label: t("overview.kpi.debt"), value: f.usdcRound(stats.outstandingDebt), hint: t("overview.kpi.debtHint") },
-    { icon: Wheat, tone: "amber", label: t("overview.kpi.tons"), value: f.tons(tons), hint: t("overview.kpi.tonsHint") },
-    { icon: Gauge, tone: "lilac", label: t("overview.kpi.ltv"), value: f.bps(config.ltvBps), hint: t("overview.kpi.ltvHint", { liq: f.bps(config.liqThresholdBps) }) },
+  const items: Array<{ icon: LucideIcon; tone: IconTileTone; accent: string; label: string; value: string; hint: string }> = [
+    { icon: Vault, tone: "lime", accent: "#6355f6", label: t("overview.kpi.liquidity"), value: f.usdcRound(stats.available), hint: t("overview.kpi.liquidityHint") },
+    { icon: Coins, tone: "sky", accent: "#0ea5e9", label: t("overview.kpi.debt"), value: f.usdcRound(stats.outstandingDebt), hint: t("overview.kpi.debtHint") },
+    { icon: Wheat, tone: "amber", accent: "#f59e0b", label: t("overview.kpi.tons"), value: f.tons(tons), hint: t("overview.kpi.tonsHint") },
+    { icon: Gauge, tone: "lilac", accent: "#e8799b", label: t("overview.kpi.ltv"), value: f.bps(config.ltvBps), hint: t("overview.kpi.ltvHint", { liq: f.bps(config.liqThresholdBps) }) },
   ];
   return (
     <section aria-label="Live metrics" className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       {items.map((it) => {
         return (
-          <div key={it.label} className="rounded-2xl border border-line bg-surface p-5 shadow-(--shadow-card)">
+          <div
+            key={it.label}
+            className="av-lift relative overflow-hidden rounded-2xl border border-line bg-surface p-5 shadow-(--shadow-card)"
+            style={{ backgroundImage: `radial-gradient(120% 80% at 100% 0%, ${it.accent}14, transparent 60%)` }}
+          >
+            <span aria-hidden className="absolute inset-x-0 top-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${it.accent}, ${it.accent}00)` }} />
             <div className="flex items-start justify-between gap-3">
               <p className="text-xs font-semibold text-mute">{it.label}</p>
               <IconTile icon={it.icon} tone={it.tone} size="sm" />
@@ -303,7 +312,7 @@ function PoolDonut({ stats }: { stats: PoolStats }) {
       <Donut
         segments={[
           { value: stats.available, color: "var(--color-brand)", label: t("dash.pool.available") },
-          { value: stats.outstandingDebt, color: "var(--color-navy)", label: t("dash.pool.lent") },
+          { value: stats.outstandingDebt, color: "var(--color-cyan)", label: t("dash.pool.lent") },
         ]}
         center={
           <div>
@@ -317,7 +326,7 @@ function PoolDonut({ stats }: { stats: PoolStats }) {
         <Legend
           items={[
             { color: "var(--color-brand)", label: t("dash.pool.available"), value: f.usdcRound(stats.available) },
-            { color: "var(--color-navy)", label: t("dash.pool.lent"), value: f.usdcRound(stats.outstandingDebt) },
+            { color: "var(--color-cyan)", label: t("dash.pool.lent"), value: f.usdcRound(stats.outstandingDebt) },
           ]}
         />
         <div>
@@ -334,9 +343,9 @@ function PoolDonut({ stats }: { stats: PoolStats }) {
 
 const STATUS: Record<WarrantStatus, { label: MessageKey; color: string; tone: "brand" | "info" | "danger" | "neutral" }> = {
   [WarrantStatus.Issued]: { label: "status.issued", color: "var(--color-info)", tone: "info" },
-  [WarrantStatus.InCustody]: { label: "status.inCustody", color: "var(--color-navy)", tone: "neutral" },
+  [WarrantStatus.InCustody]: { label: "status.inCustody", color: "var(--color-brand)", tone: "neutral" },
   [WarrantStatus.Liquidated]: { label: "status.liquidated", color: "var(--color-danger)", tone: "danger" },
-  [WarrantStatus.Released]: { label: "status.released", color: "var(--color-brand)", tone: "brand" },
+  [WarrantStatus.Released]: { label: "status.released", color: "var(--color-mint)", tone: "brand" },
 };
 
 function WarrantBars({ warrants }: { warrants: Warrant[] }) {
@@ -388,15 +397,16 @@ function HowItWorks() {
   return (
     <div>
       <h2 className="mb-5 text-2xl font-extrabold tracking-tight text-ink">{t("overview.how.title")}</h2>
-      <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <ol className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <span aria-hidden className="pointer-events-none absolute left-[12%] right-[12%] top-[44px] hidden h-px bg-[linear-gradient(90deg,var(--color-brand-glow)_50%,transparent_50%)] bg-[length:10px_1px] lg:block" />
         {steps.map((s, i) => (
           <li
             key={i}
-            className="relative rounded-(--radius-card) border border-line bg-surface p-5 shadow-(--shadow-card)"
+            className="av-lift relative rounded-(--radius-card) border border-line bg-surface p-5 shadow-(--shadow-card)"
           >
             <div className="mb-4 flex items-center justify-between">
-              <IconTile icon={s.icon} tone="navy" size="sm" className="size-10" />
-              <span className="font-display text-sm font-bold text-faint">0{i + 1}</span>
+              <IconTile icon={s.icon} tone="navy" size="sm" className="size-10 shadow-[0_8px_18px_-8px_rgba(99,85,246,0.8)]" />
+              <span className="font-display text-sm font-bold text-brand">0{i + 1}</span>
             </div>
             <h3 className="text-base font-bold text-ink">{s.title}</h3>
             <p className="mt-1.5 text-sm leading-relaxed text-mute">{s.body}</p>

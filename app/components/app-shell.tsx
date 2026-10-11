@@ -47,12 +47,12 @@ function SideLink({ item, active, demo }: { item: Item; active: boolean; demo?: 
         active
           ? demo
             ? "bg-warn/10 text-warn"
-            : "bg-navy text-white shadow-[0_6px_16px_-8px_rgba(6,25,61,0.6)]"
+            : "bg-gradient-to-r from-brand to-brand-strong text-white shadow-[0_8px_20px_-10px_rgba(99,85,246,0.8)]"
           : "text-mute hover:bg-sunken hover:text-ink",
       )}
     >
       <Icon
-        className={cx("size-[18px] shrink-0", active ? (demo ? "text-warn" : "text-brand") : "text-faint group-hover:text-ink")}
+        className={cx("size-[18px] shrink-0", active ? (demo ? "text-warn" : "text-white") : "text-faint group-hover:text-brand")}
         aria-hidden
       />
       {t(item.label)}
@@ -68,7 +68,7 @@ function MobileLink({ item, active, demo }: { item: Item; active: boolean; demo?
       aria-current={active ? "page" : undefined}
       className={cx(
         "whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors",
-        active ? (demo ? "bg-warn/10 text-warn" : "bg-navy text-white") : "text-mute hover:bg-sunken hover:text-ink",
+        active ? (demo ? "bg-warn/10 text-warn" : "bg-brand text-white") : "text-mute hover:bg-sunken hover:text-ink",
       )}
     >
       {t(item.label)}
@@ -87,7 +87,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-dvh">
       <aside className="sticky top-0 hidden h-dvh w-[264px] shrink-0 flex-col border-r border-line bg-surface lg:flex">
-        <Link href="/" className="flex items-center px-6 pb-6 pt-6" aria-label={t("common.brand")}>
+        <Link href="/" className="flex items-center border-b border-line px-6 pb-5 pt-6 mb-5" aria-label={t("common.brand")}>
           <ZafraLockup />
         </Link>
 
@@ -116,14 +116,14 @@ export function AppShell({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="space-y-3 p-4">
-          <div className="relative overflow-hidden rounded-2xl bg-navy p-4 text-white">
+          <div className="av-night av-glow-line relative overflow-hidden rounded-2xl p-4 text-white">
             <div aria-hidden className="av-grid pointer-events-none absolute inset-0 opacity-60" />
             <ZafraMark white className="pointer-events-none absolute -bottom-6 -right-6 size-24 opacity-10" />
             <div className="relative">
               <p className="flex items-center gap-2 text-xs font-semibold">
                 <span className="relative flex size-2">
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-brand opacity-70" />
-                  <span className="relative inline-flex size-2 rounded-full bg-brand" />
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-mint opacity-70" />
+                  <span className="relative inline-flex size-2 rounded-full bg-mint" />
                 </span>
                 Solana devnet
               </p>
@@ -132,7 +132,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 href={explorerAddressUrl(PROGRAM_ID)}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-3 inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-brand hover:underline"
+                className="mt-3 inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-brand-glow hover:underline"
               >
                 {shortenAddress(PROGRAM_ID, 5)}
                 <ExternalLink className="size-3" aria-hidden />

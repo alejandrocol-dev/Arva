@@ -127,7 +127,7 @@ export function SplitBar({
     fee: "var(--color-warn)",
     margin: undefined,
   } as const;
-  const marginStyle = { background: "repeating-linear-gradient(135deg, rgba(6,25,61,0.16) 0 6px, rgba(6,25,61,0.08) 6px 12px)" };
+  const marginStyle = { background: "repeating-linear-gradient(135deg, rgba(23,19,43,0.16) 0 6px, rgba(23,19,43,0.08) 6px 12px)" };
 
   return (
     <div className={className}>

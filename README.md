@@ -1,206 +1,182 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="app/public/brand/zafra-lockup-white.png" />
-    <img src="app/public/brand/zafra-lockup.png" width="300" alt="Zafra" />
+    <source media="(prefers-color-scheme: dark)" srcset="docs/img/arva-mark-white.png" />
+    <img src="docs/img/arva-mark.png" width="96" alt="ARVA" />
   </picture>
 </p>
 
-<p align="center"><b>Liquidez abierta para warrants de granos en Argentina.</b><br/>
-El productor deja su warrant de garantía y recibe un préstamo en dólares digitales en segundos, sin vender la cosecha.</p>
+<h1 align="center">ARVA</h1>
 
 <p align="center">
-  <code>Solana devnet</code> · <code>Anchor</code> · <code>Next.js</code> · <code>USDC de prueba</code>
+  <b>Open credit for digital grain warrants, on Solana.</b><br/>
+  A producer locks a certified grain warrant as collateral and receives USDC in seconds from an open liquidity pool, without selling the harvest.
 </p>
-
-> **Estado:** corre solo en **devnet** (la red de prueba de Solana, con plata que no vale nada). La certificadora y el oráculo de precio están simulados. El código no está auditado.
 
 <p align="center">
-  <img src="docs/img/landing.jpg" alt="Landing de Zafra" />
+  <img src="https://img.shields.io/badge/Solana-devnet-6355F6?style=flat-square&logo=solana&logoColor=white" alt="Solana devnet" />
+  <img src="https://img.shields.io/badge/Anchor-1.1.2-1B1440?style=flat-square" alt="Anchor" />
+  <img src="https://img.shields.io/badge/Next.js-16-17132B?style=flat-square&logo=nextdotjs&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/USDC-test%20funds-22D3EE?style=flat-square" alt="Test USDC" />
+  <img src="https://img.shields.io/badge/status-unaudited-FFB38A?style=flat-square" alt="Unaudited" />
 </p>
 
-<table>
-  <tr>
-    <td width="50%"><img src="docs/img/dashboard.jpg" alt="Panel de la app con datos en vivo de devnet" /></td>
-    <td width="50%"><img src="docs/img/guide.jpg" alt="Guía interactiva para recorrer la app" /></td>
-  </tr>
-  <tr>
-    <td align="center"><sub>Panel con datos en vivo de devnet, simulador de liquidación y actividad on-chain</sub></td>
-    <td align="center"><sub>Guía interactiva que explica cada pantalla</sub></td>
-  </tr>
-</table>
+<p align="center">
+  <a href="https://explorer.solana.com/address/AERC53ZiqizgjYdJK9hCeGtSk6PfzwnEn2z3wkMKiqiJ?cluster=devnet"><b>Program on Explorer</b></a> ·
+  <a href="docs/SPEC.md"><b>Technical spec</b></a> ·
+  <a href="#run-it-locally"><b>Run it</b></a>
+</p>
+
+> [!IMPORTANT]
+> ARVA runs **only on Solana devnet** (Solana's test network: funds come from a faucet and have no real value). The certifier and the price oracle are **simulated**. The code is **not audited**.
+
+<p align="center">
+  <img src="docs/img/dashboard.png" alt="ARVA dashboard reading live data from devnet" />
+</p>
 
 ---
 
-## El problema: valor inmóvil en el silo
+## The harvest exists. The capital doesn't.
 
-El grano cosechado y almacenado es un activo real pero ilíquido. Un productor puede tener cien toneladas de soja en un silobolsa, unos cuarenta mil dólares de mercadería, y no disponer de capital de trabajo para la campaña siguiente. Semillas, combustible y obligaciones financieras se pagan en calendario de siembra, no de venta.
+Stored grain is a real asset, but an illiquid one. A producer can have 100 tons of soy sitting in a silo bag, roughly USD 35,000 of goods, and still lack working capital for the next season. Seed, fuel and debt are due on the planting calendar, not the selling one.
 
-Argentina cuenta con un instrumento legal sobre ese activo: el **warrant**, un título de crédito que representa mercadería depositada (Ley 9.643). En la práctica su uso como garantía queda limitado al circuito bancario y de ALyCs: operaciones bilaterales, documentación manual y plazos de aprobación que no se alinean con los tiempos de la campaña.
+Argentina already has a legal instrument over that asset: the **warrant**, a credit title that represents stored goods (**Law 9,643**). In practice, using it as collateral is limited to banks and brokers: bilateral deals, manual paperwork and approval times that don't match the season.
 
-**Zafra convierte el warrant en garantía programable.** El documento se tokeniza on-chain a razón de un token por tonelada, el productor lo deposita como colateral en el programa y un pool abierto de liquidez en USDC le origina el préstamo. Al repagar, el colateral se libera. Si el precio del grano perfora el umbral de liquidación, la posición se liquida automáticamente.
+**ARVA turns the warrant into programmable collateral.** The warrant is represented on-chain as one token per ton. The producer locks it in the program's vault, and an open USDC pool originates the loan. Repay, and the collateral is released. If the grain price breaks the liquidation threshold, anyone can liquidate the position, and the rules are the same for everyone.
 
-> Por eso existe Zafra: porque la zafra no espera.
-
----
-
-## Por qué importa
-
-Zafra entra en la categoría **RWA (Real World Assets)**: el colateral no es un activo nativo de cripto, es grano real, guardado y certificado, representado on-chain. La blockchain no crea el activo; le da un mercado de crédito abierto.
-
-### Para el productor
-- **Capital sin vender la cosecha.** Puede esperar un mejor precio sin quedarse sin plata para trabajar.
-- **En segundos, no en semanas.** El préstamo se acredita apenas se firma la transacción.
-- **Sin depender de una ventanilla.** Cualquier fondo puede prestarle, no solo su banco.
-- **Reglas claras desde el principio.** Antes de firmar ve cuánto recibe, cuánto debe y a qué precio del grano se liquidaría su garantía.
-
-### Para quien presta
-- **Una garantía real detrás:** grano guardado y certificado.
-- **Cobra el interés y la comisión** de cada préstamo.
-- **Todo es público y auditable:** cada préstamo, pago y liquidación es una transacción que cualquiera puede revisar.
-
-### Por qué en una blockchain y no en una planilla
-- **La garantía es programable:** se bloquea sola, se libera sola cuando el préstamo se paga y la liquidación la ejecuta el código, no un juzgado.
-- **En Solana cada operación tarda segundos y cuesta centavos**, que es lo que hace viable prestarle a un productor chico.
-- **No hay un intermediario que custodie la garantía:** la tiene el programa, con reglas que no cambian según quién pida.
+> *Because the harvest doesn't wait.*
 
 ---
 
-## El mercado y el momento: Argentina
+## How it works
 
-**El instrumento existe y tiene respaldo legal.** El warrant está regulado por la **Ley 9.643**, actualizada por el **DNU 70/2023**. Esa actualización habilitó documentos electrónicos, división de lotes y la figura del productor como depositario.
+```
+ Certified warrant  ──►  ARVA program vault  ──►  Open USDC pool
+  (1 token = 1 t)        (PDA, no private key)     (anyone can supply)
+```
 
-**El mercado está creciendo.** En 2025 se emitieron warrants por **US$2.079 millones, un 93% más que el año anterior** (Secretaría de Agricultura, vía Bichos de Campo).
-
-**La digitalización ya empezó:**
-- **A3 Mercados** lanzó su plataforma de warrants digitales; la primera operación fue con Grassi SA y Banco Galicia.
-- **Matba Rofex** lanzó su propia plataforma y tokenizó una silobolsa como garantía de futuros, junto con Origino.
-- La **Bolsa de Comercio del Chaco** estructuró el **primer pagaré bursátil respaldado por un warrant digital** en el MAV, con Control Union como warrantera, y lo presentó como un modelo replicable en el norte del país.
-
-**Del otro lado, la plata existe:**
-- El **74,3% de los inversores argentinos tiene cripto**, más que en EE.UU. o el Reino Unido (Nexo, *Future of Digital Wealth* 2026).
-- Las stablecoins son el **72% de las operaciones cripto locales** (EY).
-- Pero esa tenencia casi no se integra a inversiones reales. Hay dólares digitales sin un destino productivo, y el campo necesita financiamiento.
-
-### Dónde se para Zafra
-**Zafra no digitaliza warrants**: eso ya lo hacen A3 y Matba Rofex. **Zafra es la capa de crédito que va encima.** Toma el warrant digital y lo vuelve prestable contra capital abierto, no solo contra el de un banco.
-
-| | Qué hace | Diferencia con Zafra |
+| | Step | What happens on-chain |
 |---|---|---|
-| A3 Mercados / Matba Rofex | Emiten y registran el warrant digital | Son la emisión. Zafra podría ser su capa de liquidez |
-| Bancos y ALyCs | Prestan contra warrant, de forma bilateral | Zafra usa un fondo abierto y reglas públicas |
-| Agrotoken, Nera, SiloReal, Origino | Tokenizan grano o silobolsas, o los monitorean | Otro instrumento. Zafra trabaja sobre el warrant legal |
+| 1 | **Certify** | The certifier registers a warrant (silo ID, grain, tons) and mints tokens to the producer. |
+| 2 | **Supply** | Anyone deposits USDC into the liquidity pool. |
+| 3 | **Borrow** | The producer locks the warrant and receives up to **70%** of its value, minus a **0.75%** origination fee. |
+| 4 | **Repay** | Principal plus simple interest (accrued per second) is paid back and the tokens are returned. |
+| 5 | **Liquidate** | If debt exceeds **80%** of the collateral value, anyone can liquidate and the pool keeps the warrant. |
+
+**Example:** 100 t of soy at 350 USDC/t = 35,000 USDC of collateral → 24,500 USDC loan → **≈ 24,316 USDC** received after the fee. The position becomes liquidatable if soy falls below **306 USDC/t**.
 
 ---
 
-## Qué hace hoy (funcionando en devnet)
+## Why on-chain
 
-El ciclo completo corre en la cadena y es verificable en el explorador:
+- **Programmable collateral.** It locks itself, releases itself on repayment, and liquidation is executed by code, not by a court.
+- **Public audit trail.** Every loan, repayment and liquidation is a transaction anyone can inspect.
+- **No custodian.** The collateral sits in a program-derived vault with no private key.
+- **Seconds and cents.** Solana's speed and fees make lending to a small producer viable.
 
-1. **Emitir:** la certificadora registra un warrant (Silo ID, grano, toneladas) y se mintean los tokens al productor (1 token = 1 t).
-2. **Fondear:** cualquiera aporta USDC al fondo de liquidez.
-3. **Pedir:** el productor bloquea el warrant en una bóveda del programa y recibe hasta el **70%** del valor, menos una comisión de **0,75%**.
-4. **Devolver:** paga principal más interés simple, que corre por segundo, y recupera sus tokens.
-5. **Liquidar:** si el precio cae y la deuda supera el **80%** del valor de la garantía, cualquiera puede liquidar la posición y el fondo se queda con el warrant.
+---
 
-**Ejemplo:** 100 t de soja a 380 USDC/t equivalen a 38.000 USDC de garantía. Con eso se pueden pedir 26.600 USDC y se reciben unos 26.400 netos. Si la soja cae un 30%, la posición se vuelve liquidable.
+## The market
 
-### La app
-- **Landing** que explica el producto en lenguaje simple, con números leídos en vivo de la cadena.
-- **Panel** con la liquidez del fondo, la deuda vigente, las toneladas tokenizadas, gráficos y las últimas transacciones del programa, cada una con link al explorador.
-- **Simulador de liquidación:** movés el precio del grano y ves en qué punto un préstamo queda liquidable.
-- **Guía interactiva** por pantalla, pensada para quien revisa la app por primera vez.
-- **Bilingüe**, en español e inglés.
-- **Pantalla de revisión antes de cada firma**, que muestra qué das, qué recibís, la comisión y el precio de liquidación.
-- **Riesgo explicado en lenguaje claro**, con cuatro niveles: Sano, Atención, En riesgo y Liquidable. También muestra cuánto puede caer el precio antes de la liquidación.
-- **Avisos antes de que falle algo:** saldo insuficiente para devolver, Silo ID repetido, errores traducidos.
-- **Herramientas de demo**, marcadas como simuladas: Certificadora (emitir warrants) y Administrador (mover el precio del grano y liquidar).
+- **The instrument is legal and modernized.** Law 9,643, updated by **DNU 70/2023**, enabled electronic warrants, lot splitting and the producer as depositary.
+- **It's growing.** Warrants worth **US$2,079M were issued in 2025, +93% year over year** (Secretaría de Agricultura, via Bichos de Campo).
+- **Digitization has started.** A3 Mercados and Matba Rofex launched digital warrant platforms, and the Bolsa de Comercio del Chaco structured the first promissory note backed by a digital warrant on MAV.
+- **The capital exists.** **74.3%** of Argentine investors hold crypto (Nexo, *Future of Digital Wealth* 2026) and stablecoins are **72%** of local crypto activity (EY), yet that money rarely reaches the real economy.
 
-### Qué está simulado
-| Real (en devnet) | Simulado |
+**Where ARVA fits:** ARVA doesn't digitize warrants; A3 and Matba Rofex already do. **ARVA is the credit layer on top**, making a digital warrant borrowable against open capital, not only a bank's.
+
+| | What they do | How ARVA differs |
+|---|---|---|
+| A3 Mercados / Matba Rofex | Issue and register digital warrants | They are issuance. ARVA can be their liquidity layer |
+| Banks and brokers | Lend against warrants, bilaterally | ARVA uses an open pool and public rules |
+| Agrotoken, Nera, SiloReal, Origino | Tokenize or monitor grain and silo bags | A different instrument. ARVA works on the legal warrant |
+
+---
+
+## The app
+
+- **Landing** that explains the product in plain language, for producers and investors alike.
+- **Dashboard** with pool liquidity, outstanding debt, tokenized tons, charts and the latest program transactions, each linked to Solana Explorer.
+- **Liquidation simulator:** move the grain price and see exactly when a loan becomes liquidatable.
+- **Review screen before every signature:** what you give, what you get, the fee and the liquidation price.
+- **Risk in plain language:** four tiers (Healthy, Watch, At risk, Liquidatable) plus how far the price can drop.
+- **Guided tour** on every screen for first-time users.
+- **English and Spanish.**
+- **Demo tools, clearly labeled as simulated:** Certifier (issue warrants) and Admin (move the grain price).
+
+### Real vs. simulated
+
+| ✅ Real (on devnet) | 🧪 Simulated |
 |---|---|
-| El programa, las cuentas, las firmas y el registro público | La certificadora (en producción, una warrantera habilitada) |
-| La bóveda de garantía y la liquidación automática | El oráculo de precio (en producción, un feed de mercado) |
-| Los tokens del warrant y el fondo de liquidez | El USDC, que es de prueba. El fondo lo pone el equipo |
+| The program, accounts, signatures and public record | The certifier (in production, a licensed warehouse) |
+| The collateral vault and liquidation logic | The price oracle (in production, a market feed) |
+| Warrant tokens and the liquidity pool | USDC is a test token; the pool is funded by the team |
 
 ---
 
-## Lo que viene
+## Roadmap
 
-1. **Validar con el sector:** conversaciones con productores, acopios y warranteras.
-2. **Certificación real:** integrar una warrantera habilitada que firme la emisión, siguiendo el camino del precedente del Chaco.
-3. **Precio real:** reemplazar el oráculo simulado por un feed de precios de granos.
-4. **Sobre los rieles existentes:** conectarse a la emisión de warrants digitales de A3 y Matba Rofex como su capa de liquidez abierta.
-5. **Retiros y rendimiento para quien presta:** hoy, en el MVP, lo aportado no se puede retirar.
-6. **Más documentos del agro:** el mismo modelo para otros títulos negociables, como cartas de porte o cheques de pago diferido.
-7. **Auditoría y marco regulatorio** antes de cualquier uso con dinero real.
-
----
-
-## Por qué construí Zafra
-
-Este proyecto no salió de una idea en el aire. Antes de meterme con los agentes me puse a investigar el mercado en serio: la Ley 9.643 y lo que habilitó el DNU 70/2023, las plataformas que ya lanzaron A3 Mercados y Matba Rofex, los volúmenes de warrants que se emiten por año y cómo funciona el crédito rural hoy.
-
-La conclusión que tuve es que hay una oportunidad real. El activo existe, el marco legal existe, la digitalización ya arrancó, y la pieza que sigue faltando es el crédito abierto contra ese warrant. Zafra es mi intento de construir esa pieza.
-
-## Una nota honesta sobre el estado
-
-Zafra llegó a esta entrega más ajustado de lo que me hubiera gustado, entre el tiempo de la hackathon y una conexión de internet inestable en mi casa. En la recta final sumé una identidad visual propia, una landing, el panel con gráficos y una guía para recorrer la app, pero todavía hay margen: estados más ricos en cada pantalla, versión móvil más cuidada y muchos detalles más.
-
-Elegí deliberadamente presentar el sistema completo funcionando de verdad: emitir, prestar, devolver y liquidar, todo en devnet, antes que una interfaz perfecta sobre datos falsos. Lo próximo es cerrar esa brecha, si se me permite.
+1. **Validate with the industry:** producers, grain elevators and licensed warehouses.
+2. **Real certification:** a licensed warehouse signs issuance, following the Chaco precedent.
+3. **Real prices:** replace the simulated oracle with a grain price feed.
+4. **Plug into existing rails:** act as the open liquidity layer for A3 and Matba Rofex digital warrants.
+5. **Withdrawals and yield for lenders:** in this MVP, supplied liquidity can't be withdrawn yet.
+6. **More agro instruments:** the same model for other negotiable titles.
+7. **Audit and regulatory framework** before any use with real money.
 
 ---
 
-## Cómo está hecho
+## Built with
 
-| Capa | Tecnología |
+| Layer | Stack |
 |---|---|
-| Programa on-chain | Anchor 1.1.2 + SPL Token (clásico), un solo programa `zafra` |
-| Tests | Rust + LiteSVM (`cargo test`), 16 tests de las instrucciones y sus casos negativos |
+| On-chain program | Anchor 1.1.2 + SPL Token (classic), a single program |
+| Tests | Rust + LiteSVM (`cargo test`), 16 tests covering instructions and negative cases |
 | Frontend | Next.js 16 + TypeScript + Tailwind + Solana Wallet Adapter (Phantom) |
-| Scripts | TypeScript (setup de devnet, ciclo completo, inspección) |
+| Scripts | TypeScript (devnet setup, full cycle, inspection) |
 
-**Instrucciones del programa:** `initialize`, `set_price`, `register_warrant`, `deposit_liquidity`, `borrow`, `repay`, `liquidate`.
+**Instructions:** `initialize` · `set_price` · `register_warrant` · `deposit_liquidity` · `borrow` · `repay` · `liquidate`
 
-**Program ID (devnet):** [`AERC53ZiqizgjYdJK9hCeGtSk6PfzwnEn2z3wkMKiqiJ`](https://explorer.solana.com/address/AERC53ZiqizgjYdJK9hCeGtSk6PfzwnEn2z3wkMKiqiJ?cluster=devnet)
-**USDC de prueba:** `12KPRGKraqyydu8favsGtMGqqm23YUEwgc3TVHGwjuef`
+**Program ID (devnet):** [`AERC53ZiqizgjYdJK9hCeGtSk6PfzwnEn2z3wkMKiqiJ`](https://explorer.solana.com/address/AERC53ZiqizgjYdJK9hCeGtSk6PfzwnEn2z3wkMKiqiJ?cluster=devnet)<br/>
+**Test USDC mint:** `12KPRGKraqyydu8favsGtMGqqm23YUEwgc3TVHGwjuef`
 
 ```
-programs/zafra/   Programa Anchor (src/, tests/)
-app/              Frontend Next.js
-scripts/          Scripts de devnet (TS)
-docs/SPEC.md      Contrato técnico (manda sobre el código)
-docs/DESIGN.md    Brief de diseño de la interfaz
-docs/img/         Capturas de la app
+programs/zafra/   Anchor program (src/, tests/)
+app/              Next.js frontend (landing at public/index.html, app at /app)
+scripts/          Devnet scripts (TS)
+docs/SPEC.md      Technical contract (takes precedence over code)
+docs/DESIGN.md    UI design brief
+docs/img/         Screenshots and brand assets
 ```
 
-### Correrlo
+<a id="run-it-locally"></a>
+### Run it locally
 
 ```bash
-# Programa
+# Program
 anchor build
 cargo test
 anchor deploy --provider.cluster devnet
 
-# Frontend (http://localhost:3000)
+# Frontend → http://localhost:3000
 cd app
 npm install
 NEXT_PUBLIC_USE_REAL=true npm run dev
 ```
 
-- **Modos del frontend:**
-  - Con `NEXT_PUBLIC_USE_REAL=true` lee y escribe en devnet.
-  - Sin esa variable usa datos simulados en memoria.
-- **RPC:** se puede cambiar con `NEXT_PUBLIC_RPC_URL`. Por defecto usa `https://api.devnet.solana.com`.
-- **Wallet:** para usarla hace falta Phantom en modo devnet.
+- `NEXT_PUBLIC_USE_REAL=true` reads and writes on devnet; without it, the app uses in-memory mock data.
+- `NEXT_PUBLIC_RPC_URL` overrides the RPC (default `https://api.devnet.solana.com`).
+- You need **Phantom set to devnet** to sign transactions.
 
 ---
 
-## Reglas del proyecto
+## Project rules
 
-- Solo devnet. Nunca mainnet ni fondos reales.
-- No hay claves ni secretos en el repo.
-- Toda transacción necesita la firma explícita del usuario.
+- **Devnet only.** Never mainnet, never real funds.
+- **No keys or secrets** in the repository.
+- **Every transaction requires the user's explicit signature.**
 
-## Uso de IA
+## Use of AI
 
-Hecho con Devin como asistente de programación. La idea, el diseño del producto, las especificaciones y la revisión son del autor; el código generado se revisó antes de cada commit.
+Built with Devin as a coding assistant. The idea, product design, specifications and review are the author's; generated code was reviewed before each commit.
+
+<p align="center"><sub>ARVA · built on Solana · devnet · not audited</sub></p>

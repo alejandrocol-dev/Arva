@@ -252,7 +252,7 @@ export function RiskSimulator({
           <p className="mt-1 font-display text-3xl font-extrabold tracking-tight">
             {f.number(price, 0)} <span className="text-base font-semibold text-white/60">USDC/t</span>
           </p>
-          <p className={cx("mt-1 text-xs font-semibold", change < 0 ? "text-[#ff8fa3]" : "text-brand")}>
+          <p className={cx("mt-1 text-xs font-semibold", change < 0 ? "text-[#ff8fa3]" : "text-brand-glow")}>
             {change >= 0 ? "+" : ""}
             {f.pct(change, 1)} {t("sim.vsBase")}
           </p>

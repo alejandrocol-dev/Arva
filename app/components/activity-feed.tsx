@@ -23,7 +23,7 @@ const KIND: Record<ActivityKind, { icon: LucideIcon; label: MessageKey; tile: st
   setPrice: { icon: Tag, label: "activity.setPrice", tile: "bg-tile-amber text-warn" },
   registerWarrant: { icon: FileCheck2, label: "activity.registerWarrant", tile: "bg-tile-sky text-info" },
   depositLiquidity: { icon: ArrowDownToLine, label: "activity.depositLiquidity", tile: "bg-tile-lime text-brand-strong" },
-  borrow: { icon: Banknote, label: "activity.borrow", tile: "bg-navy text-brand" },
+  borrow: { icon: Banknote, label: "activity.borrow", tile: "bg-navy text-brand-glow" },
   repay: { icon: Undo2, label: "activity.repay", tile: "bg-tile-lime text-brand-strong" },
   liquidate: { icon: Gavel, label: "activity.liquidate", tile: "bg-danger/10 text-danger" },
   other: { icon: CircleDot, label: "activity.other", tile: "bg-sunken text-mute" },

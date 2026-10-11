@@ -221,7 +221,7 @@ function Hero({ ex }: { ex: ExampleLoan }) {
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-500 group-hover/hero:opacity-100"
-        style={{ background: "radial-gradient(560px circle at var(--mx, 70%) var(--my, 40%), rgba(133,218,7,0.16), transparent 60%)" }}
+        style={{ background: "radial-gradient(560px circle at var(--mx, 70%) var(--my, 40%), rgba(99,85,246,0.16), transparent 60%)" }}
       />
       <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-navy-deep to-transparent" />
 
@@ -254,7 +254,7 @@ function Hero({ ex }: { ex: ExampleLoan }) {
           <div className="mt-9 flex flex-wrap gap-3">
             <Link
               href="/app"
-              className="inline-flex h-12 items-center gap-2 rounded-xl bg-brand px-6 text-base font-bold text-navy shadow-[0_10px_30px_-10px_rgba(133,218,7,0.7)] transition hover:brightness-95"
+              className="inline-flex h-12 items-center gap-2 rounded-xl bg-brand px-6 text-base font-bold text-navy shadow-[0_10px_30px_-10px_rgba(99,85,246,0.7)] transition hover:brightness-95"
             >
               {t("landing.hero.ctaApp")}
               <ArrowRight className="size-4" aria-hidden />
@@ -500,7 +500,7 @@ function How() {
       <div className="mx-auto max-w-[1200px]">
         <SectionHead center lime eyebrow={t("landing.how.eyebrow")} title={t("landing.how.title")} body={t("landing.how.body")} />
         <ol className="relative mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <span aria-hidden className="absolute left-[12%] right-[12%] top-[52px] hidden h-px bg-[repeating-linear-gradient(90deg,rgba(6,25,61,0.35)_0_6px,transparent_6px_12px)] lg:block" />
+          <span aria-hidden className="absolute left-[12%] right-[12%] top-[52px] hidden h-px bg-[repeating-linear-gradient(90deg,rgba(23,19,43,0.35)_0_6px,transparent_6px_12px)] lg:block" />
           <span aria-hidden className="av-travel absolute top-[46px] z-10 hidden size-3 -translate-x-1/2 rounded-full bg-navy shadow-[0_0_18px_6px_rgba(255,255,255,0.75)] lg:block" />
           {steps.map((s, i) => {
             const Icon = s.icon;
@@ -738,7 +738,7 @@ function WhyOnChain() {
             const Icon = it.icon;
             return (
               <Reveal delay={i * 110} key={it.title} className="rounded-[22px] border border-white/10 bg-white/[0.04] p-6 hover:-translate-y-1 hover:bg-white/[0.07]">
-                <IconTile icon={Icon} tone="brand" size="lg" className="shadow-[0_8px_22px_-6px_rgba(133,218,7,0.5)]" />
+                <IconTile icon={Icon} tone="brand" size="lg" className="shadow-[0_8px_22px_-6px_rgba(99,85,246,0.5)]" />
                 <h3 className="mt-6 text-lg font-bold text-white">{t(it.title)}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/60">{t(it.body)}</p>
               </Reveal>
@@ -868,7 +868,7 @@ function SpeedLegal() {
               ))}
             </ul>
           </Reveal>
-          <Reveal delay={180} className="relative overflow-hidden rounded-[28px] bg-navy p-8 text-white shadow-[0_30px_80px_-30px_rgba(133,218,7,0.45)] sm:p-10">
+          <Reveal delay={180} className="relative overflow-hidden rounded-[28px] bg-navy p-8 text-white shadow-[0_30px_80px_-30px_rgba(99,85,246,0.45)] sm:p-10">
             <div aria-hidden className="av-grid pointer-events-none absolute inset-0 opacity-50" />
             <div className="relative">
               <span className="grid size-12 place-items-center rounded-2xl bg-brand text-navy">
