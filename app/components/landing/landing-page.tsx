@@ -830,7 +830,7 @@ function AppPreview() {
               <span className="size-2.5 rounded-full bg-danger/50" />
               <span className="size-2.5 rounded-full bg-warn/50" />
               <span className="size-2.5 rounded-full bg-brand/60" />
-              <span className="ml-3 truncate font-mono text-[11px] text-faint">arva-gilt.vercel.app/app</span>
+              <span className="ml-3 truncate font-mono text-[11px] text-faint">arva-devnet.vercel.app/app</span>
             </div>
             <Image src="/landing/app-dashboard-v2.jpg" alt={t("landing.preview.alt")} width={1400} height={1118} sizes="(min-width: 1024px) 700px, 100vw" className="h-auto w-full" />
           </div>
