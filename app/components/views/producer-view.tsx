@@ -5,7 +5,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { Coins, FileCheck2, Wallet } from "lucide-react";
 import {
   accruedDebt,
-  zafra,
+  arva,
   collateralValue,
   maxBorrowAmount,
   originationFee,
@@ -15,7 +15,7 @@ import {
   type Loan,
   type PoolStats,
   type Warrant,
-} from "@/lib/zafra";
+} from "@/lib/arva";
 import { MIN_SOL_FOR_FEES } from "@/lib/constants";
 import { useNowSec } from "@/lib/data-bus";
 import { useFmt, useT } from "@/lib/i18n";
@@ -48,10 +48,10 @@ export function ProducerView() {
   const { data, loading, error, reload } = useAsyncData(async () => {
     if (!owner) return null;
     const [config, positions, stats, balances] = await Promise.all([
-      zafra.getConfig(),
-      zafra.getMyWarrants(owner),
-      zafra.getPoolStats(),
-      zafra.getWalletBalances(owner),
+      arva.getConfig(),
+      arva.getMyWarrants(owner),
+      arva.getPoolStats(),
+      arva.getWalletBalances(owner),
     ]);
     return {
       config,
@@ -238,7 +238,7 @@ function WarrantCard({
                 ]}
                 confirmLabel={t("borrow.confirm", { amount: f.usdc(max) })}
                 successText={t("borrow.success.borrow", { amount: f.usdc(max - fee, false) })}
-                action={() => zafra.borrow(warrant.address)}
+                action={() => arva.borrow(warrant.address)}
               />
             </div>
           )}
@@ -403,7 +403,7 @@ function OpenPosition({
         ]}
         confirmLabel={t("borrow.repay.confirm", { amount: f.usdc(risk.debt) })}
         successText={t("borrow.success.repay")}
-        action={() => zafra.repay(warrant.address)}
+        action={() => arva.repay(warrant.address)}
       />
     </div>
   );

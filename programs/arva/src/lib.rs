@@ -12,7 +12,7 @@ pub use state::*;
 declare_id!("AERC53ZiqizgjYdJK9hCeGtSk6PfzwnEn2z3wkMKiqiJ");
 
 #[program]
-pub mod zafra {
+pub mod arva {
     use super::*;
 
     pub fn initialize(

@@ -52,12 +52,12 @@ pub fn mint_supply(data: &[u8]) -> u64 {
 }
 
 pub fn setup() -> (LiteSVM, Keypair) {
-    let program_id = zafra::id();
+    let program_id = arva::id();
     let payer = Keypair::new();
     let mut svm = LiteSVM::new();
     let bytes = include_bytes!(concat!(
         env!("CARGO_TARGET_TMPDIR"),
-        "/../deploy/zafra.so"
+        "/../deploy/arva.so"
     ));
     svm.add_program(program_id, bytes).unwrap();
     svm.airdrop(&payer.pubkey(), 10_000_000_000).unwrap();
@@ -120,62 +120,62 @@ pub fn send_ix(
 }
 
 pub fn config_pda() -> Pubkey {
-    Pubkey::find_program_address(&[zafra::constants::CONFIG_SEED], &zafra::id()).0
+    Pubkey::find_program_address(&[arva::constants::CONFIG_SEED], &arva::id()).0
 }
 
 pub fn pool_vault_pda() -> Pubkey {
-    Pubkey::find_program_address(&[zafra::constants::POOL_VAULT_SEED], &zafra::id()).0
+    Pubkey::find_program_address(&[arva::constants::POOL_VAULT_SEED], &arva::id()).0
 }
 
 pub fn warrant_pda(silo_id: &str) -> Pubkey {
     Pubkey::find_program_address(
-        &[zafra::constants::WARRANT_SEED, silo_id.as_bytes()],
-        &zafra::id(),
+        &[arva::constants::WARRANT_SEED, silo_id.as_bytes()],
+        &arva::id(),
     )
     .0
 }
 
 pub fn mint_authority_pda(warrant: &Pubkey) -> Pubkey {
     Pubkey::find_program_address(
-        &[zafra::constants::MINT_AUTHORITY_SEED, warrant.as_ref()],
-        &zafra::id(),
+        &[arva::constants::MINT_AUTHORITY_SEED, warrant.as_ref()],
+        &arva::id(),
     )
     .0
 }
 
 pub fn warrant_mint_pda(warrant: &Pubkey) -> Pubkey {
     Pubkey::find_program_address(
-        &[zafra::constants::WARRANT_MINT_SEED, warrant.as_ref()],
-        &zafra::id(),
+        &[arva::constants::WARRANT_MINT_SEED, warrant.as_ref()],
+        &arva::id(),
     )
     .0
 }
 
 pub fn loan_pda(warrant: &Pubkey) -> Pubkey {
     Pubkey::find_program_address(
-        &[zafra::constants::LOAN_SEED, warrant.as_ref()],
-        &zafra::id(),
+        &[arva::constants::LOAN_SEED, warrant.as_ref()],
+        &arva::id(),
     )
     .0
 }
 
 pub fn warrant_vault_pda(warrant: &Pubkey) -> Pubkey {
     Pubkey::find_program_address(
-        &[zafra::constants::WARRANT_VAULT_SEED, warrant.as_ref()],
-        &zafra::id(),
+        &[arva::constants::WARRANT_VAULT_SEED, warrant.as_ref()],
+        &arva::id(),
     )
     .0
 }
 
 pub fn initialize_ix(admin: &Pubkey, usdc_mint: &Pubkey, certifier: &Pubkey) -> Instruction {
     Instruction::new_with_bytes(
-        zafra::id(),
-        &zafra::instruction::Initialize {
+        arva::id(),
+        &arva::instruction::Initialize {
             certifier: *certifier,
             annual_interest_bps: ANNUAL_INTEREST_BPS,
         }
         .data(),
-        zafra::accounts::Initialize {
+        arva::accounts::Initialize {
             admin: *admin,
             config: config_pda(),
             pool_vault: pool_vault_pda(),
@@ -194,9 +194,9 @@ pub fn initialize_ix(admin: &Pubkey, usdc_mint: &Pubkey, certifier: &Pubkey) -> 
 
 pub fn set_price_ix(admin: &Pubkey, price: u64) -> Instruction {
     Instruction::new_with_bytes(
-        zafra::id(),
-        &zafra::instruction::SetPrice { price }.data(),
-        zafra::accounts::SetPrice {
+        arva::id(),
+        &arva::instruction::SetPrice { price }.data(),
+        arva::accounts::SetPrice {
             admin: *admin,
             config: config_pda(),
         }
@@ -214,15 +214,15 @@ pub fn register_warrant_ix(
     let warrant = warrant_pda(silo_id);
     let mint = warrant_mint_pda(&warrant);
     Instruction::new_with_bytes(
-        zafra::id(),
-        &zafra::instruction::RegisterWarrant {
+        arva::id(),
+        &arva::instruction::RegisterWarrant {
             silo_id: silo_id.to_string(),
             grain,
             tons,
             producer: *producer,
         }
         .data(),
-        zafra::accounts::RegisterWarrant {
+        arva::accounts::RegisterWarrant {
             certifier: *certifier,
             config: config_pda(),
             producer: *producer,
@@ -240,9 +240,9 @@ pub fn register_warrant_ix(
 
 pub fn deposit_liquidity_ix(depositor: &Pubkey, usdc_mint: &Pubkey, amount: u64) -> Instruction {
     Instruction::new_with_bytes(
-        zafra::id(),
-        &zafra::instruction::DepositLiquidity { amount }.data(),
-        zafra::accounts::DepositLiquidity {
+        arva::id(),
+        &arva::instruction::DepositLiquidity { amount }.data(),
+        arva::accounts::DepositLiquidity {
             depositor: *depositor,
             usdc_mint: *usdc_mint,
             config: config_pda(),
@@ -259,9 +259,9 @@ pub fn borrow_ix(borrower: &Pubkey, usdc_mint: &Pubkey, warrant: &Pubkey) -> Ins
     let mint = warrant_mint_pda(warrant);
     let warrant_vault = warrant_vault_pda(warrant);
     Instruction::new_with_bytes(
-        zafra::id(),
-        &zafra::instruction::Borrow.data(),
-        zafra::accounts::Borrow {
+        arva::id(),
+        &arva::instruction::Borrow.data(),
+        arva::accounts::Borrow {
             borrower: *borrower,
             usdc_mint: *usdc_mint,
             mint,
@@ -286,9 +286,9 @@ pub fn repay_ix(borrower: &Pubkey, usdc_mint: &Pubkey, warrant: &Pubkey) -> Inst
     let mint = warrant_mint_pda(warrant);
     let warrant_vault = warrant_vault_pda(warrant);
     Instruction::new_with_bytes(
-        zafra::id(),
-        &zafra::instruction::Repay.data(),
-        zafra::accounts::Repay {
+        arva::id(),
+        &arva::instruction::Repay.data(),
+        arva::accounts::Repay {
             borrower: *borrower,
             usdc_mint: *usdc_mint,
             mint,
@@ -311,9 +311,9 @@ pub fn repay_ix(borrower: &Pubkey, usdc_mint: &Pubkey, warrant: &Pubkey) -> Inst
 
 pub fn liquidate_ix(liquidator: &Pubkey, warrant: &Pubkey) -> Instruction {
     Instruction::new_with_bytes(
-        zafra::id(),
-        &zafra::instruction::Liquidate.data(),
-        zafra::accounts::Liquidate {
+        arva::id(),
+        &arva::instruction::Liquidate.data(),
+        arva::accounts::Liquidate {
             liquidator: *liquidator,
             config: config_pda(),
             warrant: *warrant,

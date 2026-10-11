@@ -4,12 +4,12 @@ import { useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { ChevronDown, TrendingDown, Undo2 } from "lucide-react";
 import {
-  zafra,
+  arva,
   DEFAULT_PRICE_PER_TON,
   isRealMode,
   type Config,
   type OpenLoan,
-} from "@/lib/zafra";
+} from "@/lib/arva";
 import { shortenAddress } from "@/lib/format";
 import { useFmt, useT } from "@/lib/i18n";
 import { positionRisk } from "@/lib/risk";
@@ -40,7 +40,7 @@ export function AdminView() {
   const [liquidating, setLiquidating] = useState<OpenLoan | null>(null);
 
   const { data, loading, error, reload } = useAsyncData(async () => {
-    const [config, loans] = await Promise.all([zafra.getConfig(), zafra.getOpenLoans()]);
+    const [config, loans] = await Promise.all([arva.getConfig(), arva.getOpenLoans()]);
     return { config, loans };
   });
 
@@ -202,7 +202,7 @@ export function AdminView() {
           }
           confirmLabel={t("admin.price.confirm", { price: f.usdc(newPrice) })}
           successText={t("admin.price.success", { price: f.usdc(newPrice) })}
-          action={() => zafra.setPrice(newPrice)}
+          action={() => arva.setPrice(newPrice)}
           onSuccess={() => setCustom("")}
         />
       )}
@@ -314,7 +314,7 @@ function LiquidateDialog({
       blockers={blockers}
       confirmLabel={t("admin.liq.confirm", { silo: warrant.siloId })}
       successText={t("admin.liq.success", { silo: warrant.siloId })}
-      action={() => zafra.liquidate(warrant.address)}
+      action={() => arva.liquidate(warrant.address)}
     />
   );
 }

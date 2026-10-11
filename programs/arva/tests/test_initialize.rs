@@ -2,7 +2,7 @@ mod common;
 
 use {
     anchor_lang::{solana_program::instruction::error::InstructionError, AccountDeserialize},
-    zafra::state::Config,
+    arva::state::Config,
     common::*,
     solana_keypair::Keypair,
     solana_signer::Signer,

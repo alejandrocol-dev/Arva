@@ -5,12 +5,12 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { CircleCheck, LoaderCircle } from "lucide-react";
 import {
-  zafra,
+  arva,
   Grain,
   isRealMode,
   suggestNextSiloId,
   type Warrant,
-} from "@/lib/zafra";
+} from "@/lib/arva";
 import { useFmt, useT } from "@/lib/i18n";
 import { useView } from "@/lib/nav";
 import { useAsyncData } from "@/lib/use-async";
@@ -45,7 +45,7 @@ export function CertifierView() {
   const [issued, setIssued] = useState<Warrant | null>(null);
 
   const { data } = useAsyncData(async () => {
-    const [config, warrants] = await Promise.all([zafra.getConfig(), zafra.getAllWarrants()]);
+    const [config, warrants] = await Promise.all([arva.getConfig(), arva.getAllWarrants()]);
     return { config, taken: warrants.map((w) => w.siloId) };
   });
   const suggestion = data ? suggestNextSiloId(data.taken) : "";
@@ -68,7 +68,7 @@ export function CertifierView() {
     setSilo("checking");
     let cancelled = false;
     const timer = window.setTimeout(() => {
-      zafra
+      arva
         .siloIdExists(id)
         .then((exists) => !cancelled && setSilo(exists ? "taken" : "free"))
         .catch(() => !cancelled && setSilo("idle"));
@@ -245,7 +245,7 @@ export function CertifierView() {
         successText={t("cert.issued.body", { tons: f.tons(tonsNum), silo: siloId.trim() })}
         nextAction={{ label: t("cert.issued.cta"), onClick: () => setView("borrow") }}
         action={async () => {
-          const res = await zafra.registerWarrant({
+          const res = await arva.registerWarrant({
             siloId: siloId.trim(),
             grain: Grain.Soybean,
             tons: tonsNum,

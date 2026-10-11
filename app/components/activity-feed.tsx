@@ -11,7 +11,7 @@ import {
   Undo2,
   type LucideIcon,
 } from "lucide-react";
-import { zafra, type ActivityKind } from "@/lib/zafra";
+import { arva, type ActivityKind } from "@/lib/arva";
 import { explorerTxUrl } from "@/lib/format";
 import { useFmt, useT, type MessageKey } from "@/lib/i18n";
 import { useAsyncData } from "@/lib/use-async";
@@ -33,7 +33,7 @@ const KIND: Record<ActivityKind, { icon: LucideIcon; label: MessageKey; tile: st
 export function ActivityTicker({ limit = 8, label }: { limit?: number; label?: string }) {
   const t = useT();
   const f = useFmt();
-  const { data } = useAsyncData(() => zafra.getRecentActivity(limit), limit);
+  const { data } = useAsyncData(() => arva.getRecentActivity(limit), limit);
   const items = (data ?? []).filter((a) => !a.failed && a.kind !== "other");
   if (items.length < 3) return null;
   return (
@@ -72,7 +72,7 @@ export function ActivityTicker({ limit = 8, label }: { limit?: number; label?: s
 export function ActivityFeed({ limit = 8 }: { limit?: number }) {
   const t = useT();
   const f = useFmt();
-  const { data, error, loading, reload } = useAsyncData(() => zafra.getRecentActivity(limit), limit);
+  const { data, error, loading, reload } = useAsyncData(() => arva.getRecentActivity(limit), limit);
 
   if (error && !data)
     return (

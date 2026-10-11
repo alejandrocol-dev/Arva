@@ -6,7 +6,7 @@ use {
         solana_program::instruction::error::InstructionError,
         AccountDeserialize,
     },
-    zafra::state::{warrant_status, Warrant},
+    arva::state::{warrant_status, Warrant},
     anchor_spl::associated_token::get_associated_token_address,
     common::*,
     solana_keypair::Keypair,

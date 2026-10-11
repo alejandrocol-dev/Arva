@@ -5,7 +5,7 @@ import * as os from "os";
 import * as path from "path";
 
 async function main() {
-  const IDL = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../target/idl/zafra.json"), "utf8"));
+  const IDL = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../target/idl/arva.json"), "utf8"));
   const conn = new Connection("https://api.devnet.solana.com", "confirmed");
   const kp = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(fs.readFileSync(path.join(os.homedir(), ".config/solana/id.json"), "utf8"))));
   setProvider(new AnchorProvider(conn, new Wallet(kp), { commitment: "confirmed" }));

@@ -1,7 +1,7 @@
 /**
- * Real Zafra client — the on-chain implementation of `ZafraClient`
- * from `./zafra.ts`, built on @coral-xyz/anchor + the generated IDL
- * (`idl/zafra.json`, camelCase type in `./zafra.idl.ts`).
+ * Real Arva client — the on-chain implementation of `ArvaClient`
+ * from `./arva.ts`, built on @coral-xyz/anchor + the generated IDL
+ * (`idl/arva.json`, camelCase type in `./arva.idl.ts`).
  *
  * Cluster is devnet-only, enforced by the caller (AppProviders pins the
  * Connection to devnet; the verify script uses clusterApiUrl("devnet")).
@@ -10,8 +10,8 @@
  * (1 = 1 USDC / 1 ton). Conversion to u64 base units happens at this
  * boundary — USDC has 6 decimals, warrant tokens have 0.
  *
- * This module is lazy-loaded (`await import("./zafra-real")`) by the
- * router in `./zafra.ts` so anchor never lands in the default bundle.
+ * This module is lazy-loaded (`await import("./arva-real")`) by the
+ * router in `./arva.ts` so anchor never lands in the default bundle.
  */
 import { AnchorError, AnchorProvider, BN, Program } from "@coral-xyz/anchor";
 import {
@@ -29,18 +29,18 @@ import {
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 
-import idlJson from "../idl/zafra.json";
-import type { Zafra } from "./zafra.idl";
+import idlJson from "../idl/arva.json";
+import type { Arva } from "./arva.idl";
 import {
   accruedDebt,
   activityKindFromLogs,
   AgroError,
   type Activity,
-  ZafraError,
+  ArvaError,
   collateralValue,
   healthFactor,
   LoanStatus,
-  type ZafraClient,
+  type ArvaClient,
   type Config,
   type Loan,
   type OpenLoan,
@@ -50,17 +50,17 @@ import {
   type Warrant,
   type WalletBalances,
   type WarrantPosition,
-} from "./zafra";
+} from "./arva";
 
 // ---------------------------------------------------------------------------
 // Signer abstraction — matches @solana/wallet-adapter's AnchorWallet and the
 // anchor `Wallet` interface (AnchorProvider constructor parameter).
 // ---------------------------------------------------------------------------
 
-export type ZafraWallet = ConstructorParameters<typeof AnchorProvider>[1];
+export type ArvaWallet = ConstructorParameters<typeof AnchorProvider>[1];
 
 /** Placeholder signer for read-only access (writes fail fast on the client). */
-class ReadOnlyWallet implements ZafraWallet {
+class ReadOnlyWallet implements ArvaWallet {
   publicKey = PublicKey.default;
 
   signTransaction<T extends Transaction | VersionedTransaction>(
@@ -87,7 +87,7 @@ class ReadOnlyWallet implements ZafraWallet {
 }
 
 // ---------------------------------------------------------------------------
-// PDA seeds (docs/SPEC.md, mirrored by programs/zafra/src/constants.rs)
+// PDA seeds (docs/SPEC.md, mirrored by programs/arva/src/constants.rs)
 // ---------------------------------------------------------------------------
 
 export const PROGRAM_ID = new PublicKey(idlJson.address);
@@ -172,10 +172,10 @@ interface DecodedLoan {
 }
 
 // ---------------------------------------------------------------------------
-// Error mapping — on-chain AgroError code -> ZafraError with variant name
+// Error mapping — on-chain AgroError code -> ArvaError with variant name
 // ---------------------------------------------------------------------------
 
-/** AgroError discriminants, in IDL order (programs/zafra/src/error.rs). */
+/** AgroError discriminants, in IDL order (programs/arva/src/error.rs). */
 const AGRO_ERROR_BY_CODE: Record<number, AgroError> = {
   6000: AgroError.NotAdmin,
   6001: AgroError.NotCertifier,
@@ -191,31 +191,31 @@ const AGRO_ERROR_BY_CODE: Record<number, AgroError> = {
   6011: AgroError.PriceNotSet,
 };
 
-/** Unwrap Anchor/RPC errors into ZafraError when a known code is found. */
+/** Unwrap Anchor/RPC errors into ArvaError when a known code is found. */
 function mapError(err: unknown): unknown {
   if (err instanceof AnchorError) {
     const code = AGRO_ERROR_BY_CODE[err.error.errorCode.number];
-    if (code !== undefined) return new ZafraError(code);
+    if (code !== undefined) return new ArvaError(code);
   }
   return err;
 }
 
 const SETUP_HINT =
-  "Zafra Config account not found on devnet — run setup-devnet first " +
+  "Arva Config account not found on devnet — run setup-devnet first " +
   "(scripts/setup-devnet.ts initializes Config, the USDC mint and the pool).";
 
 // ---------------------------------------------------------------------------
 // Client
 // ---------------------------------------------------------------------------
 
-export class RealZafraClient implements ZafraClient {
-  readonly program: Program<Zafra>;
+export class RealArvaClient implements ArvaClient {
+  readonly program: Program<Arva>;
   readonly provider: AnchorProvider;
   private readonly commitment: Commitment;
 
   constructor(
     connection: Connection,
-    wallet?: ZafraWallet | null,
+    wallet?: ArvaWallet | null,
     commitment: Commitment = "confirmed",
   ) {
     this.commitment = commitment;
@@ -224,7 +224,7 @@ export class RealZafraClient implements ZafraClient {
       wallet ?? new ReadOnlyWallet(),
       { commitment },
     );
-    this.program = new Program<Zafra>(idlJson, this.provider);
+    this.program = new Program<Arva>(idlJson, this.provider);
   }
 
   // -- reads ---------------------------------------------------------------
@@ -613,7 +613,7 @@ export class RealZafraClient implements ZafraClient {
     return new PublicKey(config.usdcMint);
   }
 
-  /** Sign + send + confirm, mapping on-chain errors to ZafraError. */
+  /** Sign + send + confirm, mapping on-chain errors to ArvaError. */
   private async send(tx: Transaction): Promise<string> {
     try {
       return await this.provider.sendAndConfirm(tx, [], {

@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { Pause, Play, RotateCcw } from "lucide-react";
-import { DEFAULT_PRICE_PER_TON, type Config } from "@/lib/zafra";
+import { DEFAULT_PRICE_PER_TON, type Config } from "@/lib/arva";
 import { useFmt, useT } from "@/lib/i18n";
 import { useInView, useReducedMotion } from "@/lib/use-motion";
 import { priceBuffer, riskTier } from "@/lib/risk";

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { ChevronDown, LogOut, Wallet } from "lucide-react";
-import { zafra } from "@/lib/zafra";
+import { arva } from "@/lib/arva";
 import { shortenAddress } from "@/lib/format";
 import { useFmt, useT } from "@/lib/i18n";
 import { useAsyncData } from "@/lib/use-async";
@@ -26,7 +26,7 @@ export function WalletButton({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
   const { data: balances } = useAsyncData(
     () =>
       open && publicKey
-        ? zafra.getWalletBalances(publicKey.toBase58())
+        ? arva.getWalletBalances(publicKey.toBase58())
         : Promise.resolve(null),
     `${publicKey?.toBase58() ?? "none"}:${open}`,
   );

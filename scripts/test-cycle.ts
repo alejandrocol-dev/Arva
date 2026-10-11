@@ -1,5 +1,5 @@
 /**
- * test-cycle.ts — Zafra e2e check on devnet: borrow -> verify -> repay -> verify.
+ * test-cycle.ts — Arva e2e check on devnet: borrow -> verify -> repay -> verify.
  *
  * Uses the solana-cli keypair (~/.config/solana/id.json) as the single demo wallet.
  * Requires setup-devnet.ts to have run first (Config, funded pool, SILO-TUC-001 warrant).
@@ -25,7 +25,7 @@ import * as os from "os";
 import * as path from "path";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
-const IDL_PATH = path.join(REPO_ROOT, "target", "idl", "zafra.json");
+const IDL_PATH = path.join(REPO_ROOT, "target", "idl", "arva.json");
 const KEYPAIR_PATH = path.join(os.homedir(), ".config", "solana", "id.json");
 const RPC_URL = process.env.RPC_URL ?? "https://api.devnet.solana.com";
 const SILO_ID = process.env.SILO_ID ?? "SILO-TUC-001";
@@ -81,7 +81,7 @@ async function main() {
   const program = new Program(idl, provider) as any;
   const programId: PublicKey = program.programId;
 
-  console.log("== Zafra e2e cycle: borrow -> repay ==");
+  console.log("== Arva e2e cycle: borrow -> repay ==");
   console.log("program:", programId.toBase58());
   console.log("wallet :", payer.publicKey.toBase58());
 

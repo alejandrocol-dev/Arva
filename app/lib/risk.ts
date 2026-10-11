@@ -5,7 +5,7 @@ import {
   type Config,
   type Loan,
   type Warrant,
-} from "./zafra";
+} from "./arva";
 
 /**
  * Risk is expressed as the PRICE BUFFER: how far the grain price can fall

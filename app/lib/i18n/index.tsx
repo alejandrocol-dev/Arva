@@ -15,7 +15,7 @@ export type Locale = "en" | "es";
 export type { MessageKey };
 export type TranslateFn = (key: MessageKey, params?: Record<string, string | number>) => string;
 
-const STORAGE_KEY = "zafra.locale";
+const STORAGE_KEY = "arva.locale";
 const DICTS: Record<Locale, Record<MessageKey, string>> = { en, es };
 
 type Params = Record<string, string | number>;

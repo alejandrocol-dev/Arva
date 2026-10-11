@@ -7,10 +7,10 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-zafra = "AERC53ZiqizgjYdJK9hCeGtSk6PfzwnEn2z3wkMKiqiJ"
+arva = "AERC53ZiqizgjYdJK9hCeGtSk6PfzwnEn2z3wkMKiqiJ"
 
 [programs.devnet]
-zafra = "AERC53ZiqizgjYdJK9hCeGtSk6PfzwnEn2z3wkMKiqiJ"
+arva = "AERC53ZiqizgjYdJK9hCeGtSk6PfzwnEn2z3wkMKiqiJ"
 
 [provider]
 cluster = "localnet"

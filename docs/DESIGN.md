@@ -1,4 +1,4 @@
-# DESIGN — Zafra UI/UX brief
+# DESIGN — Arva UI/UX brief
 
 Goal: make the demo look and feel like a mainstream fintech/DeFi product (think Kamino / Aave / Morpho / a neobank), not a developer dashboard. Judges and first-time users must understand in 10 seconds: **who it's for, what they get, what it costs, and what can go wrong.** All UI copy ships in **English and Spanish (es-AR, voseo)** with a language switch.
 
@@ -6,13 +6,13 @@ Research basis (web3ux.design "Loans, Health, TVL" and "Transaction flows", Sail
 
 Non-negotiables
 - Devnet only. Never imply real money. Persistent, friendly notice: "Demo on Solana devnet — test funds, no real money" (ES: "Demo en Solana devnet — fondos de prueba, sin dinero real").
-- Keep the data layer contract: `lib/zafra.ts` (`ZafraClient`) and `lib/zafra-real.ts`. Additive helpers are OK; do not break existing signatures. Never fall back to mock data when `NEXT_PUBLIC_USE_REAL=true`.
+- Keep the data layer contract: `lib/arva.ts` (`ArvaClient`) and `lib/arva-real.ts`. Additive helpers are OK; do not break existing signatures. Never fall back to mock data when `NEXT_PUBLIC_USE_REAL=true`.
 - Do not touch `programs/`, `scripts/`, `docs/SPEC.md`.
 - `npm run build`, `npm run lint` and `npx tsc --noEmit` must pass.
 
 ## 1. Information architecture
 
-Top nav (sticky): logo wordmark **Zafra** · "Overview" · "Borrow" (Producer) · "Earn" (Investor) · "Demo tools" dropdown (Certifier, Admin — labelled *Simulated by Zafra team*) · language switch (EN | ES) · wallet button.
+Top nav (sticky): logo wordmark **Arva** · "Overview" · "Borrow" (Producer) · "Earn" (Investor) · "Demo tools" dropdown (Certifier, Admin — labelled *Simulated by Arva team*) · language switch (EN | ES) · wallet button.
 
 Naming (EN → ES):
 - Warrant → *Warrant (certificado de depósito)*, first mention explains it; afterwards "warrant"

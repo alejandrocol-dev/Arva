@@ -1,8 +1,8 @@
 {
-  "name": "zafra-scripts",
+  "name": "arva-scripts",
   "version": "0.1.0",
   "private": true,
-  "description": "Devnet tooling for the Zafra demo",
+  "description": "Devnet tooling for the Arva demo",
   "scripts": {
     "setup:devnet": "tsx scripts/setup-devnet.ts"
   },

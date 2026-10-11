@@ -16,21 +16,21 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import {
-  zafra,
+  arva,
   DEFAULT_PRICE_PER_TON,
   LoanStatus,
   WarrantStatus,
   type Config,
   type PoolStats,
   type Warrant,
-} from "@/lib/zafra";
+} from "@/lib/arva";
 import { useFmt, useT, type MessageKey } from "@/lib/i18n";
 import { useView, type View } from "@/lib/nav";
 import { useAsyncData } from "@/lib/use-async";
 import { positionRisk } from "@/lib/risk";
 import { ActivityFeed } from "@/components/activity-feed";
 import { BarList, Donut, Legend } from "@/components/charts";
-import { ZafraMark } from "@/components/logo";
+import { ArvaMark } from "@/components/logo";
 import { Badge, Button, Card, IconTile, Notice, ProgressBar, Skeleton, cx, type IconTileTone } from "@/components/ui";
 
 export function OverviewView() {
@@ -38,9 +38,9 @@ export function OverviewView() {
   const [, setView] = useView();
   const { data, error, loading, reload } = useAsyncData(async () => {
     const [stats, config, warrants] = await Promise.all([
-      zafra.getPoolStats(),
-      zafra.getConfig(),
-      zafra.getAllWarrants(),
+      arva.getPoolStats(),
+      arva.getConfig(),
+      arva.getAllWarrants(),
     ]);
     return { stats, config, warrants };
   });
@@ -130,9 +130,9 @@ function DemoHero({ onGo }: { onGo: (v: View) => void }) {
   const { data } = useAsyncData(async () => {
     if (!owner) return null;
     const [positions, config, openLoans] = await Promise.all([
-      zafra.getMyWarrants(owner),
-      zafra.getConfig(),
-      zafra.getOpenLoans(),
+      arva.getMyWarrants(owner),
+      arva.getConfig(),
+      arva.getOpenLoans(),
     ]);
     const mine = positions.filter((p) => p.warrant.owner === owner);
     const underwater = openLoans.some(
@@ -158,7 +158,7 @@ function DemoHero({ onGo }: { onGo: (v: View) => void }) {
       <div aria-hidden className="av-grid pointer-events-none absolute inset-0 opacity-50" />
       <div aria-hidden className="av-float pointer-events-none absolute -left-20 -top-24 size-72 rounded-full bg-brand/30 blur-3xl" />
       <div aria-hidden className="pointer-events-none absolute -bottom-24 right-10 size-64 rounded-full bg-peach/15 blur-3xl" />
-      <ZafraMark white className="pointer-events-none absolute -bottom-10 left-[36%] hidden size-52 opacity-[0.06] lg:block" />
+      <ArvaMark white className="pointer-events-none absolute -bottom-10 left-[36%] hidden size-52 opacity-[0.06] lg:block" />
       <div className="relative grid gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.6fr)] lg:items-center">
         <div>
           <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-brand-glow backdrop-blur">

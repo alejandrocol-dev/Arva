@@ -140,7 +140,7 @@ Argentina already has a legal instrument over that asset: the **warrant**, a cre
 **Test USDC mint:** `12KPRGKraqyydu8favsGtMGqqm23YUEwgc3TVHGwjuef`
 
 ```
-programs/zafra/   Anchor program (src/, tests/)
+programs/arva/   Anchor program (src/, tests/)
 app/              Next.js frontend (landing at public/index.html, app at /app)
 scripts/          Devnet scripts (TS)
 docs/SPEC.md      Technical contract (takes precedence over code)

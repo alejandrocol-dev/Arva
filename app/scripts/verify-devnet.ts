@@ -1,5 +1,5 @@
 /**
- * Read-only devnet smoke check for the real Zafra client.
+ * Read-only devnet smoke check for the real Arva client.
  *
  *   npm run verify:devnet        (npx tsx scripts/verify-devnet.ts)
  *
@@ -8,7 +8,7 @@
  *
  * Env vars (nothing secret is ever committed):
  *   KEYPAIR_PATH       — keypair JSON, default ~/.config/solana/id.json
- *   ZAFRA_RPC_URL  — RPC endpoint, default public devnet
+ *   ARVA_RPC_URL  — RPC endpoint, default public devnet
  */
 import { readFileSync } from "node:fs";
 import { homedir } from "node:os";
@@ -16,11 +16,11 @@ import { join } from "node:path";
 import { Wallet as NodeWallet } from "@coral-xyz/anchor";
 import { clusterApiUrl, Connection, Keypair } from "@solana/web3.js";
 
-import { PROGRAM_ID, RealZafraClient } from "../lib/zafra-real";
+import { PROGRAM_ID, RealArvaClient } from "../lib/arva-real";
 
 async function main() {
   const rpcUrl =
-    process.env.ZAFRA_RPC_URL ??
+    process.env.ARVA_RPC_URL ??
     process.env.SOLANA_RPC_URL ??
     clusterApiUrl("devnet");
   const keypairPath =
@@ -29,12 +29,12 @@ async function main() {
   const secret = JSON.parse(readFileSync(keypairPath, "utf8")) as number[];
   const payer = Keypair.fromSecretKey(Uint8Array.from(secret));
 
-  const client = new RealZafraClient(
+  const client = new RealArvaClient(
     new Connection(rpcUrl, "confirmed"),
     new NodeWallet(payer),
   );
 
-  console.log(`Zafra devnet verify`);
+  console.log(`Arva devnet verify`);
   console.log(`  program : ${PROGRAM_ID.toBase58()}`);
   console.log(`  rpc     : ${rpcUrl}`);
   console.log(`  keypair : ${payer.publicKey.toBase58()} (${keypairPath})`);

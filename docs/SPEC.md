@@ -1,8 +1,8 @@
-# SPEC — Zafra (contrato técnico)
+# SPEC — Arva (contrato técnico)
 
 > **Este archivo es el contrato entre los subagentes.** El programa y el frontend se construyen contra esto, no uno contra el otro. Si algo cambia, cambia acá primero.
 
-## Programa Anchor `zafra` (un solo programa)
+## Programa Anchor `arva` (un solo programa)
 
 ### Cuentas
 
@@ -43,7 +43,7 @@ El warrant es un **mint SPL clásico** (0 decimales, supply = toneladas) con aut
 
 ## Tests — Rust con LiteSVM (`cargo test`)
 
-> Anchor 1.1.2 genera la plantilla moderna: tests en `programs/zafra/tests/*.rs` con `litesvm`, que cargan el `.so` compilado y corren en proceso (rápido, sin validador). Se corre con `cargo test` desde la raíz del repo. Opcional extra: tests TS contra devnet real más adelante.
+> Anchor 1.1.2 genera la plantilla moderna: tests en `programs/arva/tests/*.rs` con `litesvm`, que cargan el `.so` compilado y corren en proceso (rápido, sin validador). Se corre con `cargo test` desde la raíz del repo. Opcional extra: tests TS contra devnet real más adelante.
 
 Feliz: initialize → set_price → deposit → register → borrow → repay.
 Negativos: LTV excedido; no-certifier registra; no-admin cambia precio; doble borrow sobre el mismo warrant; borrow de quien no es owner; liquidate sobre préstamo sano; liquidate tras caída de precio (pasa); pool sin liquidez suficiente.
@@ -57,7 +57,7 @@ Negativos: LTV excedido; no-certifier registra; no-admin cambia precio; doble bo
   - **Investor:** depositar USDC de prueba al pool; ver liquidez y (si está) rendimiento.
   - **Admin:** set price (con botón "Simulate price drop −30%") y `liquidate` sobre posiciones abiertas.
 - Cada transacción muestra su link al explorador (devnet).
-- Datos: primero capa **simulada detrás de una interfaz tipada** (`lib/zafra.ts`), después se reemplaza por el cliente real generado desde el IDL.
+- Datos: primero capa **simulada detrás de una interfaz tipada** (`lib/arva.ts`), después se reemplaza por el cliente real generado desde el IDL.
 
 ## Scripts (`scripts/`)
 

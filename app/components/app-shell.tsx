@@ -20,7 +20,7 @@ import { explorerAddressUrl, shortenAddress } from "@/lib/format";
 import { cx } from "@/components/ui";
 import { GuidedTour, useTourAutoStart } from "./guided-tour";
 import { LocaleSwitch } from "./locale-switch";
-import { ZafraLockup, ZafraMark } from "./logo";
+import { ArvaLockup, ArvaMark } from "./logo";
 import { SiteFooter } from "./site-footer";
 import { WalletButton } from "./wallet-button";
 
@@ -88,7 +88,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="flex min-h-dvh">
       <aside className="sticky top-0 hidden h-dvh w-[264px] shrink-0 flex-col border-r border-line bg-surface lg:flex">
         <Link href="/" className="flex items-center border-b border-line px-6 pb-5 pt-6 mb-5" aria-label={t("common.brand")}>
-          <ZafraLockup />
+          <ArvaLockup />
         </Link>
 
         <nav className="flex-1 space-y-7 overflow-y-auto px-4" aria-label="Main">
@@ -118,7 +118,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="space-y-3 p-4">
           <div className="av-night av-glow-line relative overflow-hidden rounded-2xl p-4 text-white">
             <div aria-hidden className="av-grid pointer-events-none absolute inset-0 opacity-60" />
-            <ZafraMark white className="pointer-events-none absolute -bottom-6 -right-6 size-24 opacity-10" />
+            <ArvaMark white className="pointer-events-none absolute -bottom-6 -right-6 size-24 opacity-10" />
             <div className="relative">
               <p className="flex items-center gap-2 text-xs font-semibold">
                 <span className="relative flex size-2">
@@ -151,7 +151,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-8">
             <div className="flex min-w-0 items-center gap-3">
               <Link href="/" className="lg:hidden" aria-label={t("common.brand")}>
-                <ZafraMark className="size-9" />
+                <ArvaMark className="size-9" />
               </Link>
               <div className="hidden min-w-0 sm:block">
                 <p className="truncate font-display text-base font-bold text-ink">{t(current.label)}</p>

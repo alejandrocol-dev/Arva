@@ -1,4 +1,4 @@
-# Zafra — Frontend
+# Arva — Frontend
 
 Next.js 16 (App Router) + TypeScript + Tailwind v4 + Solana wallet adapter.
 **Devnet only.** See `../docs/SPEC.md` for the product contract.
@@ -17,7 +17,7 @@ Optional: copy `.env.example` → `.env.local` to override the devnet RPC
 
 ## Structure
 
-- `lib/zafra.ts` — typed data layer (`ZafraClient` interface) matching
+- `lib/arva.ts` — typed data layer (`ArvaClient` interface) matching
   the SPEC accounts/instructions. Currently a **mock** with in-memory state,
   artificial latency and fake tx signatures; swap the singleton export for the
   real IDL-generated client without touching the views.

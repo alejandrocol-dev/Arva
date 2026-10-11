@@ -26,7 +26,7 @@ const TOURS: Record<View, { steps: Step[]; next?: View }> = {
 
 /* ------------------------------ persistence ------------------------------- */
 
-const STORAGE_KEY = "zafra.tour.v1";
+const STORAGE_KEY = "arva.tour.v1";
 type Stored = { seen: View[]; off: boolean };
 
 function readStored(): Stored {

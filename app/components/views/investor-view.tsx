@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Coins, TrendingUp, Wheat } from "lucide-react";
-import { zafra, type Config, type PoolStats } from "@/lib/zafra";
+import { arva, type Config, type PoolStats } from "@/lib/arva";
 import { MIN_SOL_FOR_FEES } from "@/lib/constants";
 import { useFmt, useT } from "@/lib/i18n";
 import { useAsyncData } from "@/lib/use-async";
@@ -38,9 +38,9 @@ export function InvestorView() {
 
   const { data, loading, error, reload } = useAsyncData(async () => {
     const [stats, config, balances] = await Promise.all([
-      zafra.getPoolStats(),
-      zafra.getConfig(),
-      owner ? zafra.getWalletBalances(owner) : Promise.resolve(null),
+      arva.getPoolStats(),
+      arva.getConfig(),
+      owner ? arva.getWalletBalances(owner) : Promise.resolve(null),
     ]);
     return { stats, config, balances };
   }, owner);
@@ -152,7 +152,7 @@ export function InvestorView() {
           ]}
           confirmLabel={t("earn.confirm", { amount: f.usdc(amountNum) })}
           successText={t("earn.success", { amount: f.usdc(amountNum, false) })}
-          action={() => zafra.depositLiquidity(amountNum)}
+          action={() => arva.depositLiquidity(amountNum)}
           onSuccess={() => setAmount("")}
         />
       )}

@@ -51,6 +51,6 @@ pub fn handle_initialize(
     config.annual_interest_bps = annual_interest_bps;
     config.bump = ctx.bumps.config;
 
-    msg!("Zafra initialized");
+    msg!("Arva initialized");
     Ok(())
 }

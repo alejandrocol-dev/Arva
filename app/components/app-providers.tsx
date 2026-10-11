@@ -12,7 +12,7 @@ import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { clusterApiUrl } from "@solana/web3.js";
 
-import { setZafraRuntime } from "@/lib/zafra";
+import { setArvaRuntime } from "@/lib/arva";
 
 import "@solana/wallet-adapter-react-ui/styles.css";
 
@@ -32,7 +32,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
     <ConnectionProvider endpoint={ENDPOINT}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
-          <ZafraRuntimeBridge />
+          <ArvaRuntimeBridge />
           {children}
         </WalletModalProvider>
       </WalletProvider>
@@ -41,17 +41,17 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 
 /**
- * Publishes the connected wallet + devnet connection to the zafra client
- * router (lib/zafra.ts). Only consumed when NEXT_PUBLIC_USE_REAL=true —
+ * Publishes the connected wallet + devnet connection to the arva client
+ * router (lib/arva.ts). Only consumed when NEXT_PUBLIC_USE_REAL=true —
  * with the mock active this is a harmless no-op.
  */
-function ZafraRuntimeBridge() {
+function ArvaRuntimeBridge() {
   const { connection } = useConnection();
   const wallet = useAnchorWallet();
 
   useEffect(() => {
-    setZafraRuntime(wallet ? { connection, wallet } : null);
-    return () => setZafraRuntime(null);
+    setArvaRuntime(wallet ? { connection, wallet } : null);
+    return () => setArvaRuntime(null);
   }, [connection, wallet]);
 
   return null;

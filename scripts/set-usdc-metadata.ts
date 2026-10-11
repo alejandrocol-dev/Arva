@@ -134,7 +134,7 @@ async function main() {
   const mint = new PublicKey(env.USDC_MINT);
   const metadata = metadataPda(mint);
 
-  console.log("== Zafra: set test-USDC metadata (devnet) ==");
+  console.log("== Arva: set test-USDC metadata (devnet) ==");
   console.log("mint     :", mint.toBase58());
   console.log("metadata :", metadata.toBase58());
   console.log("payer    :", payer.publicKey.toBase58());

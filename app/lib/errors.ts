@@ -1,4 +1,4 @@
-import { AgroError, ZafraError } from "./zafra";
+import { AgroError, ArvaError } from "./arva";
 import type { MessageKey } from "./i18n/messages";
 
 export interface FriendlyError {
@@ -44,7 +44,7 @@ function programError(variant: AgroError): FriendlyError {
 
 /** Turn anything thrown by wallet / RPC / program into translatable keys. */
 export function translateError(err: unknown): FriendlyError {
-  if (err instanceof ZafraError) return programError(err.code);
+  if (err instanceof ArvaError) return programError(err.code);
 
   const technical = rawMessage(err);
   const lower = technical.toLowerCase();

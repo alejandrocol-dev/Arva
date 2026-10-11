@@ -30,7 +30,7 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import { zafra, DEFAULT_PRICE_PER_TON, type Config } from "@/lib/zafra";
+import { arva, DEFAULT_PRICE_PER_TON, type Config } from "@/lib/arva";
 import { PROGRAM_ID } from "@/lib/constants";
 import { explorerAddressUrl } from "@/lib/format";
 import { useFmt, useT, type MessageKey } from "@/lib/i18n";
@@ -40,11 +40,11 @@ import { ActivityTicker } from "@/components/activity-feed";
 import { SplitBar } from "@/components/charts";
 import { CountUp, Marquee, Reveal, RotatingWord, ScrollProgress } from "@/components/motion";
 import { LocaleSwitch } from "@/components/locale-switch";
-import { ZafraLockup, ZafraMark } from "@/components/logo";
+import { ArvaLockup, ArvaMark } from "@/components/logo";
 import { RiskSimulator } from "@/components/risk-simulator";
 import { Button, IconTile, Skeleton, cx } from "@/components/ui";
 
-const GITHUB_URL = "https://github.com/alejandrocol-dev/zafra";
+const GITHUB_URL = "https://github.com/alejandrocol-dev/arva";
 
 /* Canonical demo example: 100 t of soy. USD figures come from the on-chain
    Config when it loads (fallback: the 380 USDC/t reference parameters). */
@@ -84,7 +84,7 @@ function exampleLoan(config: Config | null | undefined): ExampleLoan {
 }
 
 export function LandingPage() {
-  const { data: config } = useAsyncData(() => zafra.getConfig());
+  const { data: config } = useAsyncData(() => arva.getConfig());
   const ex = exampleLoan(config);
   return (
     <div className="flex min-h-dvh flex-col bg-surface">
@@ -138,8 +138,8 @@ function LandingNav() {
       )}
     >
       <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-2 px-4 py-4 sm:gap-4 sm:px-8">
-        <Link href="/" aria-label="Zafra">
-          <ZafraLockup white={!scrolled} />
+        <Link href="/" aria-label="Arva">
+          <ArvaLockup white={!scrolled} />
         </Link>
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Landing">
           {links.map(([href, key]) => (
@@ -355,9 +355,9 @@ function LiveStrip() {
   const f = useFmt();
   const { data, error, reload } = useAsyncData(async () => {
     const [stats, config, warrants] = await Promise.all([
-      zafra.getPoolStats(),
-      zafra.getConfig(),
-      zafra.getAllWarrants(),
+      arva.getPoolStats(),
+      arva.getConfig(),
+      arva.getAllWarrants(),
     ]);
     return { stats, config, tons: warrants.reduce((s, w) => s + w.tons, 0), count: warrants.length };
   });
@@ -830,7 +830,7 @@ function AppPreview() {
               <span className="size-2.5 rounded-full bg-danger/50" />
               <span className="size-2.5 rounded-full bg-warn/50" />
               <span className="size-2.5 rounded-full bg-brand/60" />
-              <span className="ml-3 truncate font-mono text-[11px] text-faint">zafra-gilt.vercel.app/app</span>
+              <span className="ml-3 truncate font-mono text-[11px] text-faint">arva-gilt.vercel.app/app</span>
             </div>
             <Image src="/landing/app-dashboard-v2.jpg" alt={t("landing.preview.alt")} width={1400} height={1118} sizes="(min-width: 1024px) 700px, 100vw" className="h-auto w-full" />
           </div>
@@ -1026,7 +1026,7 @@ function FinalCta() {
         <div aria-hidden className="av-grid pointer-events-none absolute inset-0 opacity-60" />
         <div aria-hidden className="pointer-events-none absolute -bottom-32 left-1/2 size-[420px] -translate-x-1/2 rounded-full bg-brand/25 blur-3xl" />
         <div className="relative">
-          <ZafraMark white className="mx-auto size-16" />
+          <ArvaMark white className="mx-auto size-16" />
           <h2 className="mx-auto mt-6 max-w-2xl text-3xl font-extrabold leading-[1.1] sm:text-5xl">{t("landing.cta.title")}</h2>
           <p className="mx-auto mt-4 max-w-xl text-base text-white/70 sm:text-lg">{t("landing.cta.body")}</p>
           <div className="mt-9 flex flex-wrap justify-center gap-3">
@@ -1056,7 +1056,7 @@ function LandingFooter() {
     <footer className="bg-navy-deep px-5 py-14 text-white/60 sm:px-8">
       <div className="mx-auto grid max-w-[1200px] gap-10 lg:grid-cols-[1fr_1.4fr]">
         <div>
-          <ZafraLockup white />
+          <ArvaLockup white />
           <p className="mt-4 font-display text-lg font-bold text-white">{t("landing.footer.tagline")}</p>
         </div>
         <div className="space-y-4 text-xs leading-relaxed">

@@ -4,7 +4,7 @@ use {
     anchor_lang::{
         solana_program::instruction::error::InstructionError, AccountDeserialize,
     },
-    zafra::state::{loan_status, warrant_status, Loan, Warrant},
+    arva::state::{loan_status, warrant_status, Loan, Warrant},
     anchor_spl::associated_token::get_associated_token_address,
     common::*,
     solana_keypair::Keypair,

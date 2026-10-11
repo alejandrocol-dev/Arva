@@ -1,14 +1,14 @@
 /**
- * Zafra data layer.
+ * Arva data layer.
  *
  * Everything the UI needs from the on-chain program goes through the
- * `ZafraClient` interface below. The exported `zafra` singleton is a
+ * `ArvaClient` interface below. The exported `arva` singleton is a
  * MOCK implementation: it keeps in-memory state, adds artificial latency and
  * returns fake (but well-formed) transaction signatures so the UI can already
  * render devnet explorer links.
  *
  * Swap path: build the real client from the generated IDL
- * (target/idl/zafra.json), implement this same interface against it and
+ * (target/idl/arva.json), implement this same interface against it and
  * change the single export at the bottom of the file. No view code should
  * need to change.
  *
@@ -82,10 +82,10 @@ export enum AgroError {
   PriceNotSet = "PriceNotSet",
 }
 
-export class ZafraError extends Error {
+export class ArvaError extends Error {
   constructor(public readonly code: AgroError) {
     super(code);
-    this.name = "ZafraError";
+    this.name = "ArvaError";
   }
 }
 
@@ -239,7 +239,7 @@ export function suggestNextSiloId(taken: string[], prefix = "SILO-TUC-"): string
 // Client interface — implement this against the real program to go live
 // ---------------------------------------------------------------------------
 
-export interface ZafraClient {
+export interface ArvaClient {
   getConfig(): Promise<Config>;
   /** Warrants owned by `owner` (pass null to preview demo data). */
   getMyWarrants(owner: string | null): Promise<WarrantPosition[]>;
@@ -343,7 +343,7 @@ function fakeSig(): string {
 }
 
 /** Demo producer used to seed positions (and shown when no wallet is connected). */
-export const DEMO_PRODUCER = fakePubkey("zafra-demo-producer");
+export const DEMO_PRODUCER = fakePubkey("arva-demo-producer");
 
 const LATENCY_MS = 700;
 const delay = () =>
@@ -384,9 +384,9 @@ function makeWarrant(
 
 function seed(): MockState {
   const config: Config = {
-    admin: fakePubkey("zafra-admin"),
-    certifier: fakePubkey("zafra-certifier"),
-    usdcMint: fakePubkey("zafra-usdc-mint"),
+    admin: fakePubkey("arva-admin"),
+    certifier: fakePubkey("arva-certifier"),
+    usdcMint: fakePubkey("arva-usdc-mint"),
     pricePerTon: 380,
     ltvBps: 7000,
     liqThresholdBps: 8000,
@@ -395,7 +395,7 @@ function seed(): MockState {
   };
 
   const demo = DEMO_PRODUCER;
-  const otherProducer = fakePubkey("zafra-other-producer");
+  const otherProducer = fakePubkey("arva-other-producer");
 
   const w1 = makeWarrant("SILO-AR-0042", demo, config.certifier, 120, WarrantStatus.InCustody);
   const w2 = makeWarrant("SILO-AR-0117", demo, config.certifier, 80, WarrantStatus.Issued);
@@ -429,7 +429,7 @@ function seed(): MockState {
   return { config, poolTotal: 400_000, warrants: [w1, w2, w3], loans, activity };
 }
 
-class MockZafraClient implements ZafraClient {
+class MockArvaClient implements ArvaClient {
   private state = seed();
 
   async getConfig(): Promise<Config> {
@@ -504,10 +504,10 @@ class MockZafraClient implements ZafraClient {
     input: RegisterWarrantInput,
   ): Promise<TxResult & { warrant: Warrant }> {
     await delay();
-    if (!input.siloId.trim()) throw new ZafraError(AgroError.MathOverflow);
-    if (input.tons <= 0) throw new ZafraError(AgroError.MathOverflow);
+    if (!input.siloId.trim()) throw new ArvaError(AgroError.MathOverflow);
+    if (input.tons <= 0) throw new ArvaError(AgroError.MathOverflow);
     if (this.state.warrants.some((w) => w.siloId === input.siloId)) {
-      throw new ZafraError(AgroError.LoanExists);
+      throw new ArvaError(AgroError.LoanExists);
     }
     const warrant = makeWarrant(
       input.siloId.trim(),
@@ -524,10 +524,10 @@ class MockZafraClient implements ZafraClient {
     await delay();
     const warrant = this.mustWarrant(warrantAddress);
     if (warrant.status !== WarrantStatus.Issued) {
-      throw new ZafraError(AgroError.WarrantNotIssued);
+      throw new ArvaError(AgroError.WarrantNotIssued);
     }
     if (this.openLoanFor(warrantAddress)) {
-      throw new ZafraError(AgroError.LoanExists);
+      throw new ArvaError(AgroError.LoanExists);
     }
     const principal = maxBorrowAmount(warrant, this.state.config);
     const draw = principal - originationFee(warrant, this.state.config);
@@ -535,7 +535,7 @@ class MockZafraClient implements ZafraClient {
       .filter((l) => l.status === LoanStatus.Open)
       .reduce((sum, l) => sum + l.principal, 0);
     if (this.state.poolTotal - outstanding < draw) {
-      throw new ZafraError(AgroError.InsufficientLiquidity);
+      throw new ArvaError(AgroError.InsufficientLiquidity);
     }
     const loan: Loan = {
       address: fakePubkey(`loan:${warrant.address}`),
@@ -554,9 +554,9 @@ class MockZafraClient implements ZafraClient {
     await delay();
     const warrant = this.mustWarrant(warrantAddress);
     const loan = this.openLoanFor(warrantAddress);
-    if (!loan) throw new ZafraError(AgroError.LoanNotOpen);
+    if (!loan) throw new ArvaError(AgroError.LoanNotOpen);
     const debt = accruedDebt(loan, this.state.config);
-    if (debt <= 0) throw new ZafraError(AgroError.NothingToRepay);
+    if (debt <= 0) throw new ArvaError(AgroError.NothingToRepay);
     // Interest earned stays in the pool.
     this.state.poolTotal += debt - loan.principal;
     loan.status = LoanStatus.Repaid;
@@ -566,14 +566,14 @@ class MockZafraClient implements ZafraClient {
 
   async depositLiquidity(amount: number): Promise<TxResult> {
     await delay();
-    if (!(amount > 0)) throw new ZafraError(AgroError.MathOverflow);
+    if (!(amount > 0)) throw new ArvaError(AgroError.MathOverflow);
     this.state.poolTotal += amount;
     return { signature: this.log("depositLiquidity") };
   }
 
   async setPrice(pricePerTon: number): Promise<TxResult> {
     await delay();
-    if (!(pricePerTon > 0)) throw new ZafraError(AgroError.MathOverflow);
+    if (!(pricePerTon > 0)) throw new ArvaError(AgroError.MathOverflow);
     this.state.config.pricePerTon = pricePerTon;
     return { signature: this.log("setPrice") };
   }
@@ -582,9 +582,9 @@ class MockZafraClient implements ZafraClient {
     await delay();
     const warrant = this.mustWarrant(warrantAddress);
     const loan = this.openLoanFor(warrantAddress);
-    if (!loan) throw new ZafraError(AgroError.LoanNotOpen);
+    if (!loan) throw new ArvaError(AgroError.LoanNotOpen);
     if (healthFactor(warrant, loan, this.state.config) >= 1) {
-      throw new ZafraError(AgroError.HealthyLoan);
+      throw new ArvaError(AgroError.HealthyLoan);
     }
     loan.status = LoanStatus.Liquidated;
     warrant.status = WarrantStatus.Liquidated;
@@ -601,7 +601,7 @@ class MockZafraClient implements ZafraClient {
 
   private mustWarrant(address: string): Warrant {
     const warrant = this.state.warrants.find((w) => w.address === address);
-    if (!warrant) throw new ZafraError(AgroError.NotOwner);
+    if (!warrant) throw new ArvaError(AgroError.NotOwner);
     return warrant;
   }
 
@@ -627,7 +627,7 @@ class MockZafraClient implements ZafraClient {
  * anchor `Wallet` interface, declared here so this module keeps no anchor
  * dependency.
  */
-export interface ZafraSigner {
+export interface ArvaSigner {
   publicKey: PublicKey;
   signTransaction<T extends Transaction | VersionedTransaction>(
     tx: T,
@@ -638,19 +638,19 @@ export interface ZafraSigner {
 }
 
 /** Connection + signer the app shell registers when a wallet connects. */
-export interface ZafraRuntime {
+export interface ArvaRuntime {
   connection: Connection;
-  wallet: ZafraSigner;
+  wallet: ArvaSigner;
 }
 
-let runtime: ZafraRuntime | null = null;
+let runtime: ArvaRuntime | null = null;
 
 /**
  * Called by AppProviders whenever the wallet-adapter connection or signer
  * changes (including on disconnect, with `null`). Only consumed when the
  * real client is enabled — registering is always safe.
  */
-export function setZafraRuntime(rt: ZafraRuntime | null): void {
+export function setArvaRuntime(rt: ArvaRuntime | null): void {
   runtime = rt;
 }
 
@@ -666,28 +666,28 @@ const RPC_ENDPOINT =
  * Routing rules (the swap to on-chain is a single env var, no code change):
  * - `NEXT_PUBLIC_USE_REAL !== "true"` → the in-memory mock (current default;
  *   keeps the UI fully demoable until the devnet setup exists).
- * - real mode + wallet connected → `RealZafraClient` over
+ * - real mode + wallet connected → `RealArvaClient` over
  *   `@coral-xyz/anchor`, lazy-imported so anchor never lands in the default
  *   bundle.
- * - real mode without a wallet → `RealZafraClient` in read-only mode.
+ * - real mode without a wallet → `RealArvaClient` in read-only mode.
  *   NEVER fall back to the mock in real mode: the demo must show chain state
  *   or nothing — fake data presented as real is worse than an error.
  */
-class ZafraRouter implements ZafraClient {
-  private readonly mock = new MockZafraClient();
+class ArvaRouter implements ArvaClient {
+  private readonly mock = new MockArvaClient();
   private cached: {
-    wallet: ZafraSigner | null;
-    client: ZafraClient;
+    wallet: ArvaSigner | null;
+    client: ArvaClient;
   } | null = null;
 
-  private async target(): Promise<ZafraClient> {
+  private async target(): Promise<ArvaClient> {
     if (!USE_REAL) return this.mock;
     const rt = runtime;
     if (!this.cached || this.cached.wallet !== (rt?.wallet ?? null)) {
-      const { RealZafraClient } = await import("./zafra-real");
+      const { RealArvaClient } = await import("./arva-real");
       this.cached = {
         wallet: rt?.wallet ?? null,
-        client: new RealZafraClient(
+        client: new RealArvaClient(
           rt?.connection ?? new Connection(RPC_ENDPOINT, "confirmed"),
           rt?.wallet ?? null,
         ),
@@ -716,7 +716,7 @@ class ZafraRouter implements ZafraClient {
 
   private read<T>(
     key: string,
-    fn: (c: ZafraClient) => Promise<T>,
+    fn: (c: ArvaClient) => Promise<T>,
     ttlMs = 6_000,
   ): Promise<T> {
     if (!USE_REAL) return this.target().then(fn);
@@ -736,7 +736,7 @@ class ZafraRouter implements ZafraClient {
     return promise;
   }
 
-  private async write<T>(fn: (c: ZafraClient) => Promise<T>): Promise<T> {
+  private async write<T>(fn: (c: ArvaClient) => Promise<T>): Promise<T> {
     try {
       return await this.target().then(fn);
     } finally {
@@ -827,4 +827,4 @@ async function withRateLimitRetry<T>(fn: () => Promise<T>, attempts = 6): Promis
   }
 }
 
-export const zafra: ZafraClient = new ZafraRouter();
+export const arva: ArvaClient = new ArvaRouter();
