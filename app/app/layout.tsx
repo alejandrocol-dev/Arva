@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://arva-devnet.vercel.app"),
-  title: "Arva — Cash against the grain you already stored",
+  title: "Arva",
   description:
     "Open on-chain liquidity for grain warrants: lock a warrant as collateral and borrow USDC on Solana. Devnet demo.",
   openGraph: {
