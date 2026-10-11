@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AppShell } from "@/components/app-shell";
 
 export const metadata: Metadata = {
-  title: "Arva App — Borrow USDC against grain warrants (devnet)",
+  title: "Arva",
 };
 
 export default function AppLayout({ children }: LayoutProps<"/app">) {
