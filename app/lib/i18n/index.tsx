@@ -15,7 +15,6 @@ export type Locale = "en" | "es";
 export type { MessageKey };
 export type TranslateFn = (key: MessageKey, params?: Record<string, string | number>) => string;
 
-const STORAGE_KEY = "arva.locale";
 const DICTS: Record<Locale, Record<MessageKey, string>> = { en, es };
 
 type Params = Record<string, string | number>;
@@ -37,18 +36,8 @@ function interpolate(template: string, params?: Params): string {
 }
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  // Start with "en" on both server and first client render (no hydration
-  // mismatch); the stored/browser preference is applied right after mount.
+  // Always start in English; the user switches to Spanish on demand.
   const [locale, setLocaleState] = useState<Locale>("en");
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === "en" || stored === "es") {
-      setLocaleState(stored);
-      return;
-    }
-    if (navigator.language.toLowerCase().startsWith("es")) setLocaleState("es");
-  }, []);
 
   useEffect(() => {
     document.documentElement.lang = locale;
@@ -56,7 +45,6 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
 
   const setLocale = useCallback((l: Locale) => {
     setLocaleState(l);
-    window.localStorage.setItem(STORAGE_KEY, l);
   }, []);
 
   const t = useCallback<TFn>(

@@ -51,7 +51,7 @@ function writeStored(patch: Partial<Stored>) {
 export function useTourAutoStart(view: View, setOpen: (open: boolean) => void) {
   useEffect(() => {
     const s = readStored();
-    if (s.off || s.seen.includes(view)) return;
+    if (view === "help" || s.off || s.seen.includes(view)) return;
     const id = window.setTimeout(() => setOpen(true), 700);
     return () => window.clearTimeout(id);
   }, [view, setOpen]);
