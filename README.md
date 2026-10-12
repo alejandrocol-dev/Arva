@@ -31,7 +31,8 @@
 > ARVA runs **only on Solana devnet** (Solana's test network: funds come from a faucet and have no real value). The certifier and the price oracle are **simulated**, and warrant tokens are **test representations** of a warrant, not registered legal titles. The code is **not audited**.
 
 <p align="center">
-  <img src="docs/img/dashboard.png" alt="ARVA dashboard reading live data from devnet" />
+  <img src="docs/img/dashboard.png" alt="ARVA dashboard reading live data from devnet" /><br/>
+  <sub>Pool, loans and tokenized tons are read from the deployed program on devnet. Simulated in this MVP: the certifier, the price oracle and the global market view. Test funds only.</sub>
 </p>
 
 ---
