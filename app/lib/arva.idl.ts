@@ -758,6 +758,7 @@ export type Arva = {
           "docs": [
             "Permissionless: anyone can trigger liquidation of an unhealthy loan."
           ],
+          "writable": true,
           "signer": true
         },
         {
@@ -823,6 +824,252 @@ export type Arva = {
               }
             ]
           }
+        },
+        {
+          "name": "mint",
+          "docs": [
+            "Warrant mint backing the collateral (1 token = 1 ton)."
+          ],
+          "relations": [
+            "warrant"
+          ]
+        },
+        {
+          "name": "warrantVault",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  119,
+                  97,
+                  114,
+                  114,
+                  97,
+                  110,
+                  116,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "warrant"
+              }
+            ]
+          }
+        },
+        {
+          "name": "poolVault",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "custodyTokenAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "warrantVault"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "poolCollateralTokenAccount",
+          "docs": [
+            "Pool treasury for seized collateral: ATA of the pool vault PDA for this warrant mint."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "poolVault"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "liquidatorWarrantTokenAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "liquidator"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": []
@@ -1581,6 +1828,16 @@ export type Arva = {
       "code": 6011,
       "name": "priceNotSet",
       "msg": "Price per ton is not set"
+    },
+    {
+      "code": 6012,
+      "name": "collateralMismatch",
+      "msg": "Borrower must hold exactly the warrant's tons to lock as collateral"
+    },
+    {
+      "code": 6013,
+      "name": "priceChangeTooLarge",
+      "msg": "Price update outside the allowed range (half to double the current price)"
     }
   ],
   "types": [
@@ -1747,6 +2004,14 @@ export type Arva = {
       "value": "7000"
     },
     {
+      "name": "liquidationBonusBps",
+      "docs": [
+        "Share of the seized collateral paid to whoever liquidates an unhealthy loan."
+      ],
+      "type": "u16",
+      "value": "500"
+    },
+    {
       "name": "loanSeed",
       "type": "bytes",
       "value": "[108, 111, 97, 110]"
@@ -1786,4 +2051,3 @@ export type Arva = {
     }
   ]
 };
-

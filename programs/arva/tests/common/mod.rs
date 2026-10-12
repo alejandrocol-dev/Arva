@@ -310,6 +310,8 @@ pub fn repay_ix(borrower: &Pubkey, usdc_mint: &Pubkey, warrant: &Pubkey) -> Inst
 }
 
 pub fn liquidate_ix(liquidator: &Pubkey, warrant: &Pubkey) -> Instruction {
+    let mint = warrant_mint_pda(warrant);
+    let warrant_vault = warrant_vault_pda(warrant);
     Instruction::new_with_bytes(
         arva::id(),
         &arva::instruction::Liquidate.data(),
@@ -318,9 +320,29 @@ pub fn liquidate_ix(liquidator: &Pubkey, warrant: &Pubkey) -> Instruction {
             config: config_pda(),
             warrant: *warrant,
             loan: loan_pda(warrant),
+            mint,
+            warrant_vault,
+            pool_vault: pool_vault_pda(),
+            custody_token_account: get_associated_token_address(&warrant_vault, &mint),
+            pool_collateral_token_account: get_associated_token_address(&pool_vault_pda(), &mint),
+            liquidator_warrant_token_account: get_associated_token_address(liquidator, &mint),
+            token_program: anchor_spl::token::ID,
+            associated_token_program: associated_token::ID,
+            system_program: system_program::ID,
         }
         .to_account_metas(None),
     )
+}
+
+/// Moves the oracle price to `target` in steps the circuit breaker accepts (at most ×2 or ÷2 each).
+pub fn step_price_to(svm: &mut LiteSVM, admin: &Keypair, from: u64, target: u64) {
+    let mut price = from;
+    while price != target {
+        price = if target < price { target.max(price / 2) } else { target.min(price * 2) };
+        svm.expire_blockhash();
+        let res = send_ix(svm, admin, &[set_price_ix(&admin.pubkey(), price)], &[admin]);
+        assert!(res.is_ok(), "set_price to {price} failed: {:?}", res.err());
+    }
 }
 
 /// Full happy-path setup: USDC mint + initialize. Returns (svm, admin, usdc_mint, certifier).

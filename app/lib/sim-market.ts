@@ -38,7 +38,7 @@ export interface SimMarket {
   tons: number;
 }
 
-const PRICE: Record<SimGrain, number> = { soy: 380, corn: 190, wheat: 230, sunflower: 410, sorghum: 170, barley: 210 };
+const PRICE: Record<SimGrain, number> = { soy: 350, corn: 190, wheat: 230, sunflower: 410, sorghum: 170, barley: 210 };
 const LTV = 0.7;
 const TAPE = 6;
 const TICK_MS = 10_000;

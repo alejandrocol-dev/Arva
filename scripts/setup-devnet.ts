@@ -6,7 +6,7 @@
  *
  *   1. Creates a test USDC mint (6 decimals, payer = authority), reused from .env if present.
  *   2. `initialize` — certifier = payer, annual_interest_bps = 1200 (skipped if Config exists).
- *   3. `set_price(380_000_000)` — 380 USDC/ton in 6-decimals units.
+ *   3. `set_price(350_000_000)` — 350 USDC/ton in 6-decimals units.
  *   4. Mints USDC to the payer and `deposit_liquidity` until the pool holds 500_000 USDC.
  *   5. `register_warrant` — silo "SILO-TUC-001", grain 0 (soybean), 100 tons, producer = payer.
  *   6. Writes .env and app/.env.local.
@@ -52,7 +52,7 @@ const RPC_URL = "https://api.devnet.solana.com";
 const COMMITMENT: Commitment = "confirmed";
 
 const ANNUAL_INTEREST_BPS = 1200; // 12% APR — demo assumption, not a real rate
-const PRICE_PER_TON = new BN(380_000_000); // 380 USDC, 6 decimals
+const PRICE_PER_TON = new BN(350_000_000); // 350 USDC, 6 decimals
 const POOL_TARGET_USDC = new BN(500_000).muln(1_000_000); // 500k USDC, 6 decimals
 
 const SILO_ID = "SILO-TUC-001";
@@ -260,7 +260,7 @@ async function main() {
     (program.account as any).config.fetch(configPda)
   );
   if (new BN(config.pricePerTon.toString()).eq(PRICE_PER_TON)) {
-    console.log("\n[3] price_per_ton already 380 USDC — skipping set_price");
+    console.log("\n[3] price_per_ton already 350 USDC — skipping set_price");
   } else {
     const sig = await withRetry("set_price", () =>
       program.methods

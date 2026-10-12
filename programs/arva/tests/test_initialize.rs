@@ -45,6 +45,31 @@ fn test_initialize_and_set_price() {
 }
 
 #[test]
+fn test_set_price_circuit_breaker() {
+    let (mut svm, admin, _usdc_mint, _certifier) = initialized();
+
+    let ix = set_price_ix(&admin.pubkey(), 400_000_000);
+    send_ix(&mut svm, &admin, &[ix], &[&admin]).unwrap();
+
+    // More than halving or more than doubling in one update is rejected.
+    for bad in [199_999_999u64, 800_000_001] {
+        svm.expire_blockhash();
+        let res = send_ix(&mut svm, &admin, &[set_price_ix(&admin.pubkey(), bad)], &[&admin]);
+        assert_eq!(
+            res.err().unwrap().err,
+            TransactionError::InstructionError(0, InstructionError::Custom(6013)) // PriceChangeTooLarge
+        );
+    }
+
+    // The edges (exactly half, then exactly double) are accepted.
+    for ok in [200_000_000u64, 400_000_000] {
+        svm.expire_blockhash();
+        let res = send_ix(&mut svm, &admin, &[set_price_ix(&admin.pubkey(), ok)], &[&admin]);
+        assert!(res.is_ok(), "set_price {ok} failed: {:?}", res.err());
+    }
+}
+
+#[test]
 fn test_set_price_rejects_non_admin() {
     let (mut svm, admin, _usdc_mint, _certifier) = initialized();
     let intruder = Keypair::new();

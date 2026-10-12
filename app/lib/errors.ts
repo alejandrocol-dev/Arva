@@ -23,6 +23,8 @@ const PROGRAM_CODES: Record<number, AgroError> = {
   6009: AgroError.MathOverflow,
   6010: AgroError.NothingToRepay,
   6011: AgroError.PriceNotSet,
+  6012: AgroError.CollateralMismatch,
+  6013: AgroError.PriceChangeTooLarge,
 };
 
 function rawMessage(err: unknown): string {

@@ -47,7 +47,7 @@ import { Button, IconTile, Skeleton, cx } from "@/components/ui";
 const GITHUB_URL = "https://github.com/alejandrocol-dev/arva";
 
 /* Canonical demo example: 100 t of soy. USD figures come from the on-chain
-   Config when it loads (fallback: the 380 USDC/t reference parameters). */
+   Config when it loads (fallback: the 350 USDC/t reference parameters). */
 const EX_TONS = 100;
 
 interface ExampleLoan {

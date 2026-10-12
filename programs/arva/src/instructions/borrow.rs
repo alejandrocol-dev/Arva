@@ -109,8 +109,13 @@ pub fn handle_borrow(ctx: Context<Borrow>) -> Result<()> {
         AgroError::InsufficientLiquidity
     );
 
-    // Lock all of the borrower's warrant tokens in the custody ATA.
-    let collateral = ctx.accounts.borrower_warrant_token_account.amount;
+    // The loan is sized on warrant.tons, so the full warrant must be locked.
+    let collateral = ctx.accounts.warrant.tons;
+    require_eq!(
+        ctx.accounts.borrower_warrant_token_account.amount,
+        collateral,
+        AgroError::CollateralMismatch
+    );
     transfer(
         CpiContext::new(
             ctx.accounts.token_program.key(),

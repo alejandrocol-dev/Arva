@@ -9,7 +9,7 @@
 
 <p align="center">
   <b>Open credit for digital grain warrants, on Solana.</b><br/>
-  A producer locks a certified grain warrant as collateral and receives USDC in seconds from an open liquidity pool, without selling the harvest.
+  A producer locks a tokenized grain warrant as collateral and receives USDC in seconds from an open liquidity pool, without selling the harvest.
 </p>
 
 <p align="center">
@@ -21,13 +21,14 @@
 </p>
 
 <p align="center">
+  <a href="https://arva-devnet.vercel.app"><b>Live app (devnet)</b></a> ·
   <a href="https://explorer.solana.com/address/AERC53ZiqizgjYdJK9hCeGtSk6PfzwnEn2z3wkMKiqiJ?cluster=devnet"><b>Program on Explorer</b></a> ·
   <a href="docs/SPEC.md"><b>Technical spec</b></a> ·
   <a href="#run-it-locally"><b>Run it</b></a>
 </p>
 
 > [!IMPORTANT]
-> ARVA runs **only on Solana devnet** (Solana's test network: funds come from a faucet and have no real value). The certifier and the price oracle are **simulated**. The code is **not audited**.
+> ARVA runs **only on Solana devnet** (Solana's test network: funds come from a faucet and have no real value). The certifier and the price oracle are **simulated**, and warrant tokens are **test representations** of a warrant, not registered legal titles. The code is **not audited**.
 
 <p align="center">
   <img src="docs/img/dashboard.png" alt="ARVA dashboard reading live data from devnet" />
@@ -41,7 +42,7 @@ Stored grain is a real asset, but an illiquid one. A producer can have 100 tons 
 
 Argentina already has a legal instrument over that asset: the **warrant**, a credit title that represents stored goods (**Law 9,643**). In practice, using it as collateral is limited to banks and brokers: bilateral deals, manual paperwork and approval times that don't match the season.
 
-**ARVA turns the warrant into programmable collateral.** The warrant is represented on-chain as one token per ton. The producer locks it in the program's vault, and an open USDC pool originates the loan. Repay, and the collateral is released. If the grain price breaks the liquidation threshold, anyone can liquidate the position, and the rules are the same for everyone.
+**ARVA turns the warrant into programmable collateral.** The warrant is represented on-chain as one token per ton (in this demo, a test token issued by a simulated certifier; linking it to a registry such as A3's is the next milestone). The producer locks it in the program's vault, and an open USDC pool originates the loan. Repay, and the collateral is released. If the grain price breaks the liquidation threshold, anyone can liquidate the position, and the rules are the same for everyone.
 
 > *Because the harvest doesn't wait.*
 
@@ -58,9 +59,9 @@ Argentina already has a legal instrument over that asset: the **warrant**, a cre
 |---|---|---|
 | 1 | **Certify** | The certifier registers a warrant (silo ID, grain, tons) and mints tokens to the producer. |
 | 2 | **Supply** | Anyone deposits USDC into the liquidity pool. |
-| 3 | **Borrow** | The producer locks the warrant and receives up to **70%** of its value, minus a **0.75%** origination fee. |
+| 3 | **Borrow** | The producer locks the full warrant and receives **70%** of its value (fixed in this MVP), minus a **0.75%** origination fee. |
 | 4 | **Repay** | Principal plus simple interest (accrued per second) is paid back and the tokens are returned. |
-| 5 | **Liquidate** | If debt exceeds **80%** of the collateral value, anyone can liquidate and the pool keeps the warrant. |
+| 5 | **Liquidate** | If debt exceeds **80%** of the collateral value, anyone can liquidate: the warrant tokens move from the vault to the pool treasury, and the liquidator earns **5%** of them as a bonus. |
 
 **Example:** 100 t of soy at 350 USDC/t = 35,000 USDC of collateral → 24,500 USDC loan → **≈ 24,316 USDC** received after the fee. The position becomes liquidatable if soy falls below **306 USDC/t**.
 
@@ -68,7 +69,7 @@ Argentina already has a legal instrument over that asset: the **warrant**, a cre
 
 ## Why on-chain
 
-- **Programmable collateral.** It locks itself, releases itself on repayment, and liquidation is executed by code, not by a court.
+- **Programmable collateral.** It locks itself, releases itself on repayment, and once a loan is unhealthy anyone can liquidate it under rules enforced by code, not by a court.
 - **Public audit trail.** Every loan, repayment and liquidation is a transaction anyone can inspect.
 - **No custodian.** The collateral sits in a program-derived vault with no private key.
 - **Seconds and cents.** Solana's speed and fees make lending to a small producer viable.
@@ -92,6 +93,16 @@ Argentina already has a legal instrument over that asset: the **warrant**, a cre
 
 ---
 
+## Try it
+
+1. On a desktop browser, install **Phantom** and switch it to **devnet** (Settings → Developer Settings → Testnet mode → Solana devnet).
+2. Open **[arva-devnet.vercel.app/app](https://arva-devnet.vercel.app/app)** and connect Phantom.
+3. Click **Get kit**: the starter kit sends your wallet devnet SOL for fees, test USDC and a 100 t demo warrant.
+4. Go to **Borrow**, review the loan (LTV, fee, liquidation price) and sign it in Phantom.
+5. Open the transaction in Solana Explorer, then **Repay** and watch the warrant return to your wallet.
+
+Everything you sign is a real devnet transaction against the deployed program. No real money is involved.
+
 ## The app
 
 - **Landing** that explains the product in plain language, for producers and investors alike.
@@ -108,20 +119,44 @@ Argentina already has a legal instrument over that asset: the **warrant**, a cre
 | ✅ Real (on devnet) | 🧪 Simulated |
 |---|---|
 | The program, accounts, signatures and public record | The certifier (in production, a licensed warehouse) |
-| The collateral vault and liquidation logic | The price oracle (in production, a market feed) |
-| Warrant tokens and the liquidity pool | USDC is a test token; the pool is funded by the team |
+| The collateral vault, repayment and permissionless liquidation | The price oracle (in production, a market feed) |
+| SPL warrant tokens and the USDC liquidity pool | What the tokens represent: test warrants, not registered titles |
+| | USDC is a test token; the pool is funded by the team |
+| | The "global market" view in the app is a labeled simulation; the "Real · devnet" toggle and "Your activity" read the program |
+
+---
+
+## Security and known limitations
+
+What the program enforces:
+
+- **Custody without keys.** Collateral sits in an ATA owned by the `["warrant_vault", warrant]` PDA; only the program can move it.
+- **Full collateral.** `borrow` sizes the loan on `warrant.tons` and requires the borrower to lock exactly that many tokens (`CollateralMismatch` otherwise).
+- **Permissionless liquidation.** When `value × 80% < debt`, anyone can call `liquidate`: the collateral moves to the pool treasury (an ATA of the `["pool_vault"]` PDA) and the caller earns a 5% bonus. A loan can only be liquidated once.
+- **Price circuit breaker.** Each `set_price` update can at most halve or double the current price (`PriceChangeTooLarge`).
+- **Checked math.** All amounts are integers with `u128` intermediates and checked operations.
+
+Known limitations of this MVP (not hidden, on the roadmap):
+
+- **Single price authority.** The admin key sets the price. There is no maximum price age, on purpose: reviewers can try the app at any time without someone refreshing the demo oracle.
+- **Seized collateral stays in the pool treasury.** There is no auction or sale instruction yet to turn it back into USDC.
+- **Lender side.** Deposits mint no shares and can't be withdrawn; interest and fees accrue to the pool as a whole.
+- **Fixed 70% LTV.** The borrower can't choose a smaller loan yet.
+- **Classic SPL Token.** The warrant token isn't frozen while pledged (it's held in custody instead); Token-2022 is planned.
+- **Admin keys are single-signer** and the code is **not audited**.
 
 ---
 
 ## Roadmap
 
-1. **Validate with the industry:** producers, grain elevators and licensed warehouses.
-2. **Real certification:** a licensed warehouse signs issuance, following the Chaco precedent.
-3. **Real prices:** replace the simulated oracle with a grain price feed.
-4. **Plug into existing rails:** act as the open liquidity layer for A3 and Matba Rofex digital warrants.
-5. **Withdrawals and yield for lenders:** in this MVP, supplied liquidity can't be withdrawn yet.
-6. **More agro instruments:** the same model for other negotiable titles.
-7. **Audit and regulatory framework** before any use with real money.
+1. **Validate with the industry:** producers, grain elevators, licensed warehouses and the digital warrant platforms.
+2. **Real certification:** a licensed warehouse signs issuance, following the Chaco precedent, and the token links to the registered warrant.
+3. **Real prices:** a dedicated price authority separate from the admin, a maximum price age, and a quote from the warrant market (our own signed publisher or an on-demand feed).
+4. **Complete liquidation:** auction or sell seized warrants back into USDC for the pool.
+5. **Lender side:** LP shares on deposit, `withdraw_liquidity`, and a protocol fee routed to a treasury.
+6. **Encumbrance on-chain:** Token-2022 warrant mint frozen by default, and admin, certifier and price authorities under a Squads multisig.
+7. **Plug into existing rails:** act as the open liquidity layer for A3 and Matba Rofex digital warrants.
+8. **Legal review and audit** before any use with real money: the token-warrant link, the open pool (CNV, VASP registration), the lender of record and how a warrant is enforced after liquidation.
 
 ---
 
@@ -130,14 +165,15 @@ Argentina already has a legal instrument over that asset: the **warrant**, a cre
 | Layer | Stack |
 |---|---|
 | On-chain program | Anchor 1.1.2 + SPL Token (classic), a single program |
-| Tests | Rust + LiteSVM (`cargo test`), 16 tests covering instructions and negative cases |
+| Tests | Rust + LiteSVM (`cargo test`), 18 tests covering instructions and negative cases |
 | Frontend | Next.js 16 + TypeScript + Tailwind + Solana Wallet Adapter (Phantom) |
 | Scripts | TypeScript (devnet setup, full cycle, inspection) |
 
 **Instructions:** `initialize` · `set_price` · `register_warrant` · `deposit_liquidity` · `borrow` · `repay` · `liquidate`
 
 **Program ID (devnet):** [`AERC53ZiqizgjYdJK9hCeGtSk6PfzwnEn2z3wkMKiqiJ`](https://explorer.solana.com/address/AERC53ZiqizgjYdJK9hCeGtSk6PfzwnEn2z3wkMKiqiJ?cluster=devnet)<br/>
-**Test USDC mint:** `12KPRGKraqyydu8favsGtMGqqm23YUEwgc3TVHGwjuef`
+**Test USDC mint:** `12KPRGKraqyydu8favsGtMGqqm23YUEwgc3TVHGwjuef`<br/>
+**Last program upgrade (Oct 12, 2026):** [`45V3VdBn…VrZMVQW`](https://explorer.solana.com/tx/45V3VdBnrb5avd1bWXV219sU4EszG6jAJvh8wqHBmpRGtDagAKAVNWSoMsf3Z3DXoMCmWmHc4VavMEghBVrZMVQW?cluster=devnet) (full-collateral check, collateral transfer on liquidation, price circuit breaker). Liquidation verified on devnet: [`5AHY9qn3…3Mmh1RMU`](https://explorer.solana.com/tx/5AHY9qn39u6W4mAaqoT1cisausbj6Lg5SGidZHpxYADXBCUxN9iupFDPi6kFBaw9wSzdfN57ZFHiMGpU3Mmh1RMU?cluster=devnet)
 
 ```
 programs/arva/   Anchor program (src/, tests/)
@@ -175,8 +211,22 @@ NEXT_PUBLIC_USE_REAL=true npm run dev
 - **No keys or secrets** in the repository.
 - **Every transaction requires the user's explicit signature.**
 
+## Team
+
+Solo founder: **Alejandro** ([@alejandrocol-dev](https://github.com/alejandrocol-dev)), Information Systems Engineering student in Tucumán, Argentina. Product, Anchor program, app and deployment.
+
+## Progress and disclosures
+
+- **Starting point:** nothing existed before the competition. The idea was chosen on Oct 3, 2026 and the first commit is from Oct 4, 2026. No prior code, users, revenue or funding.
+- **Changelog** (full history in the git log):
+  - **Oct 4:** Anchor program (7 instructions), LiteSVM tests, devnet deployment and first version of the app.
+  - **Oct 6 to 9:** new landing and app design, guided tour, real on-chain data in the UI, liquidation simulator.
+  - **Oct 11:** rename to ARVA, new brand, judge starter kit (SOL, test USDC and a demo warrant from one click) and guided journey.
+  - **Oct 12:** personal activity trail, labeled simulated market view, mobile landing; after the Superteam Argentina review: full-collateral check in `borrow`, collateral transfer and liquidator bonus in `liquidate`, price circuit breaker, corrected claims.
+- **Third-party components:** Anchor, SPL Token, Solana Wallet Adapter, Next.js, Tailwind CSS and their open-source dependencies.
+
 ## Use of AI
 
-Built with Devin as a coding assistant. The idea, product design, specifications and review are the author's; generated code was reviewed before each commit.
+Material use of AI: built with Devin (Cognition) as a coding assistant, which generated most of the code for the program, tests, app and scripts, and helped with research and copy drafts. The idea, product decisions, specifications and review are the author's; generated code was reviewed and tested before each commit.
 
 <p align="center"><sub>ARVA · built on Solana · devnet · not audited</sub></p>

@@ -101,7 +101,7 @@ export const en = {
   "demo.step2.body": "A 100 t demo warrant, test USDC and SOL for fees, in one click.",
   "demo.step2.cta": "Get kit",
   "demo.step3.title": "Borrow USDC",
-  "demo.step3.body": "Lock the warrant as collateral and receive up to 70% of its value.",
+  "demo.step3.body": "Lock the warrant as collateral and receive 70% of its value.",
   "demo.step3.cta": "Borrow",
   "demo.step4.title": "Repay, get it back",
   "demo.step4.body": "Pay back the loan and the warrant returns to your wallet.",
@@ -177,6 +177,8 @@ export const en = {
   "err.MathOverflow": "The amount is too large to compute.",
   "err.NothingToRepay": "There is nothing to repay.",
   "err.PriceNotSet": "The grain price hasn't been set yet.",
+  "err.CollateralMismatch": "Your wallet must hold the full warrant (every ton) to lock it as collateral.",
+  "err.PriceChangeTooLarge": "Each price update can at most halve or double the current price. Move it in smaller steps.",
 
   // ---- risk
   "risk.safe": "Healthy",
@@ -260,7 +262,7 @@ export const en = {
     "You need about {need} to repay but you have {have}. You're short by {short}.",
   "borrow.closed.released": "Loan repaid. The warrant tokens are back in your wallet.",
   "borrow.closed.liquidated":
-    "This position was liquidated: the pool took the collateral after the price fell. You kept the USDC you borrowed.",
+    "This position was liquidated after the price fell: the pool treasury took the collateral and the liquidator earned a 5% bonus. You kept the USDC you borrowed.",
   "borrow.success.borrow": "Loan received. {amount} USDC are in your wallet.",
   "borrow.success.repay": "Loan repaid. Your warrant is back in your wallet.",
   "borrow.success.next": "See your progress",
@@ -377,7 +379,7 @@ export const en = {
   "admin.liq.row.health": "Health factor",
   "admin.liq.warn": "The borrower keeps the USDC they borrowed and loses the warrant. This can't be undone.",
   "admin.liq.confirm": "Liquidate {silo}",
-  "admin.liq.success": "{silo} was liquidated. The pool now holds the collateral.",
+  "admin.liq.success": "{silo} was liquidated. The pool treasury now holds the collateral, minus the 5% liquidator bonus.",
   "admin.config.title": "Protocol parameters",
   "admin.config.admin": "Admin",
   "admin.config.certifier": "Certifier",
@@ -506,7 +508,7 @@ export const en = {
   "landing.hero.rotate.3": "no paperwork.",
   "landing.hero.rotate.4": "24/7.",
   "landing.hero.subtitle":
-    "Lock your grain warrant as collateral and get digital dollars (USDC) in seconds from an open liquidity pool. Public rules, automatic liquidation, every loan verifiable on-chain.",
+    "Lock your grain warrant as collateral and get digital dollars (USDC) in seconds from an open liquidity pool. Public rules, anyone can liquidate an unhealthy loan, every loan verifiable on-chain.",
   "landing.hero.ctaApp": "Try a test loan",
   "landing.hero.ctaHow": "See how it works",
   "landing.hero.chip.ltv": "Up to {ltv} of the grain's value",
@@ -648,12 +650,12 @@ export const en = {
   "landing.risk.eyebrow": "Price risk",
   "landing.risk.title": "What if the price drops? The contract doesn't improvise.",
   "landing.risk.body":
-    "Watch the soy price rise and crash on its own — the same math the contract runs. If the debt goes above 80% of the collateral value, anyone can liquidate it and the pool gets its capital back.",
+    "Watch the soy price rise and crash on its own — the same math the contract runs. If the debt goes above 80% of the collateral value, anyone can liquidate it and the collateral moves to the pool treasury.",
   "landing.sides.eyebrow": "Two sides, one pool",
   "landing.sides.title": "Producers get capital. Investors get real collateral.",
   "landing.sides.prod.title": "For producers",
   "landing.sides.prod.body": "Liquidity against the grain you already have, without selling the harvest. Repay and your warrant comes back.",
-  "landing.sides.prod.b1": "Up to 70% of the grain's value",
+  "landing.sides.prod.b1": "70% of the grain's value",
   "landing.sides.prod.b2": "Funds in seconds, in dollars",
   "landing.sides.prod.b3": "Get your warrant back when you repay",
   "landing.sides.prod.cta": "Borrow against a warrant",
@@ -681,7 +683,7 @@ export const en = {
   "landing.pos.eyebrow": "The precedent",
   "landing.pos.quote": "Banks already lend against tokenised grain. Nobody has opened up the liquidity.",
   "landing.pos.body":
-    "Since 2022, Santander, Galicia and Grupo Petersen's banks have lent against grain tokens alongside Agrotoken. Always bilateral: one bank, one producer, one approval. Arva adds the missing layer: an open pool anyone can fund, with automatic liquidation under public rules.",
+    "Since 2022, Santander, Galicia and Grupo Petersen's banks have lent against grain tokens alongside Agrotoken. Always bilateral: one bank, one producer, one approval. Arva adds the missing layer: an open pool anyone can fund, where anyone can liquidate an unhealthy loan under public rules.",
   "landing.pos.source": "Sources: Santander press release (March 2022), Infobae, BeInCrypto.",
   "landing.trust.eyebrow": "Transparency",
   "landing.trust.title": "What's real and what's simulated.",
@@ -750,7 +752,7 @@ export const en = {
     "One click drops the on-chain price 30%. Open loans whose collateral falls below 80% of its value become liquidatable.",
   "tour.admin.3.title": "Permissionless liquidation",
   "tour.admin.3.body":
-    "Anyone can liquidate an under-collateralized loan — no admin needed. The pool keeps the warrant to cover the debt.",
+    "Anyone can liquidate an under-collateralized loan, no admin needed. The warrant moves to the pool treasury to cover the debt, and the liquidator earns 5% of it.",
   "tour.earn.1.title": "The liquidity pool",
   "tour.earn.1.body":
     "Total, lent, available and indicative yield, all read from devnet. Borrowers draw from here.",
@@ -859,7 +861,7 @@ export const es: Record<MessageKey, string> = {
   "demo.step2.body": "Un warrant de prueba de 100 t, USDC de prueba y SOL para comisiones, en un clic.",
   "demo.step2.cta": "Pedir kit",
   "demo.step3.title": "Pedí un préstamo",
-  "demo.step3.body": "Dejá el warrant como garantía y recibí hasta el 70% de su valor.",
+  "demo.step3.body": "Dejá el warrant como garantía y recibí el 70% de su valor.",
   "demo.step3.cta": "Pedir",
   "demo.step4.title": "Devolvé y recuperalo",
   "demo.step4.body": "Devolvé el préstamo y el warrant vuelve a tu wallet.",
@@ -935,6 +937,8 @@ export const es: Record<MessageKey, string> = {
   "err.MathOverflow": "El monto es demasiado grande para calcularlo.",
   "err.NothingToRepay": "No hay nada para devolver.",
   "err.PriceNotSet": "Todavía no se definió el precio del grano.",
+  "err.CollateralMismatch": "Tu wallet tiene que tener el warrant completo (todas las toneladas) para dejarlo como garantía.",
+  "err.PriceChangeTooLarge": "Cada cambio de precio puede como mucho reducirlo a la mitad o duplicarlo. Movelo en pasos más chicos.",
 
   // ---- risk
   "risk.safe": "Sano",
@@ -1018,7 +1022,7 @@ export const es: Record<MessageKey, string> = {
     "Necesitás unos {need} para devolver y tenés {have}. Te faltan {short}.",
   "borrow.closed.released": "Préstamo devuelto. Los tokens del warrant volvieron a tu wallet.",
   "borrow.closed.liquidated":
-    "Esta posición se liquidó: el fondo se quedó con la garantía después de la caída de precio. Vos conservaste el USDC que pediste.",
+    "Esta posición se liquidó después de la caída de precio: la tesorería del fondo se quedó con la garantía y quien liquidó cobró un bono del 5%. Vos conservaste el USDC que pediste.",
   "borrow.success.borrow": "Préstamo recibido. {amount} USDC ya están en tu wallet.",
   "borrow.success.repay": "Préstamo devuelto. Tu warrant volvió a tu wallet.",
   "borrow.success.next": "Ver tu progreso",
@@ -1135,7 +1139,7 @@ export const es: Record<MessageKey, string> = {
   "admin.liq.row.health": "Salud del préstamo",
   "admin.liq.warn": "El prestatario conserva el USDC que pidió y pierde el warrant. No se puede deshacer.",
   "admin.liq.confirm": "Liquidar {silo}",
-  "admin.liq.success": "{silo} fue liquidado. El fondo ahora tiene la garantía.",
+  "admin.liq.success": "{silo} fue liquidado. La tesorería del fondo ahora tiene la garantía, menos el 5% de bono para quien liquidó.",
   "admin.config.title": "Parámetros del protocolo",
   "admin.config.admin": "Administrador",
   "admin.config.certifier": "Certificadora",
@@ -1264,7 +1268,7 @@ export const es: Record<MessageKey, string> = {
   "landing.hero.rotate.3": "sin papeles.",
   "landing.hero.rotate.4": "24/7.",
   "landing.hero.subtitle":
-    "Dejá tu warrant de granos como garantía y recibí dólares digitales (USDC) en segundos, desde un fondo abierto. Reglas públicas, liquidación automática y cada préstamo verificable on-chain.",
+    "Dejá tu warrant de granos como garantía y recibí dólares digitales (USDC) en segundos, desde un fondo abierto. Reglas públicas, cualquiera puede liquidar un préstamo en riesgo y cada préstamo es verificable on-chain.",
   "landing.hero.ctaApp": "Pedir un préstamo de prueba",
   "landing.hero.ctaHow": "Ver cómo funciona",
   "landing.hero.chip.ltv": "Hasta el {ltv} del valor del grano",
@@ -1406,12 +1410,12 @@ export const es: Record<MessageKey, string> = {
   "landing.risk.eyebrow": "Riesgo de precio",
   "landing.risk.title": "¿Y si el precio cae? El contrato no improvisa.",
   "landing.risk.body":
-    "Mirá cómo el precio de la soja sube y se desploma solo — con las mismas cuentas que hace el contrato. Si la deuda supera el 80% del valor de la garantía, cualquiera puede liquidarla y el fondo recupera su capital.",
+    "Mirá cómo el precio de la soja sube y se desploma solo — con las mismas cuentas que hace el contrato. Si la deuda supera el 80% del valor de la garantía, cualquiera puede liquidarla y la garantía pasa a la tesorería del fondo.",
   "landing.sides.eyebrow": "Dos lados, un mismo fondo",
   "landing.sides.title": "El productor consigue capital. El inversor, garantía real.",
   "landing.sides.prod.title": "Para productores",
   "landing.sides.prod.body": "Liquidez contra el grano que ya tenés, sin vender la cosecha. Devolvés y tu warrant vuelve.",
-  "landing.sides.prod.b1": "Hasta el 70% del valor del grano",
+  "landing.sides.prod.b1": "El 70% del valor del grano",
   "landing.sides.prod.b2": "Plata en segundos, en dólares",
   "landing.sides.prod.b3": "Recuperás el warrant al devolver",
   "landing.sides.prod.cta": "Pedir un préstamo",
@@ -1439,7 +1443,7 @@ export const es: Record<MessageKey, string> = {
   "landing.pos.eyebrow": "El precedente",
   "landing.pos.quote": "Los bancos ya prestan contra grano tokenizado. Nadie abrió la liquidez.",
   "landing.pos.body":
-    "Desde 2022, Santander, Galicia y los bancos del Grupo Petersen prestan contra tokens de granos junto a Agrotoken. Siempre bilateral: un banco, un productor, una aprobación. Arva suma la capa que falta: un fondo abierto al que cualquiera puede aportar, con liquidación automática y reglas públicas.",
+    "Desde 2022, Santander, Galicia y los bancos del Grupo Petersen prestan contra tokens de granos junto a Agrotoken. Siempre bilateral: un banco, un productor, una aprobación. Arva suma la capa que falta: un fondo abierto al que cualquiera puede aportar, donde cualquiera puede liquidar un préstamo en riesgo con reglas públicas.",
   "landing.pos.source": "Fuentes: comunicado de Santander (marzo 2022), Infobae, BeInCrypto.",
   "landing.trust.eyebrow": "Transparencia",
   "landing.trust.title": "Qué es real y qué es simulado.",
@@ -1508,7 +1512,7 @@ export const es: Record<MessageKey, string> = {
     "Con un clic el precio on-chain baja 30%. Los préstamos cuya garantía cae por debajo del 80% de su valor quedan liquidables.",
   "tour.admin.3.title": "Liquidación sin permisos",
   "tour.admin.3.body":
-    "Cualquiera puede liquidar un préstamo sin garantía suficiente; no hace falta ser admin. El fondo se queda con el warrant para cubrir la deuda.",
+    "Cualquiera puede liquidar un préstamo sin garantía suficiente; no hace falta ser admin. El warrant pasa a la tesorería del fondo para cubrir la deuda y quien liquida se lleva el 5%.",
   "tour.earn.1.title": "El fondo de liquidez",
   "tour.earn.1.body":
     "Total, prestado, disponible y rendimiento indicativo, todo leído de devnet. De acá salen los préstamos.",

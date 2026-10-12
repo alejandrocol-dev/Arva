@@ -530,6 +530,12 @@ export class RealArvaClient implements ArvaClient {
   async liquidate(warrantAddress: string): Promise<TxResult> {
     const liquidator = this.signer();
     const warrant = new PublicKey(warrantAddress);
+    const wAcc = (await this.program.account.warrant.fetch(
+      warrant,
+      this.commitment,
+    )) as DecodedWarrant;
+    const warrantVault = warrantVaultPda(warrant);
+    const poolVault = poolVaultPda();
     const tx = await this.program.methods
       .liquidate()
       .accountsPartial({
@@ -537,6 +543,26 @@ export class RealArvaClient implements ArvaClient {
         config: configPda(),
         warrant,
         loan: loanPda(warrant),
+        mint: wAcc.mint,
+        warrantVault,
+        poolVault,
+        custodyTokenAccount: getAssociatedTokenAddressSync(
+          wAcc.mint,
+          warrantVault,
+          /* allowOwnerOffCurve */ true,
+        ),
+        poolCollateralTokenAccount: getAssociatedTokenAddressSync(
+          wAcc.mint,
+          poolVault,
+          /* allowOwnerOffCurve */ true,
+        ),
+        liquidatorWarrantTokenAccount: getAssociatedTokenAddressSync(
+          wAcc.mint,
+          liquidator,
+        ),
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        systemProgram: SystemProgram.programId,
       })
       .transaction();
     return { signature: await this.send(tx) };

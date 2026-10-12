@@ -80,6 +80,8 @@ export enum AgroError {
   MathOverflow = "MathOverflow",
   NothingToRepay = "NothingToRepay",
   PriceNotSet = "PriceNotSet",
+  CollateralMismatch = "CollateralMismatch",
+  PriceChangeTooLarge = "PriceChangeTooLarge",
 }
 
 export class ArvaError extends Error {
@@ -223,7 +225,7 @@ export function activityKindFromLogs(logs: readonly string[] | null | undefined)
 }
 
 /** Demo reference price (USDC per ton) used by the "reset" button and the demo guide. */
-export const DEFAULT_PRICE_PER_TON = 380;
+export const DEFAULT_PRICE_PER_TON = 350;
 
 /** Next free Silo ID given the ones already taken, e.g. SILO-TUC-005. */
 export function suggestNextSiloId(taken: string[], prefix = "SILO-TUC-"): string {
@@ -389,7 +391,7 @@ function seed(): MockState {
     admin: fakePubkey("arva-admin"),
     certifier: fakePubkey("arva-certifier"),
     usdcMint: fakePubkey("arva-usdc-mint"),
-    pricePerTon: 380,
+    pricePerTon: 350,
     ltvBps: 7000,
     liqThresholdBps: 8000,
     feeBps: 75,

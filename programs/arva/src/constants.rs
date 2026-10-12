@@ -33,6 +33,10 @@ pub const DEFAULT_LIQ_THRESHOLD_BPS: u16 = 8_000;
 #[constant]
 pub const DEFAULT_FEE_BPS: u16 = 75;
 
+/// Share of the seized collateral paid to whoever liquidates an unhealthy loan.
+#[constant]
+pub const LIQUIDATION_BONUS_BPS: u16 = 500;
+
 /// Seconds in a 365-day year; denominator for simple annual interest.
 #[constant]
 pub const SECONDS_PER_YEAR: u64 = 31_536_000;

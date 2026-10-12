@@ -26,4 +26,8 @@ pub enum AgroError {
     NothingToRepay,
     #[msg("Price per ton is not set")]
     PriceNotSet,
+    #[msg("Borrower must hold exactly the warrant's tons to lock as collateral")]
+    CollateralMismatch,
+    #[msg("Price update outside the allowed range (half to double the current price)")]
+    PriceChangeTooLarge,
 }

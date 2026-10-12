@@ -24,7 +24,7 @@ const TIER_COLOR = {
 
 /**
  * "What if the grain price moves?" for a loan of 100 t of soy opened at the
- * current oracle price (or the 380 reference before config loads). Pure math
+ * current oracle price (or the 350 reference before config loads). Pure math
  * with the contract's own parameters: collateral value vs. the liquidation
  * threshold (debt ÷ liq %).
  */

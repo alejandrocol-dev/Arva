@@ -136,6 +136,39 @@ fn test_borrow_rejects_insufficient_liquidity() {
 }
 
 #[test]
+fn test_borrow_rejects_partial_collateral() {
+    let (mut svm, admin, usdc_mint, certifier) = initialized();
+    svm.airdrop(&certifier.pubkey(), 1_000_000_000).unwrap();
+
+    let ix = set_price_ix(&admin.pubkey(), PRICE);
+    send_ix(&mut svm, &admin, &[ix], &[&admin]).unwrap();
+
+    let depositor = Keypair::new();
+    svm.airdrop(&depositor.pubkey(), 1_000_000_000).unwrap();
+    fund_ata(&mut svm, usdc_mint, depositor.pubkey(), POOL_USDC);
+    let ix = deposit_liquidity_ix(&depositor.pubkey(), &usdc_mint, POOL_USDC);
+    send_ix(&mut svm, &admin, &[ix], &[&admin, &depositor]).unwrap();
+
+    let producer = Keypair::new();
+    svm.airdrop(&producer.pubkey(), 1_000_000_000).unwrap();
+    let ix = register_warrant_ix(&certifier.pubkey(), "SILO-B06", 0, TONS, &producer.pubkey());
+    send_ix(&mut svm, &admin, &[ix], &[&admin, &certifier]).unwrap();
+
+    // The producer moved 10 t of warrant tokens elsewhere: only 90 of 100 remain.
+    let warrant = warrant_pda("SILO-B06");
+    let mint = warrant_mint_pda(&warrant);
+    fund_ata(&mut svm, mint, producer.pubkey(), TONS - 10);
+
+    let ix = borrow_ix(&producer.pubkey(), &usdc_mint, &warrant);
+    let res = send_ix(&mut svm, &admin, &[ix], &[&admin, &producer]);
+    assert!(res.is_err());
+    assert_eq!(
+        res.err().unwrap().err,
+        TransactionError::InstructionError(0, InstructionError::Custom(6012)) // CollateralMismatch
+    );
+}
+
+#[test]
 fn test_borrow_rejects_unset_price() {
     let (mut svm, admin, usdc_mint, certifier) = initialized();
     svm.airdrop(&certifier.pubkey(), 1_000_000_000).unwrap();
