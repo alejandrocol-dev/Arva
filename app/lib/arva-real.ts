@@ -597,6 +597,24 @@ export class RealArvaClient implements ArvaClient {
     }));
   }
 
+  /** Latest signatures involving the wallet (its own auditable trail). */
+  async getMyActivity(owner: string, limit = 10): Promise<Activity[]> {
+    const connection = this.provider.connection;
+    const sigs = await connection.getSignaturesForAddress(new PublicKey(owner), { limit }, "confirmed");
+    if (sigs.length === 0) return [];
+    const txs = await connection.getTransactions(
+      sigs.map((s) => s.signature),
+      { commitment: "confirmed", maxSupportedTransactionVersion: 0 },
+    );
+    const logsBySig = new Map(txs.map((tx) => [tx?.transaction.signatures[0], tx?.meta?.logMessages]));
+    return sigs.map((s) => ({
+      signature: s.signature,
+      kind: activityKindFromLogs(logsBySig.get(s.signature)),
+      blockTime: s.blockTime ?? null,
+      failed: s.err !== null,
+    }));
+  }
+
   private signer(): PublicKey {
     const pk = this.provider.wallet.publicKey;
     if (!pk || pk.equals(PublicKey.default)) {

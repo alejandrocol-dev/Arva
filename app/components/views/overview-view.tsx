@@ -1,188 +1,267 @@
 "use client";
 
-import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import { useState } from "react";
 import {
   ArrowRight,
   CircleCheck,
+  CircleHelp,
+  ExternalLink,
   Coins,
   Gauge,
   Gift,
+  Globe,
   LoaderCircle,
-  Lock,
+  ShieldCheck,
   SlidersHorizontal,
-  Stamp,
+  TrendingUp,
   Undo2,
   Vault,
   Wallet,
   Wheat,
   type LucideIcon,
 } from "lucide-react";
-import {
-  arva,
-  WarrantStatus,
-  type Config,
-  type PoolStats,
-  type Warrant,
-} from "@/lib/arva";
+import { arva, WarrantStatus, type Config, type PoolStats } from "@/lib/arva";
 import { useFmt, useT, type MessageKey } from "@/lib/i18n";
-import { useJourney } from "@/lib/journey";
+import { setRole, stepKey, useJourney, type JourneyStep, type Role } from "@/lib/journey";
+import { PROGRAM_ID } from "@/lib/constants";
+import { explorerAddressUrl } from "@/lib/format";
 import { useView, type View } from "@/lib/nav";
 import { useAsyncData } from "@/lib/use-async";
-import { ActivityFeed } from "@/components/activity-feed";
-import { useStarterKit } from "@/components/starter-kit";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { ActivityFeed, KIND } from "@/components/activity-feed";
+import { useSimMarket, type SimEvent, type SimWarrant } from "@/lib/sim-market";
+import { useStepAction } from "@/components/journey-dock";
 import { BarList, Donut, Legend } from "@/components/charts";
-import { ArvaMark } from "@/components/logo";
-import { Badge, Button, Card, IconTile, Notice, ProgressBar, Skeleton, cx, type IconTileTone } from "@/components/ui";
+import { Badge, Card, ExplorerLink, IconTile, ProgressBar, Skeleton, cx, type IconTileTone } from "@/components/ui";
 
 export function OverviewView() {
   const t = useT();
   const [, setView] = useView();
-  const { data, error, loading, reload } = useAsyncData(async () => {
-    const [stats, config, warrants] = await Promise.all([
-      arva.getPoolStats(),
-      arva.getConfig(),
-      arva.getAllWarrants(),
-    ]);
-    return { stats, config, warrants };
+  const { data } = useAsyncData(async () => {
+    const [stats, config] = await Promise.all([arva.getPoolStats(), arva.getConfig()]);
+    return { stats, config };
   });
+  const sim = useSimMarket();
+  const [tape, setTape] = useState<"sim" | "real">("sim");
 
   return (
     <div className="space-y-6">
-      <DemoHero onGo={setView} />
+      <DemoHero onGo={setView} stats={data?.stats} config={data?.config} />
+
+      <MyActivity />
+
+      <div className="flex flex-wrap items-center gap-2.5 pt-2">
+        <h2 className="text-2xl font-extrabold tracking-tight text-ink">{t("dash.global.title")}</h2>
+        <Badge tone="info" icon={<Globe className="size-3.5" aria-hidden />}>
+          {t("dash.global.badge")}
+        </Badge>
+      </div>
 
       <div data-tour="kpis">
-        {error && !data ? (
-          <Notice
-            tone="warn"
-            action={
-              <Button size="sm" variant="secondary" onClick={reload}>
-                {t("common.retry")}
-              </Button>
-            }
-          >
-            {t("overview.kpi.error")}
-          </Notice>
-        ) : (
-          <Kpis loading={loading && !data} stats={data?.stats} config={data?.config} warrants={data?.warrants} />
-        )}
+        <Kpis stats={sim?.stats} config={data?.config} tons={sim?.tons} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <Card title={t("dash.pool.title")} subtitle={t("dash.pool.subtitle")}>
-          {data ? (
-            <PoolDonut stats={data.stats} />
-          ) : error ? (
-            <ChartError onRetry={reload} />
-          ) : (
-            <Skeleton className="h-56" />
-          )}
-        </Card>
         <Card title={t("dash.warrants.title")} subtitle={t("dash.warrants.subtitle")}>
-          {data ? (
-            <WarrantBars warrants={data.warrants} />
-          ) : error ? (
-            <ChartError onRetry={reload} />
+          {sim ? <SimWarrantBars warrants={sim.warrants} /> : <Skeleton className="h-48" />}
+        </Card>
+        <Card title={t("dash.pool.title")} subtitle={t("dash.pool.subtitle")}>
+          {sim ? <PoolDonut stats={sim.stats} /> : <Skeleton className="h-56" />}
+        </Card>
+        <Card
+          tour="activity"
+          title={
+            <span className="inline-flex items-center gap-2">
+              {t("activity.title")}
+              {tape === "sim" && <span className="inline-flex items-center gap-1.5 rounded-full bg-mint/10 px-2 py-0.5 text-[11px] font-bold text-brand-strong">
+                <span className="relative flex size-1.5">
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-mint opacity-70" />
+                  <span className="relative inline-flex size-1.5 rounded-full bg-mint" />
+                </span>
+                {t("sim.live")}
+              </span>}
+            </span>
+          }
+          subtitle={t(tape === "sim" ? "sim.activity.subtitle" : "activity.subtitle")}
+        >
+          <div role="tablist" aria-label={t("sim.tape.aria")} className="mb-4 grid grid-cols-2 rounded-xl bg-sunken p-1">
+            {(["sim", "real"] as const).map((k) => (
+              <button
+                key={k}
+                type="button"
+                role="tab"
+                aria-selected={tape === k}
+                onClick={() => setTape(k)}
+                className={cx(
+                  "inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-colors",
+                  tape === k ? "bg-surface text-ink shadow-sm" : "text-mute hover:text-ink",
+                )}
+              >
+                {k === "real" && <ShieldCheck className="size-3.5" aria-hidden />}
+                {t(k === "sim" ? "sim.tape.sim" : "sim.tape.real")}
+              </button>
+            ))}
+          </div>
+          {tape === "real" ? (
+            <ActivityFeed limit={6} />
+          ) : sim ? (
+            <SimTape events={sim.events} />
           ) : (
-            <Skeleton className="h-48" />
+            <Skeleton className="h-64" />
           )}
         </Card>
-        <Card tour="activity" title={t("activity.title")} subtitle={t("activity.subtitle")}>
-          <ActivityFeed limit={6} />
-        </Card>
       </div>
 
-      <section id="how" className="scroll-mt-24 pt-4">
-        <HowItWorks />
-      </section>
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card title={t("overview.why.title")}>
-          <ul className="space-y-3 text-sm text-mute">
-            {(["overview.why.1", "overview.why.2", "overview.why.3"] as const).map((k) => (
-              <li key={k} className="flex gap-2.5">
-                <CircleCheck className="mt-0.5 size-4 shrink-0 text-mint" aria-hidden />
-                {t(k)}
-              </li>
-            ))}
-          </ul>
-        </Card>
-        <Notice tone="warn" title={t("overview.honest.title")} className="self-start">
-          {t("overview.honest.body")}
-        </Notice>
-      </div>
+      <button
+        type="button"
+        onClick={() => setView("help")}
+        className="group flex w-full items-center justify-between gap-4 rounded-2xl border border-line bg-surface px-5 py-4 text-left shadow-(--shadow-card) transition-colors hover:border-brand/40"
+      >
+        <span className="flex items-center gap-3">
+          <IconTile icon={CircleHelp} tone="lilac" size="sm" />
+          <span>
+            <span className="block text-sm font-bold text-ink">{t("dash.help.title")}</span>
+            <span className="block text-xs text-mute">{t("dash.help.body")}</span>
+          </span>
+        </span>
+        <ArrowRight className="size-4 shrink-0 text-faint transition-transform group-hover:translate-x-0.5 group-hover:text-brand" aria-hidden />
+      </button>
     </div>
   );
 }
 
 /* --------------------------------- Hero / demo ------------------------------- */
 
-const STEP_STYLE: Array<{ tile: string; icon: LucideIcon }> = [
-  { tile: "bg-tile-lime", icon: Wallet },
-  { tile: "bg-tile-sky", icon: Gift },
-  { tile: "bg-tile-amber", icon: Coins },
-  { tile: "bg-tile-lilac", icon: Undo2 },
+const STEP_STYLE: Record<JourneyStep, { tile: string; icon: LucideIcon }> = {
+  connect: { tile: "bg-tile-lime", icon: Wallet },
+  kit: { tile: "bg-tile-sky", icon: Gift },
+  borrow: { tile: "bg-tile-amber", icon: Coins },
+  repay: { tile: "bg-tile-lilac", icon: Undo2 },
+  usdc: { tile: "bg-tile-sky", icon: Gift },
+  deposit: { tile: "bg-tile-amber", icon: TrendingUp },
+};
+
+const ROLES: Array<{ id: Role; icon: LucideIcon; label: MessageKey }> = [
+  { id: "producer", icon: Wheat, label: "dash.role.producer" },
+  { id: "investor", icon: TrendingUp, label: "dash.role.investor" },
 ];
 
-function DemoHero({ onGo }: { onGo: (v: View) => void }) {
+/** The wallet's own transactions on devnet — every row opens a real signature in Explorer. */
+function MyActivity() {
   const t = useT();
-  const { setVisible } = useWalletModal();
-  const kit = useStarterKit();
-  const { done, current, count, owner } = useJourney();
-  const actions: Array<() => void> = [
-    () => setVisible(true),
-    () => void kit.run(),
-    () => onGo("borrow"),
-    () => onGo("borrow"),
-  ];
+  const { publicKey } = useWallet();
+  const owner = publicKey?.toBase58();
+  return (
+    <Card
+      title={
+        <span className="flex items-center gap-2">
+          {t("mine.title")}
+          <Badge tone="info" icon={<ShieldCheck className="size-3.5" aria-hidden />}>
+            {t("mine.badge")}
+          </Badge>
+        </span>
+      }
+      subtitle={t("mine.subtitle")}
+      actions={
+        owner ? (
+          <ExplorerLink kind="address" value={owner} label={t("mine.explorer")} />
+        ) : undefined
+      }
+    >
+      {owner ? (
+        <ActivityFeed limit={6} owner={owner} />
+      ) : (
+        <p className="text-sm text-mute">{t("mine.connect")}</p>
+      )}
+    </Card>
+  );
+}
+
+function DemoHero({ onGo, stats, config }: { onGo: (v: View) => void; stats?: PoolStats; config?: Config }) {
+  const t = useT();
+  const f = useFmt();
+  const action = useStepAction();
+  const { role, steps, done, current, count, owner } = useJourney();
+  const pct = Math.round((count / steps.length) * 100);
+  const apy = stats && config ? f.bps((config.annualInterestBps * stats.utilizationBps) / 10_000) : null;
+  const investor = role === "investor";
 
   return (
-    <section id="demo" data-tour="demo" className="av-night av-glow-line relative overflow-hidden rounded-[24px] p-6 text-white shadow-(--shadow-float) sm:p-8">
+    <section id="demo" data-tour="demo" className="av-night av-glow-line relative overflow-hidden rounded-[24px] p-5 text-white shadow-(--shadow-float) sm:p-6">
       <div aria-hidden className="av-grid pointer-events-none absolute inset-0 opacity-50" />
       <div aria-hidden className="av-float pointer-events-none absolute -left-20 -top-24 size-72 rounded-full bg-brand/30 blur-3xl" />
       <div aria-hidden className="pointer-events-none absolute -bottom-24 right-10 size-64 rounded-full bg-peach/15 blur-3xl" />
-      <ArvaMark white className="pointer-events-none absolute -bottom-10 left-[36%] hidden size-52 opacity-[0.06] lg:block" />
-      <div className="relative grid gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.6fr)] lg:items-center">
+      <div className="relative grid gap-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.6fr)] lg:items-center">
         <div>
-          <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-brand-glow backdrop-blur">
-            <span className="size-1.5 rounded-full bg-mint shadow-[0_0_8px_var(--color-mint)]" />
-            {t("dash.hero.hello")}
-          </p>
-          <h1 className="mt-4 text-[28px] font-extrabold leading-[1.15] sm:text-[34px]">{t("dash.hero.title")}</h1>
-          <p className="mt-3 max-w-md text-sm leading-relaxed text-white/70">{t("dash.hero.body")}</p>
-          <div className="mt-6 max-w-xs">
-            <div className="mb-2 flex items-center justify-between text-xs font-semibold">
-              <span className="text-white/70">{t("dash.hero.progress", { done: count })}</span>
-              <span className="av-grad-text">{count * 25}%</span>
-            </div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
-              <div className="h-full rounded-full bg-gradient-to-r from-brand-glow via-brand to-cyan shadow-[0_0_12px_rgba(180,169,255,0.7)] transition-[width] duration-700" style={{ width: `${count * 25}%` }} />
-            </div>
+          <div role="tablist" aria-label={t("dash.role.aria")} className="inline-flex rounded-full border border-white/15 bg-white/5 p-1 backdrop-blur">
+            {ROLES.map((r) => {
+              const Icon = r.icon;
+              const active = role === r.id;
+              return (
+                <button
+                  key={r.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setRole(r.id)}
+                  className={cx(
+                    "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-colors",
+                    active ? "bg-white text-navy shadow-sm" : "text-white/70 hover:text-white",
+                  )}
+                >
+                  <Icon className="size-3.5" aria-hidden />
+                  {t(r.label)}
+                </button>
+              );
+            })}
           </div>
-          {!owner && <p className="mt-4 text-xs text-white/50">{t("demo.needWallet")}</p>}
-          <button
-            type="button"
-            onClick={() => onGo("admin")}
-            className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-brand-glow hover:text-white"
-          >
-            <SlidersHorizontal className="size-3.5" aria-hidden />
-            {t("demo.extra")}
-            <ArrowRight className="size-3.5" aria-hidden />
-          </button>
+          <h1 className="mt-4 text-[24px] font-extrabold leading-[1.15] sm:text-[28px]">
+            {t(investor ? "inv.hero.title" : "dash.hero.title")}
+          </h1>
+          <p className="mt-2 max-w-md text-sm leading-relaxed text-white/70">
+            {t(investor ? "inv.hero.body" : "dash.hero.body")}
+          </p>
+          <div className="mt-4 flex max-w-sm items-center gap-3">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
+              <div className="h-full rounded-full bg-gradient-to-r from-brand-glow via-brand to-cyan shadow-[0_0_12px_rgba(180,169,255,0.7)] transition-[width] duration-700" style={{ width: `${pct}%` }} />
+            </div>
+            <span className="shrink-0 text-xs font-semibold text-white/70">{t("dash.hero.progress", { done: count, total: steps.length })}</span>
+          </div>
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs">
+            {investor && apy && (
+              <span className="inline-flex items-center gap-1.5 font-semibold text-white/80">
+                <span className="size-1.5 rounded-full bg-mint shadow-[0_0_8px_var(--color-mint)]" />
+                {t("inv.hero.yield", { apy })}
+              </span>
+            )}
+            {!owner && <span className="text-white/50">{t("demo.needWallet")}</span>}
+            <button
+              type="button"
+              onClick={() => onGo("admin")}
+              className="inline-flex items-center gap-1.5 font-semibold text-brand-glow hover:text-white"
+            >
+              <SlidersHorizontal className="size-3.5" aria-hidden />
+              {t(investor ? "inv.extra" : "demo.extra")}
+              <ArrowRight className="size-3.5" aria-hidden />
+            </button>
+          </div>
         </div>
 
-        <ol className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-          {STEP_STYLE.map((s, i) => {
+        <ol className={cx("grid gap-3", steps.length === 4 ? "grid-cols-2 xl:grid-cols-4" : "grid-cols-1 sm:grid-cols-3")}>
+          {steps.map((id, i) => {
+            const s = STEP_STYLE[id];
             const Icon = s.icon;
             const isDone = done[i];
             const isCurrent = i === current;
-            const n = (i + 1) as 1 | 2 | 3 | 4;
+            const n = i + 1;
+            const busy = (id === "kit" || id === "usdc") && action.kitBusy;
             return (
               <li
-                key={i}
+                key={`${role}-${id}`}
                 className={cx(
-                  "flex min-h-[188px] flex-col rounded-2xl p-4 text-navy shadow-[0_10px_30px_-14px_rgba(0,0,0,0.5)] transition-transform hover:-translate-y-1",
+                  "flex min-h-[148px] flex-col rounded-2xl p-3.5 text-navy shadow-[0_10px_30px_-14px_rgba(0,0,0,0.5)] transition-transform hover:-translate-y-0.5",
                   s.tile,
-                  isCurrent && "ring-2 ring-brand-glow ring-offset-2 ring-offset-navy shadow-[0_0_0_6px_rgba(180,169,255,0.15),0_16px_40px_-12px_rgba(99,85,246,0.8)] xl:-translate-y-1",
+                  isCurrent && "ring-2 ring-brand-glow ring-offset-2 ring-offset-navy shadow-[0_0_0_6px_rgba(180,169,255,0.15),0_16px_40px_-12px_rgba(99,85,246,0.8)]",
                 )}
               >
                 <div className="flex items-center justify-between">
@@ -190,31 +269,29 @@ function DemoHero({ onGo }: { onGo: (v: View) => void }) {
                   {isDone ? (
                     <CircleCheck className="size-5 text-brand-strong" aria-label={t("demo.done")} />
                   ) : (
-                    <span className="grid size-8 place-items-center rounded-lg bg-white/60 text-navy shadow-sm">
-                      <Icon className="size-4" aria-hidden />
+                    <span className="grid size-7 place-items-center rounded-lg bg-white/60 text-navy shadow-sm">
+                      <Icon className="size-3.5" aria-hidden />
                     </span>
                   )}
                 </div>
-                <p className="mt-4 font-display text-[15px] font-bold leading-snug">{t(`demo.step${n}.title` as MessageKey)}</p>
-                <p className="mt-1 line-clamp-3 text-xs leading-snug text-navy/60">{t(`demo.step${n}.body` as MessageKey)}</p>
-                <div className="mt-auto pt-3">
+                <p className="mt-2.5 font-display text-[14px] font-bold leading-snug">{t(stepKey(role, n, "title"))}</p>
+                <p className="mt-1 line-clamp-2 text-xs leading-snug text-navy/60">{t(stepKey(role, n, "body"))}</p>
+                <div className="mt-auto pt-2.5">
                   {isDone ? (
                     <span className="text-xs font-bold text-brand-strong">{t("demo.done")}</span>
                   ) : (
                     <button
                       type="button"
-                      onClick={actions[i]}
-                      disabled={i === 1 && kit.busy}
+                      onClick={() => action.run(id)}
+                      disabled={busy}
                       className={cx(
                         "inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-colors disabled:opacity-70",
                         isCurrent ? "bg-brand text-white shadow-[0_6px_14px_-6px_rgba(99,85,246,0.8)] hover:bg-brand-strong" : "bg-white/70 text-navy hover:bg-white",
                       )}
                     >
-                      {i === 1 && kit.busy ? (
-                        <LoaderCircle className="size-3.5 animate-spin" aria-hidden />
-                      ) : null}
-                      {t(`demo.step${n}.cta` as MessageKey)}
-                      {!(i === 1 && kit.busy) && <ArrowRight className="size-3.5" aria-hidden />}
+                      {busy && <LoaderCircle className="size-3.5 animate-spin" aria-hidden />}
+                      {t(stepKey(role, n, "cta"))}
+                      {!busy && <ArrowRight className="size-3.5" aria-hidden />}
                     </button>
                   )}
                 </div>
@@ -227,22 +304,13 @@ function DemoHero({ onGo }: { onGo: (v: View) => void }) {
   );
 }
 
+
 /* ------------------------------------ KPIs ----------------------------------- */
 
-function Kpis({
-  loading,
-  stats,
-  config,
-  warrants,
-}: {
-  loading: boolean;
-  stats?: PoolStats;
-  config?: Config;
-  warrants?: Warrant[];
-}) {
+function Kpis({ stats, config, tons }: { stats?: PoolStats; config?: Config; tons?: number }) {
   const t = useT();
   const f = useFmt();
-  if (loading || !stats || !config || !warrants)
+  if (!stats || tons === undefined)
     return (
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
@@ -250,53 +318,36 @@ function Kpis({
         ))}
       </div>
     );
-  const tons = warrants.reduce((s, w) => s + w.tons, 0);
+  const ltv = config?.ltvBps ?? 7000;
+  const liq = config?.liqThresholdBps ?? 8000;
   const items: Array<{ icon: LucideIcon; tone: IconTileTone; accent: string; label: string; value: string; hint: string }> = [
     { icon: Vault, tone: "lime", accent: "#6355f6", label: t("overview.kpi.liquidity"), value: f.usdcRound(stats.available), hint: t("overview.kpi.liquidityHint") },
     { icon: Coins, tone: "sky", accent: "#22d3ee", label: t("overview.kpi.debt"), value: f.usdcRound(stats.outstandingDebt), hint: t("overview.kpi.debtHint") },
     { icon: Wheat, tone: "amber", accent: "#ffb38a", label: t("overview.kpi.tons"), value: f.tons(tons), hint: t("overview.kpi.tonsHint") },
-    { icon: Gauge, tone: "lilac", accent: "#8f83ff", label: t("overview.kpi.ltv"), value: f.bps(config.ltvBps), hint: t("overview.kpi.ltvHint", { liq: f.bps(config.liqThresholdBps) }) },
+    { icon: Gauge, tone: "lilac", accent: "#8f83ff", label: t("overview.kpi.ltv"), value: f.bps(ltv), hint: t("overview.kpi.ltvHint", { liq: f.bps(liq) }) },
   ];
   return (
     <section aria-label="Live metrics" className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-      {items.map((it) => {
-        return (
-          <div
-            key={it.label}
-            className="av-lift relative overflow-hidden rounded-2xl border border-line bg-surface p-5 shadow-(--shadow-card)"
-            style={{ backgroundImage: `radial-gradient(120% 80% at 100% 0%, ${it.accent}14, transparent 60%)` }}
-          >
-            <span aria-hidden className="absolute inset-x-0 top-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${it.accent}, ${it.accent}00)` }} />
-            <div className="flex items-start justify-between gap-3">
-              <p className="text-xs font-semibold text-mute">{it.label}</p>
-              <IconTile icon={it.icon} tone={it.tone} size="sm" />
-            </div>
-            <p className="mt-2 font-display text-2xl font-extrabold tracking-tight text-ink sm:text-[26px]">{it.value}</p>
-            <p className="mt-1 text-xs text-faint">{it.hint}</p>
+      {items.map((it) => (
+        <div
+          key={it.label}
+          className="av-lift relative overflow-hidden rounded-2xl border border-line bg-surface p-5 shadow-(--shadow-card)"
+          style={{ backgroundImage: `radial-gradient(120% 80% at 100% 0%, ${it.accent}14, transparent 60%)` }}
+        >
+          <span aria-hidden className="absolute inset-x-0 top-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${it.accent}, ${it.accent}00)` }} />
+          <div className="flex items-start justify-between gap-3">
+            <p className="text-xs font-semibold text-mute">{it.label}</p>
+            <IconTile icon={it.icon} tone={it.tone} size="sm" />
           </div>
-        );
-      })}
+          <p className="mt-2 font-display text-2xl font-extrabold tracking-tight text-ink tabular-nums transition-all sm:text-[26px]">{it.value}</p>
+          <p className="mt-1 text-xs text-faint">{it.hint}</p>
+        </div>
+      ))}
     </section>
   );
 }
 
 /* ---------------------------------- Charts ----------------------------------- */
-
-function ChartError({ onRetry }: { onRetry: () => void }) {
-  const t = useT();
-  return (
-    <Notice
-      tone="warn"
-      action={
-        <Button size="sm" variant="secondary" onClick={onRetry}>
-          {t("common.retry")}
-        </Button>
-      }
-    >
-      {t("common.loadError")}
-    </Notice>
-  );
-}
 
 function PoolDonut({ stats }: { stats: PoolStats }) {
   const t = useT();
@@ -343,71 +394,97 @@ const STATUS: Record<WarrantStatus, { label: MessageKey; color: string; tone: "b
   [WarrantStatus.Released]: { label: "status.released", color: "var(--color-mint)", tone: "brand" },
 };
 
-function WarrantBars({ warrants }: { warrants: Warrant[] }) {
+const SIM_ROWS = 7;
+
+function SimWarrantBars({ warrants }: { warrants: SimWarrant[] }) {
   const t = useT();
   const f = useFmt();
-  if (!warrants.length) return <p className="text-sm text-mute">{t("dash.warrants.empty")}</p>;
-  const sorted = [...warrants].sort((a, b) => a.siloId.localeCompare(b.siloId));
   const totals = Object.values(WarrantStatus)
     .filter((v): v is WarrantStatus => typeof v === "number")
-    .map((s) => ({ s, tons: warrants.filter((w) => w.status === s).reduce((n, w) => n + w.tons, 0) }))
+    .map((st) => ({ st, tons: warrants.filter((w) => w.status === st).reduce((n, w) => n + w.tons, 0) }))
     .filter((x) => x.tons > 0);
+  const rows = [...warrants].sort((a, b) => b.tons - a.tons).slice(0, SIM_ROWS);
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap gap-2">
-        {totals.map(({ s, tons }) => (
-          <Badge key={s} tone={STATUS[s].tone}>
-            {t(STATUS[s].label)} · {f.tons(tons)}
+        {totals.map(({ st, tons }) => (
+          <Badge key={st} tone={STATUS[st].tone}>
+            {t(STATUS[st].label)} · {f.tons(tons)}
           </Badge>
         ))}
       </div>
       <BarList
-        items={sorted.map((w) => ({
-          label: w.siloId,
+        items={rows.map((w) => ({
+          label: w.id,
           value: w.tons,
           display: f.tons(w.tons),
           color: STATUS[w.status].color,
-          tag: <span className="text-[11px] text-faint">{t("status.grain.soybean")}</span>,
+          tag: <span className="truncate text-[11px] text-faint">{t(`sim.grain.${w.grain}` as MessageKey)} · {w.place}</span>,
         }))}
       />
+      {warrants.length > SIM_ROWS && (
+        <p className="text-xs text-faint">{t("sim.more", { n: warrants.length - SIM_ROWS })}</p>
+      )}
     </div>
   );
 }
 
-/* ------------------------------- How it works -------------------------------- */
-
-function HowItWorks() {
+function SimTape({ events }: { events: SimEvent[] }) {
   const t = useT();
   const f = useFmt();
-  const steps: Array<{ icon: LucideIcon; title: string; body: string }> = [
-    { icon: Stamp, title: t("overview.how.1.title"), body: t("overview.how.1.body") },
-    { icon: Lock, title: t("overview.how.2.title"), body: t("overview.how.2.body") },
-    {
-      icon: Coins,
-      title: t("overview.how.3.title"),
-      body: t("overview.how.3.body", { ltv: f.bps(7000) }),
-    },
-    { icon: Undo2, title: t("overview.how.4.title"), body: t("overview.how.4.body") },
-  ];
+  const value = (e: SimEvent) =>
+    e.kind === "registerWarrant"
+      ? f.tons(e.amount)
+      : e.kind === "setPrice"
+        ? `${f.usdc(e.amount)}/t`
+        : f.usdcRound(e.amount);
   return (
     <div>
-      <h2 className="mb-5 text-2xl font-extrabold tracking-tight text-ink">{t("overview.how.title")}</h2>
-      <ol className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <span aria-hidden className="pointer-events-none absolute left-[12%] right-[12%] top-[44px] hidden h-px bg-[linear-gradient(90deg,var(--color-brand-glow)_50%,transparent_50%)] bg-[length:10px_1px] lg:block" />
-        {steps.map((s, i) => (
-          <li
-            key={i}
-            className="av-lift relative rounded-(--radius-card) border border-line bg-surface p-5 shadow-(--shadow-card)"
-          >
-            <div className="mb-4 flex items-center justify-between">
-              <IconTile icon={s.icon} tone="navy" size="sm" className="size-10 shadow-[0_8px_18px_-8px_rgba(99,85,246,0.8)]" />
-              <span className="font-display text-sm font-bold text-brand">0{i + 1}</span>
+      <ol className="relative space-y-1 overflow-hidden">
+      {events.map((e) => {
+        const k = KIND[e.kind];
+        const Icon = k.icon;
+        return (
+          <li key={e.id} className="av-tape-in flex items-center gap-3 rounded-xl px-2 py-2">
+            <span className={cx("grid size-9 shrink-0 place-items-center rounded-xl", k.tile)}>
+              <Icon className="size-4" aria-hidden />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-semibold text-ink">{t(k.label)}</p>
+              <p className="truncate text-xs text-faint">
+                {e.warrant.place} · {e.warrant.country} · {f.ago(e.at)}
+              </p>
             </div>
-            <h3 className="text-base font-bold text-ink">{s.title}</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-mute">{s.body}</p>
+            <span className="shrink-0 font-mono text-xs font-semibold text-ink tabular-nums">{value(e)}</span>
+            <span
+              role="button"
+              aria-disabled="true"
+              tabIndex={0}
+              title={t("sim.audit.disabled")}
+              aria-label={t("sim.audit.disabled")}
+              className="grid size-7 shrink-0 cursor-not-allowed place-items-center rounded-lg text-faint/60 hover:bg-sunken"
+            >
+              <ExternalLink className="size-3.5" aria-hidden />
+            </span>
           </li>
-        ))}
+        );
+      })}
       </ol>
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 text-xs">
+        <span className="inline-flex items-center gap-1.5 text-faint">
+          <ShieldCheck className="size-3.5" aria-hidden />
+          {t("sim.audit.note")}
+        </span>
+        <a
+          href={explorerAddressUrl(PROGRAM_ID)}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1 font-semibold text-brand hover:underline"
+        >
+          {t("sim.audit.real")}
+          <ExternalLink className="size-3" aria-hidden />
+        </a>
+      </div>
     </div>
   );
 }

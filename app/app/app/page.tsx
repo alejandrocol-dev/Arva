@@ -2,6 +2,7 @@
 
 import { AdminView } from "@/components/views/admin-view";
 import { CertifierView } from "@/components/views/certifier-view";
+import { HelpView } from "@/components/views/help-view";
 import { InvestorView } from "@/components/views/investor-view";
 import { OverviewView } from "@/components/views/overview-view";
 import { ProducerView } from "@/components/views/producer-view";
@@ -18,6 +19,7 @@ export default function AppHome() {
       {view === "earn" && <InvestorView />}
       {view === "certifier" && <CertifierView />}
       {view === "admin" && <AdminView />}
+      {view === "help" && <HelpView />}
     </div>
   );
 }

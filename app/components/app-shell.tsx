@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
+  CircleHelp,
   Coins,
   Compass,
   ExternalLink,
@@ -30,6 +31,7 @@ const MAIN: Item[] = [
   { id: "overview", label: "nav.overview", icon: LayoutDashboard },
   { id: "borrow", label: "nav.borrow", icon: Coins },
   { id: "earn", label: "nav.earn", icon: Vault },
+  { id: "help", label: "nav.help", icon: CircleHelp },
 ];
 const TOOLS: Item[] = [
   { id: "certifier", label: "nav.certifier", icon: Stamp },
@@ -88,7 +90,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-dvh">
       <aside className="sticky top-0 hidden h-dvh w-[264px] shrink-0 flex-col border-r border-line bg-surface lg:flex">
-        <Link href="/" className="flex items-center border-b border-line px-6 pb-5 pt-6 mb-5" aria-label={t("common.brand")}>
+        <Link href="/" className="mb-4 flex h-16 shrink-0 items-center border-b border-line px-6" aria-label={t("common.brand")}>
           <ArvaLockup />
         </Link>
 
@@ -149,13 +151,13 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 border-b border-line bg-bg/85 backdrop-blur-md">
-          <div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-8">
+          <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-8">
             <div className="flex min-w-0 items-center gap-3">
               <Link href="/" className="lg:hidden" aria-label={t("common.brand")}>
                 <ArvaMark className="size-9" />
               </Link>
               <div className="hidden min-w-0 sm:block">
-                <p className="truncate font-display text-base font-bold text-ink">{t(current.label)}</p>
+                <p className="truncate font-display text-xl font-extrabold tracking-tight text-ink">{t(current.label)}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">

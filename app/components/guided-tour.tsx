@@ -22,6 +22,7 @@ const TOURS: Record<View, { steps: Step[]; next?: View }> = {
   borrow: { steps: [{ target: "page-header" }, { target: "borrow-main" }], next: "admin" },
   admin: { steps: [{ target: "admin-oracle" }, { target: "admin-price" }, { target: "admin-loans" }], next: "earn" },
   earn: { steps: [{ target: "earn-pool" }, { target: "earn-deposit" }] },
+  help: { steps: [{ target: "page-header" }] },
 };
 
 /* ------------------------------ persistence ------------------------------- */

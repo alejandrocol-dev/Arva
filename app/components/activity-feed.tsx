@@ -18,7 +18,7 @@ import { useAsyncData } from "@/lib/use-async";
 import { Marquee } from "@/components/motion";
 import { Button, ExplorerLink, Notice, Skeleton, cx } from "@/components/ui";
 
-const KIND: Record<ActivityKind, { icon: LucideIcon; label: MessageKey; tile: string }> = {
+export const KIND: Record<ActivityKind, { icon: LucideIcon; label: MessageKey; tile: string }> = {
   initialize: { icon: Settings2, label: "activity.initialize", tile: "bg-tile-lilac text-navy" },
   setPrice: { icon: Tag, label: "activity.setPrice", tile: "bg-tile-amber text-warn" },
   registerWarrant: { icon: FileCheck2, label: "activity.registerWarrant", tile: "bg-tile-sky text-info" },
@@ -69,10 +69,13 @@ export function ActivityTicker({ limit = 8, label }: { limit?: number; label?: s
 }
 
 /** Latest program transactions on devnet, each one linked to the explorer. */
-export function ActivityFeed({ limit = 8 }: { limit?: number }) {
+export function ActivityFeed({ limit = 8, owner }: { limit?: number; owner?: string }) {
   const t = useT();
   const f = useFmt();
-  const { data, error, loading, reload } = useAsyncData(() => arva.getRecentActivity(limit), limit);
+  const { data, error, loading, reload } = useAsyncData(
+    () => (owner ? arva.getMyActivity(owner, limit) : arva.getRecentActivity(limit)),
+    `${owner ?? "all"}:${limit}`,
+  );
 
   if (error && !data)
     return (

@@ -254,6 +254,8 @@ export interface ArvaClient {
   getAllWarrants(): Promise<Warrant[]>;
   /** Most recent program transactions, newest first (activity feed). */
   getRecentActivity(limit?: number): Promise<Activity[]>;
+  /** Transactions that touched this wallet, newest first (its auditable trail). */
+  getMyActivity(owner: string, limit?: number): Promise<Activity[]>;
 
   /** Instruction: register_warrant (certifier only on-chain). */
   registerWarrant(
@@ -482,6 +484,11 @@ class MockArvaClient implements ArvaClient {
   }
 
   async getRecentActivity(limit = 10): Promise<Activity[]> {
+    await delay();
+    return this.state.activity.slice(0, limit).map((a) => ({ ...a }));
+  }
+
+  async getMyActivity(_owner: string, limit = 10): Promise<Activity[]> {
     await delay();
     return this.state.activity.slice(0, limit).map((a) => ({ ...a }));
   }
@@ -767,6 +774,9 @@ class ArvaRouter implements ArvaClient {
   }
   getRecentActivity(limit = 10) {
     return this.read(`activity:${limit}`, (c) => c.getRecentActivity(limit), 20_000);
+  }
+  getMyActivity(owner: string, limit = 10) {
+    return this.read(`myActivity:${owner}:${limit}`, (c) => c.getMyActivity(owner, limit), 20_000);
   }
   registerWarrant(input: RegisterWarrantInput) {
     return this.write((c) => c.registerWarrant(input));

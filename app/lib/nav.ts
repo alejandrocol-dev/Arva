@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useSyncExternalStore } from "react";
 
-export type View = "overview" | "borrow" | "earn" | "certifier" | "admin";
-export const VIEWS: View[] = ["overview", "borrow", "earn", "certifier", "admin"];
+export type View = "overview" | "borrow" | "earn" | "certifier" | "admin" | "help";
+export const VIEWS: View[] = ["overview", "borrow", "earn", "certifier", "admin", "help"];
 
 function parse(hash: string): View {
   const v = hash.replace(/^#/, "") as View;

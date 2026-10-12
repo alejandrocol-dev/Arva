@@ -6,6 +6,7 @@ import { Coins, TrendingUp, Wheat } from "lucide-react";
 import { arva, type Config, type PoolStats } from "@/lib/arva";
 import { MIN_SOL_FOR_FEES } from "@/lib/constants";
 import { useFmt, useT } from "@/lib/i18n";
+import { markDeposited } from "@/lib/journey";
 import { useAsyncData } from "@/lib/use-async";
 import { TxDialog } from "@/components/tx-dialog";
 import { WalletButton } from "@/components/wallet-button";
@@ -152,7 +153,11 @@ export function InvestorView() {
           ]}
           confirmLabel={t("earn.confirm", { amount: f.usdc(amountNum) })}
           successText={t("earn.success", { amount: f.usdc(amountNum, false) })}
-          action={() => arva.depositLiquidity(amountNum)}
+          action={async () => {
+            const res = await arva.depositLiquidity(amountNum);
+            if (owner) markDeposited(owner);
+            return res;
+          }}
           onSuccess={() => setAmount("")}
         />
       )}
