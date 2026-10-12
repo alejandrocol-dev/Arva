@@ -92,6 +92,12 @@ Argentina already has a legal instrument over that asset: the **warrant**, a cre
 | Banks and brokers | Lend against warrants, bilaterally | ARVA uses an open pool and public rules |
 | Agrotoken, Nera, SiloReal, Origino | Tokenize or monitor grain and silo bags | A different instrument. ARVA works on the legal warrant |
 
+## Who pays
+
+The first customer is not the producer but the **licensed warehouse or warrant platform**: ARVA gives their producers a credit product without using the warehouse's balance sheet. Revenue: an integration fee plus a per-warrant fee financed. The **producer** pays the origination fee (0.75% in the demo) plus interest to the pool. On the other side, the **lender** earns the interest; the pilot starts with identified, qualified lenders and opens to anyone once the risk model is proven.
+
+The regulated alternative already exists: Argentina's first warrant-backed note traded on MAV (July 2026) paid around 7% annual dollar-linked, but needed four institutions and a bespoke, ~US$1M deal. ARVA's wedge is not a lower rate but **tickets the incumbent structure can't serve** (US$20-50k, self-service, in seconds): for the small producer, the alternative is often no credit at all or far costlier informal credit.
+
 ---
 
 ## Try it
