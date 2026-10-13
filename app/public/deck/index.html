@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arva · Pitch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#1B1440;--night2:#2A1F6B;--deep:#0F0B28;
+  --vio:#6355F6;--vio-s:#4437D9;--lav:#B4A9FF;--lav2:#8F83FF;
+  --peach:#FFB38A;--cyan:#22D3EE;--mint:#3DD68C;--amber:#F5A524;--rose:#E8799B;
+  --paper:#FAF9F5;--ink:#17132B;--mute:#5A5C70;--faint:#8B8DA0;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#06041a;overflow:hidden;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.viewport{position:fixed;inset:0;overflow:hidden}
+.deck{width:1920px;height:1080px;position:absolute;left:50%;top:50%;transform-origin:center center}
+.s{position:absolute;inset:0;overflow:hidden;opacity:0;visibility:hidden;transition:opacity .7s var(--ease),visibility 0s .7s;isolation:isolate}
+.s.on{opacity:1;visibility:visible;transition:opacity .7s var(--ease),visibility 0s}
+
+/* surfaces */
+.dark{color:#fff;background:
+  radial-gradient(60% 70% at 0% 0%,rgba(99,85,246,.55),transparent 60%),
+  radial-gradient(45% 55% at 100% 100%,rgba(255,179,138,.22),transparent 65%),
+  radial-gradient(40% 45% at 85% 0%,rgba(34,211,238,.14),transparent 60%),
+  linear-gradient(135deg,#2A1F6B 0%,#1B1440 55%,#0F0B28 100%)}
+.light{color:var(--ink);background:
+  radial-gradient(45% 55% at 100% 0%,rgba(99,85,246,.10),transparent 70%),
+  radial-gradient(40% 50% at 0% 100%,rgba(255,179,138,.14),transparent 70%),
+  var(--paper)}
+.lav{color:var(--ink);background:
+  radial-gradient(40% 60% at 8% 0%,rgba(99,85,246,.24),transparent 70%),
+  radial-gradient(35% 55% at 95% 100%,rgba(255,179,138,.26),transparent 70%),
+  radial-gradient(30% 45% at 70% 30%,rgba(34,211,238,.10),transparent 70%),
+  linear-gradient(180deg,#F1EEFF,#E9E4FF 55%,#F3EFFF)}
+.s::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(70% 70% at 50% 40%,#000,transparent);mask-image:radial-gradient(70% 70% at 50% 40%,#000,transparent)}
+.dark::before{background-image:radial-gradient(rgba(255,255,255,.08) 1px,transparent 1px)}
+.light::before,.lav::before{background-image:radial-gradient(rgba(99,85,246,.16) 1px,transparent 1px)}
+.s::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;z-index:3;
+  background:linear-gradient(90deg,transparent,#6355F6,#22D3EE,#FFB38A,#6355F6,transparent);background-size:200% 100%;animation:line 7s linear infinite}
+@keyframes line{to{background-position:-200% 0}}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);z-index:-1;pointer-events:none;animation:orb 12s ease-in-out infinite alternate}
+@keyframes orb{to{transform:translate(40px,-30px) scale(1.08)}}
+
+/* chrome */
+.top{position:absolute;left:140px;right:140px;top:58px;display:flex;justify-content:space-between;align-items:center;z-index:4}
+.brand{display:flex;align-items:center;gap:12px;font:700 22px 'Space Grotesk';letter-spacing:.04em}
+.brand img{height:34px}
+.pg{font:500 16px 'JetBrains Mono';letter-spacing:.12em;opacity:.55}
+.src{position:absolute;left:140px;bottom:54px;max-width:1260px;font:400 19px/1.5 'JetBrains Mono';letter-spacing:0;z-index:4}
+.dark .src{color:rgba(255,255,255,.66)}
+.light .src,.lav .src{color:var(--mute)}
+.src b{font-weight:600;color:inherit;opacity:1}
+.dark .src b{color:rgba(255,255,255,.75)}
+.light .src b,.lav .src b{color:var(--ink)}
+
+/* type */
+.eb{display:inline-flex;align-items:center;gap:12px;font:600 17px 'JetBrains Mono';letter-spacing:.22em;text-transform:uppercase}
+.eb::before{content:"";width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 0 5px color-mix(in srgb,currentColor 18%,transparent),0 0 14px currentColor}
+.dark .eb{color:var(--lav)}
+.light .eb,.lav .eb{color:var(--vio-s)}
+h1{font:700 88px/1.02 'Space Grotesk';letter-spacing:-.035em}
+.grad{background:linear-gradient(90deg,#B4A9FF,#FFB38A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.grad-v{background:linear-gradient(100deg,#2A1F6B,#6355F6 55%,#8F83FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font:400 30px/1.4 Inter;margin-top:22px}
+.dark .sub{color:rgba(255,255,255,.72)}
+.light .sub,.lav .sub{color:var(--mute)}
+.mono{font-family:'JetBrains Mono'}
+
+/* cards */
+.card{position:relative;border-radius:24px;padding:30px 32px;overflow:hidden}
+.dark .card{background:linear-gradient(160deg,rgba(255,255,255,.075),rgba(255,255,255,.025));border:1px solid rgba(180,169,255,.2);box-shadow:0 30px 70px -30px rgba(0,0,0,.6);backdrop-filter:blur(8px)}
+.dark .card::before{content:"";position:absolute;inset:0 0 auto;height:1px;background:linear-gradient(90deg,transparent,rgba(180,169,255,.8),rgba(34,211,238,.5),transparent)}
+.light .card,.lav .card{background:#fff;border:1px solid rgba(99,85,246,.14);box-shadow:0 2px 6px rgba(23,19,43,.04),0 30px 60px -30px rgba(99,85,246,.35)}
+.k{font:600 14px 'JetBrains Mono';letter-spacing:.16em;text-transform:uppercase}
+.dark .k{color:var(--lav)}
+.light .k,.lav .k{color:var(--vio-s)}
+
+/* entrance */
+.a{opacity:0;transform:translateY(28px);filter:blur(10px);transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease)}
+.s.on .a{opacity:1;transform:none;filter:blur(0);transition-delay:calc(var(--d,0) * 1ms)}
+
+/* camera guide */
+.cam{position:absolute;right:60px;bottom:60px;width:380px;height:230px;border:2px dashed rgba(255,179,138,.9);border-radius:20px;display:none;place-items:center;font:600 16px 'JetBrains Mono';color:#FFB38A;letter-spacing:.14em;z-index:9;background:rgba(255,179,138,.06)}
+body.guide .cam{display:grid}
+.hint{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);font:500 13px 'JetBrains Mono';color:rgba(255,255,255,.55);background:rgba(0,0,0,.45);padding:8px 14px;border-radius:99px;transition:opacity .8s;z-index:20;pointer-events:none}
+.hint.off{opacity:0}
+
+/* ---------- S1 record ---------- */
+.s1 .left{position:absolute;left:140px;top:160px;width:880px}
+.s1 h1{font-size:64px}
+.big{display:flex;align-items:baseline;gap:22px;margin-top:26px}
+.big .n{font:700 176px/0.9 'Space Grotesk';letter-spacing:-.06em;background:linear-gradient(100deg,#fff 10%,#B4A9FF 55%,#FFB38A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 10px 40px rgba(143,131,255,.35))}
+.big .u{font:600 38px/1.05 'Space Grotesk';color:#fff}
+.big .u small{display:block;font:500 16px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:var(--lav);margin-top:10px}
+.cap{margin-top:18px;font:400 22px/1.45 Inter;color:rgba(255,255,255,.75)}
+.cap b{color:#fff;font-weight:600}
+.pill-up{display:inline-flex;align-items:center;gap:8px;padding:4px 12px;border-radius:99px;background:rgba(61,214,140,.14);border:1px solid rgba(61,214,140,.4);color:#7CF0B5;font:600 19px 'Space Grotesk';vertical-align:2px}
+.minis{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px}
+.mini{padding:16px 20px !important;border-radius:18px !important}
+.mini .k{font-size:12.5px}
+.mini b{display:block;font:700 34px/1.05 'Space Grotesk';letter-spacing:-.03em;margin-top:6px}
+.mini p{font:400 15.5px/1.38 Inter;color:rgba(255,255,255,.72);margin-top:4px}
+.s1 .right{position:absolute;left:1070px;right:140px;top:160px;display:flex;flex-direction:column;gap:18px}
+.s1 .right .card{padding:24px 30px}
+.cropsb{display:flex;flex-direction:column;gap:14px;margin-top:16px}
+.cropb{display:grid;grid-template-columns:230px 1fr 118px;align-items:center;gap:18px}
+.cropb .nm{font:600 22px Inter;color:#fff;white-space:nowrap}
+.cropb .bar{height:22px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.cropb .bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--c1),var(--c2));box-shadow:0 0 20px var(--c2);transition:width 1.6s var(--ease)}
+.s.on .cropb .bar i{width:var(--w);transition-delay:calc(var(--d,0) * 1ms)}
+.cropb .v{font:700 30px 'Space Grotesk';text-align:right;letter-spacing:-.02em}
+.cropb .v small{font:500 14px 'JetBrains Mono';color:rgba(255,255,255,.5);margin-left:5px}
+.rec{display:inline-block;margin-left:10px;padding:3px 8px;border-radius:7px;font:600 11.5px 'JetBrains Mono';letter-spacing:.1em;color:#7CF0B5;background:rgba(61,214,140,.14);border:1px solid rgba(61,214,140,.4);vertical-align:3px;box-shadow:0 0 14px -4px rgba(61,214,140,.7)}
+.lc{display:block;width:100%;height:auto;margin-top:12px;overflow:visible}
+.lc .grid line{stroke:rgba(180,169,255,.14);stroke-width:1}
+.lc .grid text,.lc .ax text{font:500 12px 'JetBrains Mono';fill:rgba(255,255,255,.5)}
+.lc .ln{stroke-width:2.5;stroke-dasharray:7 6;fill:none}
+.lc .base{stroke:#B4A9FF}
+.lc .upl{stroke:#3DD68C;filter:drop-shadow(0 0 6px rgba(61,214,140,.7))}
+.lc .act{stroke-width:5;stroke-linecap:round}
+.lc .lbl{font:700 18px 'Space Grotesk'}
+.lc .sm{font:500 11.5px 'JetBrains Mono';fill:rgba(255,255,255,.6)}
+.lc .gl{filter:drop-shadow(0 0 8px currentColor)}
+.lc .pulse{fill:none;stroke:#FFB38A;stroke-width:2;transform-origin:87.3px 81.3px;animation:pls 2s ease-out infinite}
+@keyframes pls{0%{transform:scale(1);opacity:.9}100%{transform:scale(3.2);opacity:0}}
+.lc .rvr{transform:scaleX(0);transform-origin:0 0;transition:transform 2.2s var(--ease)}
+.s.on .lc .rvr{transform:scaleX(1);transition-delay:1100ms}
+.lc-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:12px}
+.lg{font:500 13px 'JetBrains Mono';color:rgba(255,255,255,.62);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.lg i{display:inline-block;width:22px;height:0;border-top:3px solid #FFB38A;border-radius:2px}
+.lg i.l2{border-top:2.5px dashed #B4A9FF;margin-left:10px}
+.gpill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;font:600 14px 'Space Grotesk';color:#7CF0B5;background:rgba(61,214,140,.14);border:1px solid rgba(61,214,140,.42);box-shadow:0 0 18px -6px rgba(61,214,140,.8);white-space:nowrap}
+.gpill.sm{font-size:13px;padding:2px 9px;margin-right:8px}
+.grad-g{background:linear-gradient(90deg,#B8FFD9,#3DD68C);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 18px rgba(61,214,140,.35))}
+
+/* ---------- S2 problem ---------- */
+.s2 .head{position:absolute;left:140px;top:170px;right:140px}
+.s2 .row{position:absolute;left:140px;right:140px;top:440px;display:grid;grid-template-columns:1fr 70px 1fr 70px 1.15fr;align-items:stretch}
+.s2 .card{min-height:350px;display:flex;flex-direction:column;padding:30px 32px}
+.arrow{display:grid;place-items:center;color:var(--lav2)}
+.arrow svg{width:46px;height:46px}
+.ch{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.ti{flex:none;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#7C72FF,#4437D9);box-shadow:0 10px 22px -10px rgba(99,85,246,.9)}
+.ti svg{width:24px;height:24px}
+.hv{font:700 64px/1 'Space Grotesk';letter-spacing:-.04em;color:var(--ink)}
+.hv-sub{font:500 21px Inter;color:var(--mute);margin-top:10px}
+.val{margin-top:auto;padding-top:20px;border-top:1px dashed rgba(99,85,246,.25)}
+.val b{font:700 40px 'Space Grotesk';letter-spacing:-.03em;color:var(--vio-s)}
+.val small{display:block;font:500 15px 'JetBrains Mono';color:var(--faint);margin-top:6px}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chip{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;font:600 22px 'Space Grotesk';background:#F6F4FF;color:var(--ink);border:1px solid rgba(99,85,246,.16)}
+.chip em{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#fff;color:var(--vio);box-shadow:0 4px 10px -6px rgba(99,85,246,.6)}
+.chip em svg{width:19px;height:19px}
+.arrow svg{width:52px;height:52px;padding:13px;border-radius:50%;background:#fff;color:var(--vio);border:1px solid rgba(99,85,246,.18);box-shadow:0 10px 24px -12px rgba(99,85,246,.7)}
+.law{display:inline-block;margin-top:12px;padding:5px 11px;border-radius:8px;font:600 14px 'JetBrains Mono';color:var(--vio-s);background:#EFEDFF;border:1px solid rgba(99,85,246,.2)}
+.ttl{font:700 27px/1.2 'Space Grotesk';letter-spacing:-.02em}
+.note{font:400 20px/1.45 Inter;color:var(--mute);margin-top:auto;padding-top:18px}
+.note b{color:var(--ink);font-weight:600}
+.wait{margin-top:18px}
+.wait .lbl{display:flex;justify-content:space-between;font:600 15px 'JetBrains Mono';color:var(--faint);letter-spacing:.06em}
+.wait .tr{height:12px;border-radius:99px;margin-top:10px;background:rgba(23,19,43,.07);overflow:hidden;position:relative}
+.wait .tr i{position:absolute;left:0;top:0;bottom:0;width:14%;border-radius:99px;background:repeating-linear-gradient(135deg,#E8799B 0 10px,#F2A3B9 10px 20px);animation:crawl 9s ease-in-out infinite}
+@keyframes crawl{0%{width:6%}100%{width:34%}}
+.tags{display:flex;gap:10px;margin-top:16px}
+.tag{padding:8px 13px;border-radius:10px;background:#FDE4EA;color:#C2416B;font:600 17px Inter}
+
+/* ---------- S3 solution ---------- */
+.s3 .head{position:absolute;left:140px;top:160px;right:140px}
+.flow{position:absolute;left:140px;right:140px;top:420px;height:200px;display:grid;grid-template-columns:repeat(4,1fr);gap:110px}
+.node{position:relative;z-index:1;border-radius:22px;padding:24px 26px;background:linear-gradient(160deg,#2A2163,#1C1646);border:1px solid rgba(180,169,255,.2);box-shadow:0 30px 70px -30px rgba(0,0,0,.6);transition:background .5s,border-color .5s,box-shadow .5s}
+.node>*{transition:opacity .45s}
+.flow.run .node:not(.lit)>*{opacity:.45}
+.node.lit{background:linear-gradient(160deg,#3D3199,#1F2A5E);border-color:rgba(180,169,255,.75);box-shadow:0 0 0 1px rgba(180,169,255,.35),0 0 60px -10px rgba(99,85,246,.95)}
+.node.lit:last-child{background:linear-gradient(160deg,#1F5A4A,#1A2F4A);border-color:rgba(61,214,140,.8);box-shadow:0 0 0 1px rgba(61,214,140,.35),0 0 60px -10px rgba(61,214,140,.9)}
+.node.lit .st{color:#fff}
+.rail{position:absolute;top:50%;height:3px;margin-top:-1.5px;border-radius:3px;background:rgba(180,169,255,.18);z-index:0}
+.rail i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#8F83FF,#22D3EE,#3DD68C);box-shadow:0 0 14px #22D3EE}
+.bubble{position:absolute;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;z-index:0;background:radial-gradient(circle,#fff 0 30%,#B4FFF0 45%,#22D3EE 75%);box-shadow:0 0 16px #22D3EE,0 0 40px #8F83FF;opacity:0}
+.node .ic{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#7C72FF,#4437D9);box-shadow:0 10px 26px -8px rgba(99,85,246,.9);margin-bottom:18px}
+.node .ic svg{width:28px;height:28px;color:#fff}
+.node .ic.c{background:linear-gradient(135deg,#22D3EE,#0EA5E9);box-shadow:0 10px 26px -8px rgba(34,211,238,.8)}
+.node .ic.m{background:linear-gradient(135deg,#3DD68C,#10B981);box-shadow:0 10px 26px -8px rgba(61,214,140,.8)}
+.node b{display:block;font:700 26px 'Space Grotesk';letter-spacing:-.02em}
+.node span{display:block;font:400 18px/1.4 Inter;color:rgba(255,255,255,.65);margin-top:6px}
+.node .st{position:absolute;top:22px;right:24px;font:600 14px 'JetBrains Mono';color:rgba(255,255,255,.35)}
+.mlabel{position:absolute;left:140px;top:652px}
+.math{position:absolute;left:140px;right:140px;top:688px;display:flex;align-items:center;gap:22px}
+.mx{display:flex;flex-direction:column;padding:18px 26px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(180,169,255,.18)}
+.mx small{font:600 14px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:var(--lav)}
+.mx b{font:700 34px 'Space Grotesk';letter-spacing:-.02em;margin-top:4px}
+.mx.out{background:linear-gradient(135deg,rgba(99,85,246,.45),rgba(34,211,238,.18));border-color:rgba(180,169,255,.55);box-shadow:0 0 50px -10px rgba(99,85,246,.8)}
+.mx.out b{font-size:40px}
+.mx.out b em{font-style:normal;background:linear-gradient(90deg,#fff,#B4FFF0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.op{font:600 32px 'Space Grotesk';color:rgba(255,255,255,.4)}
+.back{margin-left:auto;display:flex;align-items:center;gap:12px;font:500 22px Inter;color:rgba(255,255,255,.8)}
+.back svg{width:30px;height:30px;color:#3DD68C}
+
+/* ---------- S4 why solana ---------- */
+.s4 .head{position:absolute;left:140px;top:160px;right:140px}
+.s4 .cn{position:absolute;top:24px;right:26px;font:600 14px 'JetBrains Mono';color:var(--faint);letter-spacing:.08em}
+.s4 .grid{position:absolute;left:140px;right:140px;top:410px;display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+.s4 .card{min-height:330px;display:flex;flex-direction:column;padding:26px 28px}
+.s4 .ic2{width:60px;height:60px;border-radius:17px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));box-shadow:0 12px 26px -10px var(--g2)}
+.s4 .ic2 svg{width:28px;height:28px}
+.s4 h3{font:700 28px/1.1 'Space Grotesk';letter-spacing:-.02em;margin-top:20px}
+.s4 p{font:400 18px/1.45 Inter;color:var(--mute);margin-top:12px}
+.viz{margin-top:auto;padding-top:22px}
+.panel{height:132px;border-radius:16px;background:#F6F4FF;border:1px solid rgba(99,85,246,.16);padding:16px 18px;display:flex;flex-direction:column;justify-content:center}
+.code{font:500 17px/1.65 'JetBrains Mono';color:var(--ink)}
+.code .kw{color:var(--vio);font-weight:600}.code .fn{color:var(--vio-s);font-weight:600}.code .nu{color:var(--vio);font-weight:600}
+.txl{gap:6px}
+.txl div{display:flex;justify-content:space-between;align-items:center;font:500 15.5px 'JetBrains Mono';color:var(--ink);padding:5px 0;border-bottom:1px dashed rgba(99,85,246,.18)}
+.txl div:last-child{border-bottom:0}
+.txl div span{width:20px;height:20px;border-radius:6px;display:grid;place-items:center;font-size:12px;color:#fff;background:#10B981;box-shadow:0 0 10px -2px rgba(16,185,129,.7)}
+.speed{flex-direction:row;align-items:center;justify-content:space-around}
+.speed>div{text-align:center}
+.speed>i{width:1px;align-self:stretch;background:rgba(99,85,246,.2)}
+.speed b{display:block;font:700 36px 'Space Grotesk';color:var(--vio-s);letter-spacing:-.02em}
+.speed small{font:500 14px 'JetBrains Mono';color:var(--mute);letter-spacing:.04em}
+.ppl{flex-direction:row;align-items:center}
+.ppl i{width:46px;height:46px;border-radius:50%;border:3px solid #F6F4FF;margin-left:-12px;background:var(--a);box-shadow:0 6px 14px -6px rgba(68,55,217,.5)}
+.ppl i:first-of-type{margin-left:0}
+.ppl span{margin-left:16px;font:600 17px Inter;color:var(--mute);white-space:nowrap}
+
+/* ---------- S5 why now ---------- */
+.s5 .head{position:absolute;left:140px;top:160px;width:1100px}
+.s5 .stats{position:absolute;left:140px;top:405px;width:1160px;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(186px,auto);gap:22px}
+.stat{padding:24px 26px;display:flex;flex-direction:column}
+.stat b{display:block;font:700 46px/1.02 'Space Grotesk';letter-spacing:-.035em}
+.stat b.grad{filter:drop-shadow(0 6px 24px rgba(143,131,255,.35))}
+.stat.names b{font-size:32px;line-height:1.12}
+.stat p{font:400 17px/1.4 Inter;color:rgba(255,255,255,.75);margin-top:auto;padding-top:12px}
+.stat .k{display:block;margin-bottom:12px}
+.stat .up{display:inline-block;padding:2px 9px;margin-right:6px;border-radius:7px;font:600 15px 'Space Grotesk';color:#7CF0B5;background:rgba(61,214,140,.14);border:1px solid rgba(61,214,140,.35)}
+.biz{position:absolute;left:1340px;right:140px;top:405px;display:flex;flex-direction:column;padding:26px 28px}
+.biz h3{font:700 28px/1.15 'Space Grotesk';margin-top:12px;letter-spacing:-.02em}
+.biz ul{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:14px}
+.biz li{display:flex;gap:14px;font:400 18px/1.4 Inter;color:rgba(255,255,255,.85)}
+.biz li i{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font:700 15px 'Space Grotesk';color:#fff;background:linear-gradient(135deg,#7C72FF,#4437D9)}
+.biz .pos{margin-top:20px;padding-top:18px;border-top:1px solid rgba(180,169,255,.2);font:600 20px/1.35 'Space Grotesk'}
+
+/* ---------- S6 live ---------- */
+.s6 .left{position:absolute;left:140px;top:170px;width:760px}
+.s6 h1{font-size:84px}
+.checks{list-style:none;margin-top:36px;display:flex;flex-direction:column;gap:16px}
+.checks li{display:flex;gap:16px;align-items:flex-start;font:400 23px/1.4 Inter;color:var(--ink)}
+.checks li svg{flex:none;width:30px;height:30px;padding:5px;border-radius:9px;background:#DDF7EA;color:#10B981;margin-top:2px}
+.pid{display:inline-flex;align-items:center;gap:12px;margin-top:30px;padding:12px 18px;border-radius:14px;background:#fff;border:1px solid rgba(99,85,246,.2);font:500 17px 'JetBrains Mono';color:var(--ink);box-shadow:0 14px 30px -20px rgba(99,85,246,.6)}
+.pid i{width:10px;height:10px;border-radius:50%;background:#3DD68C;box-shadow:0 0 0 4px rgba(61,214,140,.2),0 0 10px #3DD68C}
+.next{margin-top:26px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.next .k{margin-right:4px}
+.next span:not(.k){padding:10px 16px;border-radius:12px;font:600 19px 'Space Grotesk';color:#fff;background:linear-gradient(135deg,#6355F6,#4437D9);box-shadow:0 10px 24px -10px rgba(99,85,246,.9)}
+.shotw{position:absolute;left:960px;right:120px;top:190px;perspective:1800px}
+.halo{position:absolute;inset:-12% -8%;z-index:0;background:radial-gradient(45% 50% at 40% 45%,rgba(99,85,246,.45),transparent 70%),radial-gradient(35% 40% at 80% 80%,rgba(34,211,238,.25),transparent 70%),radial-gradient(30% 35% at 80% 10%,rgba(255,179,138,.3),transparent 70%);filter:blur(30px)}
+.shot{position:relative;z-index:1;border-radius:18px;overflow:hidden;background:#fff;border:1px solid transparent;
+  background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,rgba(180,169,255,.95),rgba(34,211,238,.5),rgba(255,179,138,.7));background-origin:border-box;background-clip:padding-box,border-box;
+  transform:rotateY(-9deg) rotateX(4deg);transform-origin:left center;box-shadow:0 50px 100px -30px rgba(23,19,43,.55),0 0 70px -10px rgba(99,85,246,.5)}
+.bar3{display:flex;align-items:center;gap:8px;height:38px;padding:0 16px;background:linear-gradient(180deg,#F4F2FB,#ECE9F7);border-bottom:1px solid rgba(23,19,43,.08)}
+.bar3 i{width:11px;height:11px;border-radius:50%;background:#FF6B6B}.bar3 i:nth-child(2){background:#FFC24B}.bar3 i:nth-child(3){background:#3DD68C}
+.bar3 span{margin:0 auto;transform:translateX(-24px);font:500 13px 'JetBrains Mono';color:#6B6880;background:#fff;border:1px solid rgba(23,19,43,.08);border-radius:8px;padding:4px 16px}
+.shot img{display:block;width:100%}
+.glare{position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.35) 48%,transparent 60%);transform:translateX(-120%);animation:glare 7s ease-in-out infinite}
+@keyframes glare{0%,65%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.fchip{position:absolute;z-index:2;display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;background:rgba(27,20,64,.88);border:1px solid rgba(180,169,255,.3);color:#fff;font:600 16px Inter;box-shadow:0 18px 40px -14px rgba(0,0,0,.6);animation:fl 6s ease-in-out infinite}
+@keyframes fl{50%{translate:0 -10px}}
+.fchip.c1{top:-22px;left:6%}
+.fchip.c1 i{width:9px;height:9px;border-radius:50%;background:#3DD68C;box-shadow:0 0 10px #3DD68C}
+.fchip.c2{bottom:-30px;left:-40px;flex-direction:column;align-items:flex-start;gap:2px;animation-delay:-3s}
+.fchip.c2 b{font:700 20px 'Space Grotesk';background:linear-gradient(90deg,#B4A9FF,#22D3EE);-webkit-background-clip:text;background-clip:text;color:transparent}
+.fchip.c2 small{font:500 12px 'JetBrains Mono';color:rgba(255,255,255,.6)}
+
+/* ---------- S7 close ---------- */
+.s7{background:#0F0B28}
+.s7::before{display:none}
+.s7 canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+.s7 .c{position:absolute;left:0;right:0;top:86px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.logo{position:relative;width:170px;height:170px;display:grid;place-items:center}
+.logo::before{content:"";position:absolute;inset:-60%;border-radius:50%;background:radial-gradient(circle,rgba(255,179,138,.45),rgba(143,131,255,.25) 40%,transparent 70%);filter:blur(10px);animation:breathe 5s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.12);opacity:.8}}
+.logo img{position:relative;height:150px;filter:drop-shadow(0 0 30px rgba(180,169,255,.7))}
+.s7 h1{font-size:96px;margin-top:38px}
+.s7 h1 span{display:block}
+.by{margin-top:40px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.me{margin-top:24px;width:190px;height:190px;border-radius:50%;padding:4px;background:conic-gradient(from 200deg,#B4A9FF,#22D3EE,#FFB38A,#B4A9FF);box-shadow:0 0 0 8px rgba(180,169,255,.08),0 0 50px rgba(180,169,255,.5),0 0 90px rgba(255,179,138,.25)}
+.me img{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;border:4px solid #1B1440}
+.by small{font:600 15px 'JetBrains Mono';letter-spacing:.24em;text-transform:uppercase;color:var(--lav)}
+.by b{font:700 44px 'Space Grotesk';letter-spacing:-.02em}
+.by span{font:400 22px Inter;color:rgba(255,255,255,.72)}
+.links{position:absolute;left:0;right:0;bottom:62px;display:flex;justify-content:center;align-items:center;gap:18px}
+.links small{font:600 15px 'JetBrains Mono';letter-spacing:.24em;text-transform:uppercase;color:var(--lav);margin-right:6px}
+.links span{display:inline-flex;align-items:center;gap:12px;padding:14px 22px;border-radius:16px;background:rgba(15,11,40,.7);border:1px solid rgba(180,169,255,.35);backdrop-filter:blur(10px);font:600 21px 'Space Grotesk';color:#fff}
+.links span svg{width:22px;height:22px;color:var(--lav)}
+
+/* ---------- S0 cover ---------- */
+.s0{background:#0F0B28}
+.s0::before{display:none}
+.cv-photo{position:absolute;top:0;right:0;bottom:0;width:62%;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 45%);mask-image:linear-gradient(90deg,transparent 0%,#000 45%)}
+.cv-photo img{width:100%;height:100%;object-fit:cover;transform:scale(1.12);transform-origin:70% 40%}
+.s0.on .cv-photo img{animation:kb 14s ease-out forwards}
+@keyframes kb{to{transform:scale(1)}}
+.cv-photo::after{content:"";position:absolute;inset:-2px;background:linear-gradient(90deg,rgba(15,11,40,.85) 22%,rgba(27,20,64,.35) 55%,rgba(99,85,246,.18) 100%),linear-gradient(0deg,rgba(15,11,40,.85),transparent 40%)}
+.cv-glow{position:absolute;left:-200px;top:-220px;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(99,85,246,.45),transparent 65%);filter:blur(20px)}
+.cv-l{position:absolute;left:140px;top:110px;width:1000px}
+.cv-brand{display:flex;align-items:center;gap:18px;font:700 34px 'Space Grotesk';letter-spacing:.2em}
+.cv-brand img{height:62px;filter:drop-shadow(0 0 18px rgba(180,169,255,.7))}
+.cv-h{margin-top:56px;font:700 128px/.98 'Space Grotesk';letter-spacing:-.035em}
+.cv-h span{display:block}
+.cv-sub{margin-top:36px;max-width:760px;font:400 32px/1.4 Inter;color:rgba(255,255,255,.78)}
+.cv-sub b{color:#fff;font-weight:600}
+.cv-chips{margin-top:44px;display:flex;gap:14px}
+.cv-chips span{display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(180,169,255,.3);font:600 16px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:var(--lav)}
+.cv-chips i{width:10px;height:10px;border-radius:50%;background:#3DD68C;box-shadow:0 0 12px #3DD68C;animation:breathe 2.4s ease-in-out infinite}
+.cv-who{margin-top:64px;display:flex;align-items:center;gap:22px;padding-top:34px;border-top:1px solid rgba(180,169,255,.2);width:max-content}
+.cv-who img{width:76px;height:76px;border-radius:50%;object-fit:cover;padding:3px;background:conic-gradient(from 200deg,#B4A9FF,#22D3EE,#FFB38A,#B4A9FF)}
+.cv-who b{display:block;font:700 30px 'Space Grotesk';letter-spacing:-.01em}
+.cv-who span{display:block;margin-top:6px;font:400 20px Inter;color:rgba(255,255,255,.72)}
+.cv-who small{display:block;margin-top:8px;font:600 14px 'JetBrains Mono';letter-spacing:.16em;text-transform:uppercase;color:var(--lav)}
+.cv-card{position:absolute;right:150px;top:260px;width:430px;padding:30px 32px;border-radius:26px;background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(18px);box-shadow:0 40px 90px -30px rgba(0,0,0,.7),0 0 60px -20px rgba(143,131,255,.6)}
+.s0.on .cv-card{animation:fl 6s ease-in-out 2s infinite}
+@keyframes fl{50%{transform:translateY(-14px)}}
+.cv-card small{font:600 14px 'JetBrains Mono';letter-spacing:.2em;text-transform:uppercase;color:var(--lav)}
+.cv-card .r{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px}
+.cv-card .r b{font:700 40px 'Space Grotesk'}
+.cv-card .r em{font:600 15px 'JetBrains Mono';font-style:normal;color:rgba(255,255,255,.6)}
+.cv-card .lk{margin-top:18px;display:flex;align-items:center;gap:10px;font:500 18px Inter;color:rgba(255,255,255,.75)}
+.cv-card .lk svg{width:18px;height:18px;color:var(--lav)}
+.cv-card hr{border:0;height:1px;background:rgba(255,255,255,.14);margin:22px 0}
+.cv-card .out{display:flex;justify-content:space-between;align-items:center}
+.cv-card .out b{font:700 36px 'Space Grotesk';color:#7CF0B5;text-shadow:0 0 22px rgba(61,214,140,.55)}
+.cv-card .out span{padding:6px 12px;border-radius:999px;background:rgba(61,214,140,.15);border:1px solid rgba(61,214,140,.4);font:600 13px 'JetBrains Mono';letter-spacing:.1em;color:#7CF0B5}
+</style>
+</head>
+<body>
+<div class="viewport"><div class="deck" id="deck">
+
+<!-- ============ 0 · COVER ============ -->
+<section class="s dark s0">
+  <div class="cv-photo"><img src="/landing/hero-wheat.jpg" alt=""></div>
+  <div class="cv-glow"></div>
+  <div class="cv-l">
+    <div class="cv-brand a" style="--d:100"><img src="/arva-mark-white.png" alt="">ARVA</div>
+    <h1 class="cv-h a" style="--d:300"><span>The harvest</span><span class="grad">doesn't wait.</span></h1>
+    <p class="cv-sub a" style="--d:550">Open credit for Argentina's <b>certified grain warrants</b>, settled on Solana in seconds.</p>
+    <div class="cv-chips a" style="--d:750"><span>Built on Solana</span><span><i></i>Live on devnet</span></div>
+    <div class="cv-who a" style="--d:950"><img src="/deck/profile.jpg" alt="Alejandro Colchi"><div><b>Alejandro Colchi</b><span>Solo builder · Information Systems Engineering student, Tucumán</span><small>Colosseum Crypto World's Fair · Superteam Argentina track</small></div></div>
+  </div>
+  <div class="cam">CAMERA</div>
+</section>
+
+<!-- ============ 1 · PROBLEM ============ -->
+<section class="s light s2">
+  <div class="top"><div class="brand"><img src="/arva-mark.png" alt="">ARVA</div><div class="pg">01 / 09</div></div>
+  <div class="head">
+    <div class="eb a" style="--d:100">The problem</div>
+    <h1 class="a" style="--d:250;margin-top:26px">The harvest is there.<br><span class="grad-v">The money isn't.</span></h1>
+  </div>
+  <div class="row">
+    <div class="card a" style="--d:450">
+      <div class="ch"><span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V8a6 6 0 0 1 12 0v13"/><path d="M3 21h18"/><path d="M6 12h12M6 16h12"/></svg></span><span class="k">The asset</span></div>
+      <div class="hv"><span data-count="100">0</span> tons</div>
+      <div class="hv-sub">of soy stored in a silo</div>
+      <div class="val"><b>≈ US$<span data-count="35000">0</span></b><small>example at US$350 per ton</small></div>
+    </div>
+    <div class="arrow a" style="--d:550"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    <div class="card a" style="--d:650">
+      <div class="ch"><span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span><span class="k">The bills don't wait</span></div>
+      <div class="chips">
+        <span class="chip"><em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/></svg></em>Seeds</span>
+        <span class="chip"><em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22h12M4 9h10"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0V9.8a2 2 0 0 0-.6-1.4L18 5"/></svg></em>Fuel</span>
+        <span class="chip"><em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></svg></em>Tools</span>
+        <span class="chip"><em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 18V6"/></svg></em>Debt</span>
+      </div>
+      <p class="note">He has the harvest, <b>not the cash.</b></p>
+    </div>
+    <div class="arrow a" style="--d:750"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    <div class="card a" style="--d:850">
+      <div class="ch"><span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></span><span class="k">The warrant</span></div>
+      <div class="ttl">A legal title for the stored grain.</div>
+      <div><span class="law">Law 9,643</span></div>
+      <p class="note">Today it only unlocks a <b>bank loan:</b></p>
+      <div class="tags"><span class="tag">Paperwork</span><span class="tag">Brokers</span><span class="tag">Weeks of waiting</span></div>
+      <div class="wait"><div class="lbl"><span>BANK APPROVAL</span><span>PENDING…</span></div><div class="tr"><i></i></div></div>
+    </div>
+  </div>
+  <div class="src a" style="--d:1000"><b>Sources:</b> Warrant regime: Law 9,643, updated by DNU 70/2023 · Value: illustrative example at US$350/t (Arva demo price).</div>
+  <div class="cam">CAMERA</div>
+</section>
+
+<!-- ============ 2 · INSIGHT ============ -->
+<section class="s dark s5">
+  <div class="orb" style="width:560px;height:560px;left:40%;bottom:-260px;background:rgba(255,179,138,.18)"></div>
+  <div class="top"><div class="brand"><img src="/arva-mark-white.png" alt="">ARVA</div><div class="pg">02 / 09</div></div>
+  <div class="head">
+    <div class="eb a" style="--d:100">The insight</div>
+    <h1 class="a" style="--d:250;margin-top:26px">The rails exist.<br><span class="grad">The credit layer doesn't.</span></h1>
+  </div>
+  <div class="stats" style="grid-template-columns:repeat(2,1fr)">
+    <div class="card stat a" style="--d:450"><span class="k">Warrants issued · 2025</span><b class="grad">US$<span data-count="2079">0</span>M</b><p><span class="up">▲ +93%</span>year over year in Argentina</p></div>
+    <div class="card stat names a" style="--d:550"><span class="k">Digitization</span><b class="grad">A3 Mercados<br>Matba Rofex</b><p>already register digital warrants</p></div>
+        <div class="card stat names a" style="--d:650"><span class="k">A legal title</span><b class="grad">Law 9,643<br>DNU 70/2023</b><p>electronic warrants enabled</p></div>
+    <div class="card stat names a" style="--d:750"><span class="k">The missing piece</span><b class="grad">Open credit<br>on top</b><p>no open way to borrow against it yet</p></div>
+  </div>
+  <div class="card biz a" style="--d:900">
+    <div class="k">What's missing</div>
+    <h3>Three pieces, two already exist.</h3>
+    <ul>
+      <li><i>1</i>Certifier: licensed warehouses already store and certify the grain.</li>
+      <li><i>2</i>Registry: A3 and Matba Rofex already register the digital warrant.</li>
+      <li><i>3</i>Open credit on top: that is Arva.</li>
+    </ul>
+    <div class="pos">They digitize the warrant.<br><span class="grad">Arva makes it borrowable.</span></div>
+  </div>
+  <div class="src a" style="--d:1100"><b>Sources:</b> Warrants issued: Secretaría de Agricultura, via Bichos de Campo · Warrant regime: Law 9,643, updated by DNU 70/2023.</div>
+  <div class="cam">CAMERA</div>
+</section>
+<!-- ============ 3 · PRODUCT ============ -->
+<section class="s dark s3">
+  <div class="orb" style="width:600px;height:600px;right:-160px;top:-200px;background:rgba(34,211,238,.18)"></div>
+  <div class="top"><div class="brand"><img src="/arva-mark-white.png" alt="">ARVA</div><div class="pg">03 / 09</div></div>
+  <div class="head">
+    <div class="eb a" style="--d:100">The solution</div>
+    <h1 class="a" style="--d:250;margin-top:26px">So I built <span class="grad">Arva.</span></h1>
+    <p class="sub a" style="--d:400">Lock the warrant. Borrow digital dollars in seconds. Keep the harvest.</p>
+  </div>
+  <div class="flow" id="flow">
+    <div class="rail"><i></i></div><div class="bubble"></div>
+    <div class="node a" style="--d:500"><span class="st">01</span>
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></div>
+      <b>Certified warrant</b><span>1 token = 1 ton of grain</span></div>
+    <div class="node a" style="--d:650"><span class="st">02</span>
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+      <b>Arva vault</b><span>Locked by the program, no private key</span></div>
+    <div class="node a" style="--d:800"><span class="st">03</span>
+      <div class="ic c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="6"/><path d="M18.1 10.4A6 6 0 1 1 10.4 18.1"/></svg></div>
+      <b>Open USDC pool</b><span>Anyone can supply liquidity</span></div>
+    <div class="node a" style="--d:950"><span class="st">04</span>
+      <div class="ic m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+      <b>Producer</b><span>Receives USDC in seconds</span></div>
+  </div>
+  <div class="k mlabel a" style="--d:1050">Example · 100 t of soy at US$350/t</div>
+  <div class="math">
+    <div class="mx a" style="--d:1100"><small>Collateral</small><b><span data-count="35000">0</span> USDC</b></div>
+    <span class="op a" style="--d:1150">×</span>
+    <div class="mx a" style="--d:1200"><small>Loan</small><b>70%</b></div>
+    <span class="op a" style="--d:1250">−</span>
+    <div class="mx a" style="--d:1300"><small>Fee 0.75%</small><b>184</b></div>
+    <span class="op a" style="--d:1350">=</span>
+    <div class="mx out a" style="--d:1450"><small>Producer receives</small><b><em><span data-count="24316">0</span> USDC</em></b></div>
+    <div class="back a" style="--d:1600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Repay, and the warrant comes back.</div>
+  </div>
+  <div class="src a" style="--d:1700"><b>Demo parameters on Solana devnet:</b> 70% loan-to-value · 80% liquidation threshold · 0.75% origination fee · 12% annual demo rate · Example: 100 t × US$350/t.</div>
+  <div class="cam">CAMERA</div>
+</section>
+
+<!-- ============ 4 · WHY SOLANA ============ -->
+<section class="s lav s4">
+  <div class="top"><div class="brand"><img src="/arva-mark.png" alt="">ARVA</div><div class="pg">04 / 09</div></div>
+  <div class="head">
+    <div class="eb a" style="--d:100">Why Solana</div>
+    <h1 class="a" style="--d:250;margin-top:26px">Collateral that <span class="grad-v">runs itself.</span></h1>
+    <p class="sub a" style="--d:350">On Solana, the loan's rules are programmable, public, fast and open to anyone.</p>
+  </div>
+  <div class="grid">
+    <div class="card a" style="--d:450"><span class="cn">01</span>
+      <div class="ic2" style="--g1:#7C72FF;--g2:#4437D9"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg></div>
+      <h3>Programmable collateral</h3>
+      <p>It locks and releases itself. If the price falls too far, anyone can liquidate.</p>
+      <div class="viz"><div class="panel code"><div><span class="kw">if</span> price &lt; <span class="nu">306</span> {</div><div>&nbsp;&nbsp;<span class="fn">liquidate</span>(loan)</div><div>}</div></div></div>
+    </div>
+    <div class="card a" style="--d:600"><span class="cn">02</span>
+      <div class="ic2" style="--g1:#7C72FF;--g2:#4437D9"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div>
+      <h3>Public by default</h3>
+      <p>Every loan and repayment is a transaction anyone can verify.</p>
+      <div class="viz"><div class="panel txl"><div>warrant_minted<span>✓</span></div><div>collateral_locked<span>✓</span></div><div>loan_disbursed<span>✓</span></div></div></div>
+    </div>
+    <div class="card a" style="--d:750"><span class="cn">03</span>
+      <div class="ic2" style="--g1:#7C72FF;--g2:#4437D9"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg></div>
+      <h3>Seconds and cents</h3>
+      <p>Fast and cheap enough to make lending to a small producer worth it.</p>
+      <div class="viz"><div class="panel speed"><div><b>~1s</b><small>confirmation</small></div><i></i><div><b>&lt;$0.01</b><small>network fee</small></div></div></div>
+    </div>
+    <div class="card a" style="--d:900"><span class="cn">04</span>
+      <div class="ic2" style="--g1:#7C72FF;--g2:#4437D9"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-5-6.7"/></svg></div>
+      <h3>Open liquidity</h3>
+      <p>Anyone can supply the pool. No single bank decides who gets credit.</p>
+      <div class="viz"><div class="panel ppl"><i style="--a:#2A1F6B"></i><i style="--a:#4437D9"></i><i style="--a:#6355F6"></i><i style="--a:#8F83FF"></i><i style="--a:#B4A9FF"></i><span>+ any lender</span></div></div>
+    </div>
+  </div>
+  <div class="src a" style="--d:1050"><b>Notes:</b> Network figures are typical Solana values · Liquidation price of US$306/t from the demo example (100 t of soy at US$350/t).</div>
+  <div class="cam">CAMERA</div>
+</section>
+
+<!-- ============ 5 · EVIDENCE ============ -->
+<section class="s light s6">
+  <div class="top"><div class="brand"><img src="/arva-mark.png" alt="">ARVA</div><div class="pg">05 / 09</div></div>
+  <div class="left">
+    <div class="eb a" style="--d:100">Working product</div>
+    <h1 class="a" style="--d:250;margin-top:26px">Live on<br><span class="grad-v">Solana devnet.</span></h1>
+    <ul class="checks">
+      <li class="a" style="--d:450"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>The full cycle runs on-chain: issue, borrow, repay, liquidate.</li>
+      <li class="a" style="--d:550"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>7 program instructions, 18 automated tests.</li>
+      <li class="a" style="--d:650"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Every transaction public on Solana Explorer.</li>
+    </ul>
+    <div class="pid a" style="--d:750"><i></i>AERC53ZiqizgjYdJK9hCeGtSk6PfzwnEn2z3wkMKiqiJ</div>
+    
+  </div>
+  <div class="shotw a" style="--d:500">
+    <div class="halo"></div>
+    <div class="shot">
+      <div class="bar3"><i></i><i></i><i></i><span>arva-devnet.vercel.app/app</span></div>
+      <img src="/app-dashboard-arva.png" alt="Arva dashboard">
+      <div class="glare"></div>
+    </div>
+    <div class="fchip c1"><i></i>Live on devnet</div>
+    <div class="fchip c2"><b>Read on-chain</b><small>pool · loans · tokenized tons</small></div>
+  </div>
+  <div class="src a" style="--d:1000">Dashboard data (pool, loans, tokenized tons) is read from the deployed program on devnet. Simulated in this MVP: certifier, price oracle and the global market view. Test funds only.</div>
+  <div class="cam">CAMERA</div>
+</section>
+
+<!-- ============ 6 · FIELD ============ -->
+<section class="s dark s6c">
+  <div class="orb" style="width:520px;height:520px;left:42%;top:-220px;background:rgba(61,214,140,.14)"></div>
+  <div class="orb" style="width:460px;height:460px;right:-120px;top:300px;background:rgba(99,85,246,.25)"></div>
+  <div class="top"><div class="brand"><img src="/arva-mark-white.png" alt="">ARVA</div><div class="pg">06 / 09</div></div>
+  <div class="head" style="position:absolute;left:140px;top:150px;right:140px">
+    <div class="eb a" style="--d:100">Early validation</div>
+    <h1 class="a" style="--d:250;margin-top:22px">The field says it.<br><span class="grad">The data backs it.</span></h1>
+  </div>
+  <div class="card a" style="--d:450;position:absolute;left:140px;top:430px;width:700px;padding:30px 34px">
+    <div class="k">What I heard on the ground</div>
+    <p style="font:600 32px/1.25 'Space Grotesk';margin-top:16px;color:#fff">The model makes sense.</p>
+    <p style="font:400 20px/1.5 Inter;color:rgba(255,255,255,.75);margin-top:12px">People who work in the field agree, and point to the real door: <b style="color:#fff;font-weight:600">licensed warehouses and large producers.</b></p>
+    <div style="margin-top:22px;padding-top:18px;border-top:1px solid rgba(180,169,255,.2);display:flex;align-items:center;gap:14px">
+      <span style="flex:none;width:10px;height:10px;border-radius:50%;background:#B4A9FF;box-shadow:0 0 12px #B4A9FF"></span>
+      <span style="font:500 18px/1.4 Inter;color:rgba(255,255,255,.8)">Outreach in progress: emails sent to warehouses and large producers.</span>
+    </div>
+  </div>
+  <div class="a" style="--d:600;position:absolute;left:900px;right:140px;top:430px">
+    <div class="k" style="color:#7CF0B5">And the research agrees</div>
+    <div class="card" style="margin-top:16px;padding:26px 30px;border-color:rgba(61,214,140,.35)">
+      <p style="font:500 22px/1.45 Inter;color:#fff">&ldquo;Many farm companies in Chaco found themselves with the soybean harvest and no shipping slots to Rosario. They needed a short-term liquidity bridge.&rdquo;</p>
+      <p style="font:600 14px/1.4 'JetBrains Mono';letter-spacing:.08em;color:rgba(255,255,255,.6);margin-top:14px">JULIO BARRIOS CIMA &middot; BOLSA DE COMERCIO DEL CHACO</p>
+    </div>
+  </div>
+  <div style="position:absolute;left:900px;width:580px;top:690px;display:flex;flex-wrap:wrap;gap:14px">
+    <div class="a" style="--d:750"><div style="animation:fl 6s ease-in-out infinite;padding:12px 18px;border-radius:999px;background:rgba(27,20,64,.85);border:1px solid rgba(61,214,140,.4);font:600 17px Inter;color:#fff;box-shadow:0 14px 30px -14px rgba(0,0,0,.6)"><b style="color:#7CF0B5">US$2,079M</b> in warrants issued in 2025, +93%</div></div>
+    <div class="a" style="--d:850"><div style="animation:fl 6s ease-in-out infinite;animation-delay:-2s;padding:12px 18px;border-radius:999px;background:rgba(27,20,64,.85);border:1px solid rgba(180,169,255,.4);font:600 17px Inter;color:#fff;box-shadow:0 14px 30px -14px rgba(0,0,0,.6)"><b style="color:#B4A9FF">Digital warrants</b> live at A3 and Matba Rofex</div></div>
+    <div class="a" style="--d:950"><div style="animation:fl 6s ease-in-out infinite;animation-delay:-4s;padding:12px 18px;border-radius:999px;background:rgba(27,20,64,.85);border:1px solid rgba(255,179,138,.45);font:600 17px Inter;color:#fff;box-shadow:0 14px 30px -14px rgba(0,0,0,.6)"><b style="color:#FFB38A">1st</b> warrant backed note on MAV, Jul 2026</div></div>
+  </div>
+  <div class="src a" style="--d:1050"><b>Sources:</b> Conversations and outreach by the founder, Oct 2026 (no commitments yet) &middot; Quote translated from Bichos de Campo (Jul 2026) &middot; Secretar&iacute;a de Agricultura, via Bichos de Campo.</div>
+  <div class="cam">CAMERA</div>
+</section>
+
+<!-- ============ 7 · SEGMENT & PRICE ============ -->
+<section class="s dark s5b">
+  <div class="orb" style="width:560px;height:560px;right:-140px;top:-180px;background:rgba(143,131,255,.24)"></div>
+  <div class="orb" style="width:420px;height:420px;left:20%;bottom:-220px;background:rgba(34,211,238,.12)"></div>
+  <div class="top"><div class="brand"><img src="/arva-mark-white.png" alt="">ARVA</div><div class="pg">07 / 09</div></div>
+  <div class="head" style="position:absolute;left:140px;top:150px;right:140px">
+    <div class="eb a" style="--d:100">Business model</div>
+    <h1 class="a" style="--d:250;margin-top:22px">We sell to the <span class="grad">warehouses.</span></h1>
+    <p class="sub a" style="--d:400;margin-top:16px">A credit product for their producers, off their balance sheet.</p>
+  </div>
+  <div style="position:absolute;left:140px;width:1000px;top:390px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+    <div class="card a" style="--d:500;padding:24px 24px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:12px"><span style="flex:none;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#7C72FF,#4437D9);box-shadow:0 10px 24px -10px #7C72FF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-7h6v7"/></svg></span><span class="k">The customer</span></div>
+      <b style="display:block;font:700 26px/1.15 'Space Grotesk';letter-spacing:-.02em;margin-top:18px;color:#fff">Warehouse</b>
+      <p style="font:400 16.5px/1.45 Inter;color:rgba(255,255,255,.72);margin-top:10px">Pays an integration fee plus a fee per warrant financed.</p>
+    </div>
+    <div class="card a" style="--d:600;padding:24px 24px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:12px"><span style="flex:none;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#22D3EE,#0E9FB8);box-shadow:0 10px 24px -10px #22D3EE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span class="k">The borrower</span></div>
+      <b style="display:block;font:700 26px/1.15 'Space Grotesk';letter-spacing:-.02em;margin-top:18px;color:#fff">Producer</b>
+      <p style="font:400 16.5px/1.45 Inter;color:rgba(255,255,255,.72);margin-top:10px">Gets 70% of the warrant in seconds. Pays 0.75% plus interest.</p>
+    </div>
+    <div class="card a" style="--d:700;padding:24px 24px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:12px"><span style="flex:none;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#FFB38A,#E07B4F);box-shadow:0 10px 24px -10px #FFB38A"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><circle cx="9" cy="9" r="6"/><path d="M18.1 10.4A6 6 0 1 1 10.4 18.1"/></svg></span><span class="k">The capital</span></div>
+      <b style="display:block;font:700 26px/1.15 'Space Grotesk';letter-spacing:-.02em;margin-top:18px;color:#fff">Lenders</b>
+      <p style="font:400 16.5px/1.45 Inter;color:rgba(255,255,255,.72);margin-top:10px">Earn the interest. Identified lenders first, open pool next.</p>
+    </div>
+  </div>
+  <div class="card a" style="--d:800;position:absolute;left:1180px;right:140px;top:390px;padding:24px 28px">
+    <div class="k">vs. the regulated alternative</div>
+    <p style="font:400 15px/1.4 Inter;color:rgba(255,255,255,.6);margin-top:6px">First warrant backed note on MAV &middot; Jul 2026</p>
+    <div style="margin-top:14px">
+      <div style="display:grid;grid-template-columns:110px 1fr 1fr;gap:10px;padding-bottom:8px;font:600 13px 'JetBrains Mono';letter-spacing:.12em;color:rgba(255,255,255,.5)"><span></span><span>MAV NOTE</span><span style="color:#B4A9FF">ARVA</span></div>
+      <div style="display:grid;grid-template-columns:110px 1fr 1fr;gap:10px;padding:11px 0;border-top:1px solid rgba(180,169,255,.15);font:400 16.5px/1.35 Inter;color:rgba(255,255,255,.75)"><span style="color:rgba(255,255,255,.5)">Setup</span><span>4 institutions</span><b style="color:#fff;font-weight:600">1 program</b></div>
+      <div style="display:grid;grid-template-columns:110px 1fr 1fr;gap:10px;padding:11px 0;border-top:1px solid rgba(180,169,255,.15);font:400 16.5px/1.35 Inter;color:rgba(255,255,255,.75)"><span style="color:rgba(255,255,255,.5)">Ticket</span><span>~US$1M deal</span><b style="color:#fff;font-weight:600">Per warrant</b></div>
+      <div style="display:grid;grid-template-columns:110px 1fr 1fr;gap:10px;padding:11px 0;border-top:1px solid rgba(180,169,255,.15);font:400 16.5px/1.35 Inter;color:rgba(255,255,255,.75)"><span style="color:rgba(255,255,255,.5)">Speed</span><span>Bespoke</span><b style="color:#fff;font-weight:600">Seconds</b></div>
+    </div>
+  </div>
+  <div class="card a" style="--d:900;position:absolute;left:140px;width:1300px;top:710px;padding:22px 28px">
+    <div class="k" style="margin-bottom:16px">Go to market</div>
+    <div style="display:flex;gap:28px">
+      <div class="a" style="--d:950;flex:1;display:flex;gap:14px;align-items:flex-start"><span style="flex:none;font:700 15px 'JetBrains Mono';color:#B4A9FF;padding:6px 10px;border-radius:9px;border:1px solid rgba(180,169,255,.35)">01</span><div><b style="display:block;font:700 19px 'Space Grotesk';color:#fff">Pilot</b><span style="display:block;font:400 15.5px/1.4 Inter;color:rgba(255,255,255,.7);margin-top:4px">One licensed warehouse, identified lenders.</span></div></div>
+      <div class="a" style="--d:1050;flex:1;display:flex;gap:14px;align-items:flex-start"><span style="flex:none;font:700 15px 'JetBrains Mono';color:#B4A9FF;padding:6px 10px;border-radius:9px;border:1px solid rgba(180,169,255,.35)">02</span><div><b style="display:block;font:700 19px 'Space Grotesk';color:#fff">Scale</b><span style="display:block;font:400 15.5px/1.4 Inter;color:rgba(255,255,255,.7);margin-top:4px">More warehouses through digital registries.</span></div></div>
+      <div class="a" style="--d:1150;flex:1;display:flex;gap:14px;align-items:flex-start"><span style="flex:none;font:700 15px 'JetBrains Mono';color:#B4A9FF;padding:6px 10px;border-radius:9px;border:1px solid rgba(180,169,255,.35)">03</span><div><b style="display:block;font:700 19px 'Space Grotesk';color:#fff">Open</b><span style="display:block;font:400 15.5px/1.4 Inter;color:rgba(255,255,255,.7);margin-top:4px">The pool opens to any lender.</span></div></div>
+    </div>
+  </div>
+  <div class="src a" style="--d:1250"><b>Sources:</b> Bolsa de Comercio del Chaco, via Bichos de Campo (Jul 2026) &middot; Fee and interest are the demo parameters on devnet.</div>
+  <div class="cam">CAMERA</div>
+</section>
+
+<!-- ============ 8 · TEAM ============ -->
+<section class="s dark s6b">
+  <div class="orb" style="width:560px;height:560px;left:-140px;bottom:-260px;background:rgba(34,211,238,.15)"></div>
+  <div class="orb" style="width:600px;height:600px;right:60px;top:80px;background:rgba(255,179,138,.16)"></div>
+  <div class="top"><div class="brand"><img src="/arva-mark-white.png" alt="">ARVA</div><div class="pg">08 / 09</div></div>
+  <div class="head" style="position:absolute;left:140px;top:150px;width:960px">
+    <div class="eb a" style="--d:100">The team</div>
+    <h1 class="a" style="--d:250;margin-top:22px">One builder,<br><span class="grad">roots in the field.</span></h1>
+  </div>
+  <div style="position:absolute;left:140px;width:980px;top:430px;display:grid;grid-template-columns:repeat(2,1fr);gap:20px">
+    <div class="card a" style="--d:400;padding:24px 26px">
+      <div style="display:flex;align-items:center;gap:12px"><span style="flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#3DD68C,#1E9E62);box-shadow:0 10px 24px -10px #3DD68C"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/></svg></span><span class="k">Roots</span></div>
+      <b style="display:block;font:700 23px/1.2 'Space Grotesk';letter-spacing:-.01em;margin-top:16px;color:#fff">From the countryside</b>
+      <p style="font:400 17px/1.45 Inter;color:rgba(255,255,255,.72);margin-top:8px">Family from the field. Grew up in General G&uuml;emes, Salta, surrounded by farms.</p>
+    </div>
+    <div class="card a" style="--d:500;padding:24px 26px">
+      <div style="display:flex;align-items:center;gap:12px"><span style="flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#FFB38A,#E07B4F);box-shadow:0 10px 24px -10px #FFB38A"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.7 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.8-1.7 1.7-1.7h2c3.1 0 5.5-2.5 5.5-5.6C22 6 17.5 2 12 2z"/></svg></span><span class="k">Brand</span></div>
+      <b style="display:block;font:700 23px/1.2 'Space Grotesk';letter-spacing:-.01em;margin-top:16px;color:#fff">Designed from scratch</b>
+      <p style="font:400 17px/1.45 Inter;color:rgba(255,255,255,.72);margin-top:8px">Logo drawn from zero. Colors chosen for a personal reason, to give Arva the soul it needed.</p>
+    </div>
+    <div class="card a" style="--d:600;padding:24px 26px">
+      <div style="display:flex;align-items:center;gap:12px"><span style="flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#7C72FF,#4437D9);box-shadow:0 10px 24px -10px #7C72FF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg></span><span class="k">Product</span></div>
+      <b style="display:block;font:700 23px/1.2 'Space Grotesk';letter-spacing:-.01em;margin-top:16px;color:#fff">Every decision, mine</b>
+      <p style="font:400 17px/1.45 Inter;color:rgba(255,255,255,.72);margin-top:8px">Idea, product, UX and design. Built with AI coding agents, reviewed and tested before each commit.</p>
+    </div>
+    <div class="card a" style="--d:700;padding:24px 26px">
+      <div style="display:flex;align-items:center;gap:12px"><span style="flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#22D3EE,#0E9FB8);box-shadow:0 10px 24px -10px #22D3EE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-5-6.7"/></svg></span><span class="k">Next</span></div>
+      <b style="display:block;font:700 23px/1.2 'Space Grotesk';letter-spacing:-.01em;margin-top:16px;color:#fff">A team, if it has a future</b>
+      <p style="font:400 17px/1.45 Inter;color:rgba(255,255,255,.72);margin-top:8px">The next step is people who know credit and warehouses.</p>
+    </div>
+  </div>
+  <div style="position:absolute;left:1160px;right:140px;top:215px;display:flex;flex-direction:column;align-items:center;text-align:center">
+    <div class="me a" style="--d:550;margin-top:0;width:280px;height:280px"><img src="/deck/profile.jpg" alt="Alejandro Colchi"></div>
+    <div class="by a" style="--d:700;margin-top:30px"><small>Built by</small><b style="font-size:56px">Alejandro Colchi</b><span style="font-size:23px">Information Systems Engineering student<br>Tucum&aacute;n, Argentina</span></div>
+    <div class="links a" style="--d:850;position:static;margin-top:30px"><small>Find me on</small>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>GitHub</span>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>LinkedIn</span>
+    </div>
+  </div>
+  <div class="src a" style="--d:1000"><b>Shipped solo:</b> Anchor program on Solana devnet, 18 automated tests, Next.js app and brand, built with AI coding agents (Devin).</div>
+  <div class="cam">CAMERA</div>
+</section>
+
+<!-- ============ 9 · CLOSE ============ -->
+<section class="s dark s7">
+  <canvas id="field" width="1920" height="1080"></canvas>
+  <div class="top"><div class="brand"><img src="/arva-mark-white.png" alt="">ARVA</div><div class="pg">09 / 09</div></div>
+  <div class="c" style="top:150px">
+    <h1 class="a" style="--d:400;margin-top:0"><span>The harvest exists.</span><span class="grad">With Arva, so does the capital.</span></h1>
+    <div class="a" style="--d:600;margin-top:34px;font:600 21px 'Space Grotesk';color:rgba(255,255,255,.85)"><small style="display:block;font:600 14px 'JetBrains Mono';letter-spacing:.24em;text-transform:uppercase;color:var(--lav);margin-bottom:12px">Next milestone</small>A licensed warehouse certifying real warrants &middot; a real market price &middot; the first financed warrant</div>
+  </div>
+</section>
+
+</div></div>
+<div class="hint" id="hint">← → navigate · F fullscreen · G camera guide</div>
+
+<script>
+const deck=document.getElementById('deck');
+const slides=[...document.querySelectorAll('.s')];
+let cur=0;
+
+function fit(){
+  const k=Math.min(innerWidth/1920,innerHeight/1080);
+  deck.style.transform=`translate(-50%,-50%) scale(${k})`;
+}
+addEventListener('resize',fit);fit();
+
+function fmt(v,dec){return v.toLocaleString('en-US',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
+function countUp(slide){
+  slide.querySelectorAll('[data-count]').forEach(el=>{
+    const to=parseFloat(el.dataset.count),dec=parseInt(el.dataset.dec||'0',10);
+    const delay=500,dur=1700,t0=performance.now()+delay;
+    el.textContent=fmt(0,dec);
+    const step=t=>{
+      if(!slide.classList.contains('on'))return;
+      const p=Math.min(Math.max((t-t0)/dur,0),1),e=1-Math.pow(1-p,3);
+      el.textContent=fmt(to*e,dec);
+      if(p<1)requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+}
+
+function show(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,j)=>s.classList.toggle('on',j===cur));
+  countUp(slides[cur]);
+  history.replaceState(null,'','#'+(cur+1));
+  if(slides[cur].classList.contains('s7'))startField();else stopField();
+  if(slides[cur].classList.contains('s3'))startFlow();else stopFlow();
+}
+
+/* slide 3: one bubble travels through every step and lights it up */
+const flow=document.getElementById('flow');
+const fNodes=[...flow.querySelectorAll('.node')];
+const fRail=flow.querySelector('.rail'),fFill=fRail.querySelector('i'),fBub=flow.querySelector('.bubble');
+let fRaf=null,fT0=0;
+const TRAVEL=4600,HOLD=1800,LEAD=1400;
+function flowFrame(t){
+  const c=fNodes.map(n=>n.offsetLeft+n.offsetWidth/2);
+  const x0=c[0],x1=c[c.length-1];
+  fRail.style.left=x0+'px';fRail.style.width=(x1-x0)+'px';
+  let e=t-fT0-LEAD;
+  if(e<0){fBub.style.opacity=0;fFill.style.width='0';fNodes.forEach(n=>n.classList.remove('lit'));flow.classList.add('run');fRaf=requestAnimationFrame(flowFrame);return}
+  e%=TRAVEL+HOLD;
+  const p=Math.min(e/TRAVEL,1),k=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+  const x=x0+(x1-x0)*k;
+  fBub.style.left=x+'px';fBub.style.opacity=p>=1?Math.max(0,1-(e-TRAVEL)/600):1;
+  fFill.style.width=(x-x0)+'px';
+  fNodes.forEach(n=>n.classList.toggle('lit',x>=n.offsetLeft-4));
+  fRaf=requestAnimationFrame(flowFrame);
+}
+function startFlow(){if(!fRaf){fT0=performance.now();flow.classList.add('run');fRaf=requestAnimationFrame(flowFrame)}}
+function stopFlow(){if(fRaf){cancelAnimationFrame(fRaf);fRaf=null}flow.classList.remove('run');fNodes.forEach(n=>n.classList.remove('lit'))}
+
+addEventListener('keydown',e=>{
+  if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();show(cur+1)}
+  else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(cur-1)}
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key.toLowerCase()==='f'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+  else if(e.key.toLowerCase()==='g')document.body.classList.toggle('guide');
+});
+addEventListener('click',e=>{e.clientX>innerWidth/2?show(cur+1):show(cur-1)});
+setTimeout(()=>document.getElementById('hint').classList.add('off'),3500);
+
+/* closing slide: sunrise over a plowed field */
+const cv=document.getElementById('field'),cx=cv.getContext('2d');
+const W=1920,H=1080,HY=H*0.8,VX=W/2;
+let raf=null,pulses=[],dust=[],fieldT0=0;
+const sunLogo=new Image();sunLogo.src='/arva-mark-white.png';
+for(let i=0;i<60;i++)dust.push({x:Math.random()*W,y:Math.random()*HY,r:Math.random()*1.6+.4,s:Math.random()*.25+.05,a:Math.random()});
+const FURROWS=34;
+function spawn(){pulses.push({f:Math.floor(Math.random()*FURROWS),t:0,v:.0035+Math.random()*.004,c:Math.random()<.5?'34,211,238':'180,169,255'})}
+function draw(){
+  cx.clearRect(0,0,W,H);
+  let g=cx.createLinearGradient(0,0,0,HY);
+  g.addColorStop(0,'#0F0B28');g.addColorStop(.6,'#1B1440');g.addColorStop(1,'#3A2A7A');
+  cx.fillStyle=g;cx.fillRect(0,0,W,HY);
+  let sun=cx.createRadialGradient(VX,HY,0,VX,HY,820);
+  sun.addColorStop(0,'rgba(255,179,138,.75)');sun.addColorStop(.18,'rgba(255,150,140,.35)');sun.addColorStop(.45,'rgba(143,131,255,.22)');sun.addColorStop(1,'rgba(143,131,255,0)');
+  cx.fillStyle=sun;cx.fillRect(0,0,W,H);
+  /* the Arva mark rising out of the horizon, like on the landing */
+  if(sunLogo.complete&&sunLogo.naturalWidth){
+    const now=performance.now(),p=Math.min(1,Math.max(0,(now-fieldT0-300)/2400)),k=1-Math.pow(1-p,3);
+    const lh=280,lw=lh*sunLogo.naturalWidth/sunLogo.naturalHeight,ly=HY-lh-30+Math.sin(now/2200)*4+(1-k)*(lh+50);
+    cx.save();cx.beginPath();cx.rect(0,0,W,HY);cx.clip();
+    const lg=cx.createRadialGradient(VX,HY-lh*.35,0,VX,HY-lh*.35,lh*1.9);
+    lg.addColorStop(0,`rgba(255,200,160,${.5*k})`);lg.addColorStop(.35,`rgba(160,140,255,${.28*k})`);lg.addColorStop(1,'rgba(160,140,255,0)');
+    cx.fillStyle=lg;cx.fillRect(VX-lh*2.3,HY-lh*2.5,lh*4.6,lh*2.5);
+    cx.shadowColor='rgba(190,175,255,.9)';cx.shadowBlur=40+20*Math.sin(now/1400);
+    cx.globalAlpha=.96*Math.min(1,k*1.4);cx.drawImage(sunLogo,VX-lw/2,ly,lw,lh);
+    cx.restore();
+  }
+  let gr=cx.createLinearGradient(0,HY,0,H);
+  gr.addColorStop(0,'#2A1F6B');gr.addColorStop(1,'#0F0B28');
+  cx.fillStyle=gr;cx.fillRect(0,HY,W,H-HY);
+  cx.fillStyle='rgba(255,200,170,.9)';cx.fillRect(0,HY-1,W,2);
+  for(let i=0;i<FURROWS;i++){
+    const bx=-W*1.2+(W*3.4)*(i/(FURROWS-1));
+    cx.strokeStyle='rgba(180,169,255,.16)';cx.lineWidth=1.3;
+    cx.beginPath();cx.moveTo(VX,HY);cx.lineTo(bx,H);cx.stroke();
+  }
+  for(let k=1;k<=12;k++){
+    const y=HY+(H-HY)*Math.pow(k/12,2.1);
+    cx.strokeStyle=`rgba(180,169,255,${.05+.06*(k/12)})`;cx.lineWidth=1;
+    cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke();
+  }
+  if(Math.random()<.18)spawn();
+  pulses=pulses.filter(p=>p.t<1);
+  pulses.forEach(p=>{
+    p.t+=p.v;
+    const bx=-W*1.2+(W*3.4)*(p.f/(FURROWS-1));
+    const x=bx+(VX-bx)*p.t,y=H+(HY-H)*p.t,r=4*(1-p.t)+1;
+    const gl=cx.createRadialGradient(x,y,0,x,y,r*6);
+    gl.addColorStop(0,`rgba(${p.c},${.9*(1-p.t)})`);gl.addColorStop(1,`rgba(${p.c},0)`);
+    cx.fillStyle=gl;cx.beginPath();cx.arc(x,y,r*6,0,7);cx.fill();
+  });
+  dust.forEach(d=>{
+    d.y-=d.s;d.a+=.01;if(d.y<0){d.y=HY;d.x=Math.random()*W}
+    cx.fillStyle=`rgba(255,215,190,${.25+.25*Math.sin(d.a)})`;
+    cx.beginPath();cx.arc(d.x,d.y,d.r,0,7);cx.fill();
+  });
+  raf=requestAnimationFrame(draw);
+}
+function startField(){if(!raf){fieldT0=performance.now();draw()}}
+function stopField(){if(raf){cancelAnimationFrame(raf);raf=null}}
+
+const start=parseInt(location.hash.slice(1),10);
+show(isNaN(start)?0:start-1);
+</script>
+</body>
+</html>
