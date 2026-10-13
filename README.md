@@ -13,6 +13,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/alejandrocol-dev/Arva/actions/workflows/tests.yml"><img src="https://github.com/alejandrocol-dev/Arva/actions/workflows/tests.yml/badge.svg" alt="Program tests" /></a>
   <img src="https://img.shields.io/badge/Solana-devnet-6355F6?style=flat-square&logo=solana&logoColor=white" alt="Solana devnet" />
   <img src="https://img.shields.io/badge/Anchor-1.1.2-1B1440?style=flat-square" alt="Anchor" />
   <img src="https://img.shields.io/badge/Next.js-16-17132B?style=flat-square&logo=nextdotjs&logoColor=white" alt="Next.js" />
@@ -98,23 +99,45 @@ The first customer is not the producer but the **licensed warehouse or warrant p
 
 The regulated alternative already exists: Argentina's first warrant-backed note traded on MAV (July 2026) paid around 7% annual dollar-linked, but needed four institutions and a bespoke, ~US$1M deal. ARVA's wedge is not a lower rate but **tickets the incumbent structure can't serve** (US$20-50k, self-service, in seconds): for the small producer, the alternative is often no credit at all or far costlier informal credit.
 
+| | Warrant-backed note on MAV (July 2026) | ARVA (devnet demo) |
+|---|---|---|
+| **Who is involved** | Four institutions: Bolsa de Comercio del Chaco (exchange agent), A3 Mercados (registry and custody), MAV (market) and Control Union (certifier) | One program, plus the warehouse that certifies the warrant |
+| **Minimum size** | About US$1M, across several notes | One warrant: 100 t of soy ≈ 35,000 USDC of collateral |
+| **Time to funds** | A bespoke structure (timeline not disclosed) | One transaction, seconds, once the warrant exists |
+| **Cost** | 7% a year, dollar-linked, plus undisclosed structuring costs | 0.75% fee + 12% APR (demo assumption): **≈ 909 USDC** on a 24,500 USDC loan for 90 days, about 3.7% |
+
+Source for the MAV deal: Bolsa de Comercio del Chaco via [Bichos de Campo](https://bichosdecampo.com/una-empresa-agricola-garantizo-pagares-bursatiles-con-warrants-digitales-para-obtener-financiamiento-con-una-tasa-del-7-como-lo-hizo/). The 12% rate is a parameter of the demo pool, not a market quote.
+
+**Go to market:** (1) a pilot with one licensed warehouse and identified lenders; (2) scale through the digital warrant registries of A3 Mercados and Matba Rofex; (3) open the pool as the risk model proves itself. The metric that matters first: **the first financed real warrant.**
+
+## Validation so far
+
+We say it plainly, because it's early:
+
+- **What we heard.** People who work in agriculture told us the model makes sense, and that the real door is the **licensed warehouses and large producers**, not individual farmers. That is why the first customer is the warehouse.
+- **What the market says.** Bolsa de Comercio del Chaco described the same problem in July 2026: farm companies with soy harvested but no shipping slots to Rosario needed a short-term liquidity bridge, and the warrant was the collateral they used.
+- **What we're doing.** Emails went out to licensed warehouses and large producers. No replies yet, and no commitments. We will ask how long it takes today to finance a warrant, at what rate, what stops them, and whether they would certify a pilot.
+
 ---
 
 ## Try it
 
 1. On a desktop browser, install **Phantom** and switch it to **devnet** (Settings → Developer Settings → Testnet mode → Solana devnet).
 2. Open **[arva-devnet.vercel.app/app](https://arva-devnet.vercel.app/app)** and connect Phantom.
-3. Click **Get kit**: the starter kit sends your wallet devnet SOL for fees, test USDC and a 100 t demo warrant.
+3. Click **Get starter kit**: it sends your wallet devnet SOL for fees, test USDC and a 100 t demo warrant.
 4. Go to **Borrow**, review the loan (LTV, fee, liquidation price) and sign it in Phantom.
 5. Open the transaction in Solana Explorer, then **Repay** and watch the warrant return to your wallet.
+6. Check **Your activity** on the Overview: every step with its real signature.
 
-Everything you sign is a real devnet transaction against the deployed program. No real money is involved.
+Everything you sign is a real devnet transaction against the deployed program. No real money is involved. A repaid warrant can't be pledged again; click the starter kit again to get a new one (up to 5 per wallet).
+
+Moving the price and certifying warrants are operator roles enforced on-chain, so they don't appear for regular wallets. The demo video shows the operator side: a 30% price drop and a permissionless liquidation.
 
 ## The app
 
 - **Landing** that explains the product in plain language, for producers and investors alike.
 - **Dashboard** with pool liquidity, outstanding debt, tokenized tons, charts and the latest program transactions, each linked to Solana Explorer.
-- **Liquidation simulator:** move the grain price and see exactly when a loan becomes liquidatable.
+- **Liquidation simulator** on the landing: move tons, LTV and price, and see exactly when a loan becomes liquidatable.
 - **Review screen before every signature:** what you give, what you get, the fee and the liquidation price.
 - **Risk in plain language:** four tiers (Healthy, Watch, At risk, Liquidatable) plus how far the price can drop.
 - **Guided tour** on every screen for first-time users.
@@ -220,7 +243,7 @@ NEXT_PUBLIC_USE_REAL=true npm run dev
 
 ## Team
 
-Solo founder: **Alejandro** ([@alejandrocol-dev](https://github.com/alejandrocol-dev)), Information Systems Engineering student in Tucumán, Argentina. Product, Anchor program, app and deployment.
+Solo founder: **Alejandro Colchi** ([GitHub](https://github.com/alejandrocol-dev) · [LinkedIn](https://www.linkedin.com/in/alejandro-colchi-ba0b88434/)), Tucumán, Argentina. Information Systems Engineering student. Grew up in General Güemes, Salta, a farming town; his paternal grandparents worked the land. Now in San Miguel de Tucumán. Owns the product, the design and brand, the Anchor program, the app and the deployment, built with AI coding agents (see *Use of AI*). Next step: a team with credit and warehouse experience.
 
 ## Progress and disclosures
 
@@ -229,7 +252,7 @@ Solo founder: **Alejandro** ([@alejandrocol-dev](https://github.com/alejandrocol
   - **Oct 4:** Anchor program (7 instructions), LiteSVM tests, devnet deployment and first version of the app.
   - **Oct 6 to 9:** new landing and app design, guided tour, real on-chain data in the UI, liquidation simulator.
   - **Oct 11:** rename to ARVA, new brand, judge starter kit (SOL, test USDC and a demo warrant from one click) and guided journey.
-  - **Oct 12:** personal activity trail, labeled simulated market view, mobile landing; after the Superteam Argentina review: full-collateral check in `borrow`, collateral transfer and liquidator bonus in `liquidate`, price circuit breaker, corrected claims.
+  - **Oct 12:** personal activity trail, labeled simulated market view, mobile landing; after the Superteam Argentina review: full-collateral check in `borrow`, collateral transfer and liquidator bonus in `liquidate`, price circuit breaker, corrected claims; separate producer and operator interfaces, starter kit always in view, warehouse-first business model and MAV comparison on the landing.
 - **Third-party components:** Anchor, SPL Token, Solana Wallet Adapter, Next.js, Tailwind CSS and their open-source dependencies.
 
 ## Use of AI
