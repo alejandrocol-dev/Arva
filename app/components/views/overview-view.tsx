@@ -31,6 +31,8 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { ActivityFeed, KIND } from "@/components/activity-feed";
 import { useSimMarket, type SimEvent, type SimWarrant } from "@/lib/sim-market";
 import { useStepAction } from "@/components/journey-dock";
+import { StarterKitButton } from "@/components/starter-kit";
+import { useOperator } from "@/lib/role";
 import { BarList, Donut, Legend } from "@/components/charts";
 import { Badge, Card, ExplorerLink, IconTile, ProgressBar, Skeleton, cx, type IconTileTone } from "@/components/ui";
 
@@ -182,6 +184,8 @@ function DemoHero({ onGo, stats, config }: { onGo: (v: View) => void; stats?: Po
   const f = useFmt();
   const action = useStepAction();
   const { role, steps, done, current, count, owner } = useJourney();
+  const { canAdmin, operator } = useOperator();
+  const kitDone = steps.some((id, i) => (id === "kit" || id === "usdc") && done[i]);
   const pct = Math.round((count / steps.length) * 100);
   const apy = stats && config ? f.bps((config.annualInterestBps * stats.utilizationBps) / 10_000) : null;
   const investor = role === "investor";
@@ -227,6 +231,7 @@ function DemoHero({ onGo, stats, config }: { onGo: (v: View) => void; stats?: Po
             </div>
             <span className="shrink-0 text-xs font-semibold text-white/70">{t("dash.hero.progress", { done: count, total: steps.length })}</span>
           </div>
+          {!operator && !kitDone && <StarterKitButton size="lg" className="mt-5" />}
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs">
             {investor && apy && (
               <span className="inline-flex items-center gap-1.5 font-semibold text-white/80">
@@ -235,15 +240,17 @@ function DemoHero({ onGo, stats, config }: { onGo: (v: View) => void; stats?: Po
               </span>
             )}
             {!owner && <span className="text-white/50">{t("demo.needWallet")}</span>}
-            <button
-              type="button"
-              onClick={() => onGo("admin")}
-              className="inline-flex items-center gap-1.5 font-semibold text-brand-glow hover:text-white"
-            >
-              <SlidersHorizontal className="size-3.5" aria-hidden />
-              {t(investor ? "inv.extra" : "demo.extra")}
-              <ArrowRight className="size-3.5" aria-hidden />
-            </button>
+            {canAdmin && (
+              <button
+                type="button"
+                onClick={() => onGo("admin")}
+                className="inline-flex items-center gap-1.5 font-semibold text-brand-glow hover:text-white"
+              >
+                <SlidersHorizontal className="size-3.5" aria-hidden />
+                {t(investor ? "inv.extra" : "demo.extra")}
+                <ArrowRight className="size-3.5" aria-hidden />
+              </button>
+            )}
           </div>
         </div>
 

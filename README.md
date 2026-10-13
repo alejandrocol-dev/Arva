@@ -119,7 +119,7 @@ Everything you sign is a real devnet transaction against the deployed program. N
 - **Risk in plain language:** four tiers (Healthy, Watch, At risk, Liquidatable) plus how far the price can drop.
 - **Guided tour** on every screen for first-time users.
 - **English and Spanish.**
-- **Demo tools, clearly labeled as simulated:** Certifier (issue warrants) and Admin (move the grain price).
+- **Two interfaces:** regular wallets see the producer flow (Overview, Borrow, Earn) and get a starter kit in one click. The simulated Certifier (issue warrants) and Admin (move the grain price) tools appear only for the project's operator wallets, because the program enforces those roles on-chain.
 
 ### Real vs. simulated
 

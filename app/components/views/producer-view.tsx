@@ -20,6 +20,7 @@ import { MIN_SOL_FOR_FEES } from "@/lib/constants";
 import { useNowSec } from "@/lib/data-bus";
 import { useFmt, useT } from "@/lib/i18n";
 import { useView } from "@/lib/nav";
+import { useOperator } from "@/lib/role";
 import { positionRisk, projectedDebt } from "@/lib/risk";
 import { useAsyncData } from "@/lib/use-async";
 import { PositionGauge, RiskBanner } from "@/components/risk";
@@ -44,6 +45,7 @@ export function ProducerView() {
   const f = useFmt();
   const { publicKey } = useWallet();
   const [, setView] = useView();
+  const { canCertify } = useOperator();
   const owner = publicKey?.toBase58() ?? null;
 
   const { data, loading, error, reload } = useAsyncData(async () => {
@@ -93,9 +95,11 @@ export function ProducerView() {
           action={
             <div className="flex flex-col items-center gap-3">
               <StarterKitButton size="lg" />
-              <button type="button" onClick={() => setView("certifier")} className="text-xs font-semibold text-mute hover:text-ink">
-                {t("borrow.empty.cta")}
-              </button>
+              {canCertify && (
+                <button type="button" onClick={() => setView("certifier")} className="text-xs font-semibold text-mute hover:text-ink">
+                  {t("borrow.empty.cta")}
+                </button>
+              )}
             </div>
           }
         />

@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, Compass, X } from "lucide-react";
 import { useT, type MessageKey } from "@/lib/i18n";
 import type { View } from "@/lib/nav";
+import { useOperator } from "@/lib/role";
 import { Button, cx } from "@/components/ui";
 
 /**
@@ -48,13 +49,20 @@ function writeStored(patch: Partial<Stored>) {
 }
 
 /** Opens the tour the first time a screen is visited (unless the user skipped it). */
-export function useTourAutoStart(view: View, setOpen: (open: boolean) => void) {
+export function useTourAutoStart(view: View, setOpen: (open: boolean) => void, skip = false) {
   useEffect(() => {
     const s = readStored();
-    if (view === "help" || s.off || s.seen.includes(view)) return;
+    if (skip || view === "help" || s.off || s.seen.includes(view)) return;
     const id = window.setTimeout(() => setOpen(true), 700);
     return () => window.clearTimeout(id);
-  }, [view, setOpen]);
+  }, [view, setOpen, skip]);
+}
+
+/** Next screen of the guide that this wallet can actually open (operator screens are skipped for producers). */
+function resolveNext(from: View | undefined, allowed: (v: View) => boolean): View | undefined {
+  let next = from;
+  while (next && !allowed(next)) next = TOURS[next].next;
+  return next;
 }
 
 /* -------------------------------- overlay --------------------------------- */
@@ -79,7 +87,9 @@ export function GuidedTour({
   onContinue: (next: View, openTour: boolean) => void;
 }) {
   const t = useT();
+  const { canCertify, canAdmin } = useOperator();
   const tour = TOURS[view];
+  const nextView = resolveNext(tour.next, (v) => (v === "certifier" ? canCertify : v === "admin" ? canAdmin : true));
   const [i, setI] = useState(0);
   const [rect, setRect] = useState<Rect | null>(null);
   const [cardH, setCardH] = useState(220);
@@ -230,13 +240,13 @@ export function GuidedTour({
             </Button>
           )}
           <div className="flex items-center gap-2">
-            {last && tour.next ? (
+            {last && nextView ? (
               <>
                 <Button variant="secondary" size="sm" onClick={onClose}>
                   {t("tour.done")}
                 </Button>
-                <Button size="sm" onClick={() => onContinue(tour.next!, true)}>
-                  {t("tour.nextTab", { screen: screen(tour.next) })}
+                <Button size="sm" onClick={() => onContinue(nextView, true)}>
+                  {t("tour.nextTab", { screen: screen(nextView) })}
                   <ArrowRight className="size-3.5" aria-hidden />
                 </Button>
               </>

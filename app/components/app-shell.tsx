@@ -14,8 +14,10 @@ import {
   Vault,
   type LucideIcon,
 } from "lucide-react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useT, type MessageKey } from "@/lib/i18n";
 import { useView, type View } from "@/lib/nav";
+import { OperatorProvider, useOperator } from "@/lib/role";
 import { PROGRAM_ID } from "@/lib/constants";
 import { explorerAddressUrl, shortenAddress } from "@/lib/format";
 import { cx } from "@/components/ui";
@@ -24,6 +26,7 @@ import { JourneyDock } from "./journey-dock";
 import { LocaleSwitch } from "./locale-switch";
 import { ArvaLockup, ArvaMark } from "./logo";
 import { SiteFooter } from "./site-footer";
+import { StarterKitButton } from "./starter-kit";
 import { WalletButton } from "./wallet-button";
 
 type Item = { id: View; label: MessageKey; icon: LucideIcon };
@@ -80,12 +83,24 @@ function MobileLink({ item, active, demo }: { item: Item; active: boolean; demo?
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
+  return (
+    <OperatorProvider>
+      <Shell>{children}</Shell>
+    </OperatorProvider>
+  );
+}
+
+function Shell({ children }: { children: ReactNode }) {
   const t = useT();
   const [view, setView] = useView();
+  const { connected } = useWallet();
+  const { canCertify, canAdmin, operator } = useOperator();
+  const tools = TOOLS.filter((i) => (i.id === "certifier" ? canCertify : canAdmin));
+  const blocked = (view === "certifier" && !canCertify) || (view === "admin" && !canAdmin);
   const current = [...MAIN, ...TOOLS].find((i) => i.id === view) ?? MAIN[0];
   const [tourOpen, setTourOpen] = useState(false);
   const openTour = () => setTourOpen(true);
-  useTourAutoStart(view, setTourOpen);
+  useTourAutoStart(view, setTourOpen, blocked);
 
   return (
     <div className="flex min-h-dvh">
@@ -103,19 +118,21 @@ export function AppShell({ children }: { children: ReactNode }) {
               ))}
             </div>
           </div>
-          <div>
-            <p className="mb-2 flex items-center justify-between px-3 text-[11px] font-bold uppercase tracking-[0.12em] text-faint">
-              {t("nav.demoTools")}
-              <span className="rounded-full bg-warn/10 px-2 py-0.5 text-[10px] tracking-normal text-warn normal-case">
-                {t("common.simulated")}
-              </span>
-            </p>
-            <div className="space-y-1">
-              {TOOLS.map((i) => (
-                <SideLink key={i.id} item={i} active={view === i.id} demo />
-              ))}
+          {tools.length > 0 && (
+            <div className={cx(operator && "rounded-2xl border border-warn/30 bg-warn/5 p-2")}>
+              <p className="mb-2 flex items-center justify-between px-3 pt-1 text-[11px] font-bold uppercase tracking-[0.12em] text-faint">
+                {t("nav.operator")}
+                <span className="rounded-full bg-warn/10 px-2 py-0.5 text-[10px] tracking-normal text-warn normal-case">
+                  {t("common.simulated")}
+                </span>
+              </p>
+              <div className="space-y-1">
+                {tools.map((i) => (
+                  <SideLink key={i.id} item={i} active={view === i.id} demo />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </nav>
 
         <div className="space-y-3 p-4">
@@ -161,27 +178,43 @@ export function AppShell({ children }: { children: ReactNode }) {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={openTour}
-                aria-label={t("tour.buttonAria")}
-                className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-line-strong bg-surface px-3 text-sm font-semibold text-ink transition-colors hover:bg-sunken"
-              >
-                <Compass className="size-4 text-brand-strong" aria-hidden />
-                <span className="hidden sm:inline">{t("tour.button")}</span>
-              </button>
+              {!operator && connected && (
+                <div className="hidden sm:block">
+                  <StarterKitButton size="sm" className="h-9" />
+                </div>
+              )}
+              {!blocked && (
+                <button
+                  type="button"
+                  onClick={openTour}
+                  aria-label={t("tour.buttonAria")}
+                  className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-line-strong bg-surface px-3 text-sm font-semibold text-ink transition-colors hover:bg-sunken"
+                >
+                  <Compass className="size-4 text-brand-strong" aria-hidden />
+                  <span className="hidden sm:inline">{t("tour.button")}</span>
+                </button>
+              )}
               <LocaleSwitch />
               <div data-tour="wallet">
                 <WalletButton />
               </div>
             </div>
           </div>
+          {operator && (
+            <div className="flex items-start gap-2 border-t border-warn/30 bg-warn/10 px-4 py-2 text-xs sm:px-8">
+              <SlidersHorizontal className="mt-0.5 size-3.5 shrink-0 text-warn" aria-hidden />
+              <p className="leading-snug text-ink/75">
+                <span className="mr-1.5 font-bold uppercase tracking-wide text-warn">{t("operator.banner.title")}</span>
+                {t("operator.banner.body")}
+              </p>
+            </div>
+          )}
           <nav className="flex gap-1 overflow-x-auto border-t border-line px-4 py-2 lg:hidden" aria-label="Main">
             {MAIN.map((i) => (
               <MobileLink key={i.id} item={i} active={view === i.id} />
             ))}
-            <span className="mx-1 w-px shrink-0 bg-line-strong" aria-hidden />
-            {TOOLS.map((i) => (
+            {tools.length > 0 && <span className="mx-1 w-px shrink-0 bg-line-strong" aria-hidden />}
+            {tools.map((i) => (
               <MobileLink key={i.id} item={i} active={view === i.id} demo />
             ))}
           </nav>

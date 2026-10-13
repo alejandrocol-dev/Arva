@@ -40,6 +40,14 @@ export const en = {
   "nav.certifier": "Certifier",
   "nav.admin": "Admin",
   "nav.demoTools": "Demo tools",
+  "nav.operator": "Operator console",
+  "operator.banner.title": "Operator mode",
+  "operator.banner.body":
+    "Project wallet connected. The certifier and the price oracle are simulated roles that the project holds in this demo; in production a licensed warrant issuer and a real price feed would do this.",
+  "operator.gate.title": "Operator-only tools",
+  "operator.gate.body":
+    "Issuing warrants and moving the grain price are simulated roles. In this demo they belong to the project's own wallets, and the program rejects anyone else. You don't need them: get a starter kit and run the whole producer flow with your wallet.",
+  "operator.gate.cta": "Go to Borrow",
   "footer.disclaimer":
     "Hackathon prototype on Solana devnet. Not audited. Certifier and price oracle are simulated. Not financial advice.",
   "footer.program": "Program on Solana Explorer",
@@ -800,6 +808,14 @@ export const es: Record<MessageKey, string> = {
   "nav.certifier": "Certificadora",
   "nav.admin": "Administrador",
   "nav.demoTools": "Herramientas de demo",
+  "nav.operator": "Consola de operador",
+  "operator.banner.title": "Modo operador",
+  "operator.banner.body":
+    "Wallet del proyecto conectada. La certificadora y el oráculo de precio son roles simulados que en esta demo maneja el proyecto; en producción lo harían un emisor de warrants habilitado y un precio de mercado real.",
+  "operator.gate.title": "Herramientas solo para operadores",
+  "operator.gate.body":
+    "Emitir warrants y mover el precio del grano son roles simulados. En esta demo los tienen las wallets del proyecto, y el programa rechaza a cualquier otra. No las necesitás: pedí un kit de inicio y recorré todo el flujo del productor con tu wallet.",
+  "operator.gate.cta": "Ir a Pedir préstamo",
   "footer.disclaimer":
     "Prototipo de hackathon en Solana devnet. Sin auditar. La certificadora y el oráculo de precio son simulados. No es asesoramiento financiero.",
   "footer.program": "Programa en Solana Explorer",
