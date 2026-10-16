@@ -974,6 +974,15 @@ details[open] .ans{animation:ansIn .35s cubic-bezier(.2,.7,.2,1)}
   .beamsvg{display:none}
   .banner{padding-left:20px;padding-right:20px}
 }
+@media(max-width:960px){
+  *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  nav.floating .nav-in{background:#171040;box-shadow:0 12px 28px -14px rgba(17,12,44,.65)}
+  .card-wrap::before,.shot-halo,.shot-glare,.sol-halo,.sol-glare,.aur::after,.mq::after,.hx-spot{display:none}
+  .hx-intro h1{filter:none}
+  @keyframes hxIn{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+  .netbox::after,.live::before,.bnode.mid::before,.banner .btn-pri,.banner .btn-pri::after,.hx-intro .btn-pri::after{animation:none}
+  .loan,.fchip,.shot-chip,.sol-mark{animation:none}
+}
 @media(max-width:620px){
   .wrap{padding-left:20px;padding-right:20px}
   nav.floating .nav-in{gap:10px;padding:7px 7px 7px 12px}
@@ -1589,6 +1598,7 @@ details[open] .ans{animation:ansIn .35s cubic-bezier(.2,.7,.2,1)}
 <script>
 const nav=document.getElementById('nav'),heroEl=document.getElementById('hero'),hxPin=document.getElementById('hxPin');
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const liteDevice=matchMedia('(max-width: 820px), (hover: none) and (pointer: coarse)').matches;
 let lifeRestart=()=>{};
 const heroField={sun:0};
 
@@ -1621,7 +1631,7 @@ const heroField={sun:0};
     ticking=false;
     const p=progress(),{narrow,ww,wh,cx,cy}=geo;
     const a=out(seg(p,0,.16)),e=ease(seg(p,.03,.55)),s=out(seg(p,.36,.66)),c=out(seg(p,.3,.8));
-    heroField.sun=c;if(reduceMotion&&heroField.redraw)heroField.redraw();
+    heroField.sun=c;if((reduceMotion||liteDevice)&&heroField.redraw)heroField.redraw();
     intro.style.opacity=1-a;intro.style.transform=`translateY(${-46*a}px) scale(${1-.05*a})`;
     intro.style.pointerEvents=a>.6?'none':'';
     bottom.style.opacity=1-out(seg(p,0,.1));bottom.style.transform=`translateY(${30*seg(p,0,.12)}px)`;
@@ -1685,7 +1695,7 @@ function makeField(host,cv,hyR,logoSrc,opts){
     const d=x.getImageData(0,0,c.width,c.height).data;let l=c.width,r=-1;
     for(let y=0;y<c.height;y+=2)for(let X=0;X<c.width;X++)if(d[(y*c.width+X)*4+3]>40){if(X<l)l=X;if(X>r)r=X;}
     if(r>=l)logoOff=(l+r+1)/2/c.width-.5;}catch(_){}};
-  if(logoSrc){const im=new Image();im.onload=()=>{trim(im);logo=im;if(reduceMotion)draw(0)};im.src=logoSrc;}
+  if(logoSrc){const im=new Image();im.onload=()=>{trim(im);logo=im;if(reduceMotion||liteDevice)draw(0)};im.src=logoSrc;}
   let W,H,hy,mx=0,tmx=0,run=true;
   const N=36,pulses=[],dust=[];
   for(let i=0;i<14;i++)pulses.push({i:Math.floor(Math.random()*N),p:Math.random(),s:.0025+Math.random()*.004});
@@ -1753,7 +1763,7 @@ function makeField(host,cv,hyR,logoSrc,opts){
   size();addEventListener('resize',size);
   if(matchMedia('(hover: hover) and (pointer: fine)').matches)host.addEventListener('pointermove',e=>{if(e.pointerType==='mouse')tmx=(e.clientX-host.getBoundingClientRect().left)/W-.5});
   new IntersectionObserver(([e])=>run=e.isIntersecting).observe(host);
-  if(reduceMotion)draw(0);else requestAnimationFrame(loop);
+  if(reduceMotion||liteDevice)draw(0);else requestAnimationFrame(loop);
 }
 makeField(hxPin,document.getElementById('field'),.68,'arva-mark-white.png',heroField);
 
