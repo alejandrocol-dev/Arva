@@ -726,9 +726,13 @@ body{overflow-x:clip}
 
 /* ---- ROUND 7: language switch ---- */
 nav .links a,nav .net,nav .nav-in>.btn-pri,nav .brand b{white-space:nowrap}
+nav .nav-in{overflow:hidden}
+nav .brand,nav .lang,nav .net,nav .nav-in>.btn-pri{flex:none}
+nav .links{min-width:0;overflow:hidden}
 html[lang=es] nav.floating .nav-in{max-width:1080px}
 html[lang=es] nav.floating .links{gap:18px}
-@media(max-width:1180px){html[lang=es] nav .net{display:none}html[lang=es] nav .lang{margin-left:auto}}
+@media(max-width:1180px){nav .net{display:none}nav .lang{margin-left:auto}}
+@media(max-width:1120px){nav .links{display:none}}
 nav .lang{display:inline-flex;position:relative;padding:3px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);margin-left:-14px;
   transition:opacity .45s cubic-bezier(.2,.7,.2,1) .31s,transform .45s cubic-bezier(.2,.7,.2,1) .31s,visibility .45s .31s}
 nav:not(.floating) .lang{opacity:0;transform:translateY(-6px);visibility:hidden;pointer-events:none;transition-delay:0s}
@@ -935,7 +939,7 @@ details[open] .ans{animation:ansIn .35s cubic-bezier(.2,.7,.2,1)}
   .hs b{font-size:22px}.hs-link{display:none}
   .steps,.why4,.mkt,.leg,.road{grid-template-columns:1fr 1fr}
   h1{font-size:42px}h2{font-size:32px}
-  .links{display:none}.banner h2{font-size:34px}
+  .banner h2{font-size:34px}
 }
 @media(max-width:620px){.steps,.why4,.mkt,.leg,.road{grid-template-columns:1fr}}
 /* business model */
