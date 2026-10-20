@@ -27,7 +27,7 @@
   --vio-dark:#171233; --vio-dark-2:#1E1750;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:clip}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;overflow-x:clip}
 .sg{font-family:'Space Grotesk'}
 .mono{font-family:'JetBrains Mono',monospace}
@@ -37,7 +37,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
 
 /* ---- NAV ---- */
-nav{position:fixed;inset:0 0 auto;z-index:50;background:rgba(250,249,245,.65);backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:.3s}
+nav{position:fixed;top:0;left:0;right:0;width:100%;z-index:50;background:rgba(250,249,245,.65);backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:.3s}
 .nav-in{max-width:1120px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:32px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--t1)}
 .brand img{height:30px;width:auto}
