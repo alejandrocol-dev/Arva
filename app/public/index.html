@@ -758,12 +758,12 @@ nav .lang button:not(.on):hover{color:#fff}
 .hx-intro h1 .w{display:inline-block;animation:wIn 1s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i) * 70ms + .1s)}
 .hx-intro h1 .w:not(.rot){background:linear-gradient(180deg,#fff 38%,#D6CFFF);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
 @keyframes wIn{from{opacity:0;transform:translateY(.45em) rotate(2deg);filter:blur(12px)}to{opacity:1;transform:none;filter:none}}
-.hero h1 .rot{background:none;-webkit-background-clip:border-box;background-clip:border-box}
-.hero h1 .rot span{display:inline-block;transition:none;background:linear-gradient(90deg,#FFFFFF,#7DF3D6 25%,#FFD08A 50%,#FF9CC6 75%,#FFFFFF);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:6px;animation:rotShine 6s linear infinite}
-.hero h1 .rot span.in{animation:rotShine 6s linear infinite,rotIn .75s cubic-bezier(.2,.7,.2,1)}
-.hero h1 .rot span.out{animation:rotShine 6s linear infinite,rotOut .38s cubic-bezier(.5,0,.75,0) forwards}
+.hero h1 .rot{background:linear-gradient(90deg,#FFFFFF,#7DF3D6 25%,#FFD08A 50%,#FF9CC6 75%,#FFFFFF);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rotShine 6s linear infinite,wIn 1s cubic-bezier(.2,.7,.2,1) both;animation-delay:0s,calc(var(--i) * 70ms + .1s)}
+.hero h1 .rot span{display:inline-block;transition:none;color:transparent;padding-bottom:6px}
+.hero h1 .rot span.in{animation:rotIn .75s cubic-bezier(.2,.7,.2,1)}
+.hero h1 .rot span.out{animation:rotOut .38s cubic-bezier(.5,0,.75,0) forwards}
 @keyframes rotShine{to{background-position:-220% 0}}
-@keyframes rotIn{from{opacity:0;transform:translateY(.32em);filter:blur(10px);letter-spacing:.06em}to{opacity:1;transform:none;filter:blur(0);letter-spacing:normal}}
+@keyframes rotIn{from{opacity:0;transform:translateY(.32em);filter:blur(10px);letter-spacing:.06em}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes rotOut{to{opacity:0;transform:translateY(-.28em);filter:blur(8px)}}
 .hx-intro>.sub{animation-delay:.55s}.hx-intro>.cta-row{animation-delay:.7s}
 .hero .pill{position:relative;overflow:hidden}
@@ -1063,7 +1063,8 @@ details[open] .ans{animation:ansIn .35s cubic-bezier(.2,.7,.2,1)}
 
 /* ---- LITE TIER: phones and touch devices. Same look, only cheap-to-paint motion ---- */
 @media (max-width:960px),(hover:none) and (pointer:coarse){
-  .hero h1 .rot span{animation:none;background-position:var(--rp,0%) 0;transition:background-position .7s ease}
+  .hero h1 .rot{animation:wIn 1s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i) * 70ms + .1s);background-position:var(--rp,0%) 0;transition:background-position .7s ease}
+  .hero h1 .rot span{display:inline-block;color:transparent}
   .hero h1 .rot span.in{animation:rotInL .55s cubic-bezier(.2,.7,.2,1)}
   .hero h1 .rot span.out{animation:rotOutL .3s cubic-bezier(.5,0,.75,0) forwards}
   @keyframes rotInL{from{opacity:0;transform:translateY(.3em)}to{opacity:1;transform:none}}
@@ -1894,7 +1895,7 @@ setInterval(()=>{
   if(document.hidden||reduceMotion||!heroOn||+(rot.closest('.hx-intro').style.opacity||1)<.05)return;
   const sp=rot.firstElementChild;
   sp.classList.remove('in');sp.classList.add('out');
-  setTimeout(()=>{sp.textContent=words[++wi%words.length];sp.style.setProperty('--rp',['0%','34%','67%','100%'][wi%4]);sp.classList.remove('out');void sp.offsetWidth;sp.classList.add('in');},liteDevice?300:380);
+  setTimeout(()=>{sp.textContent=words[++wi%words.length];rot.style.setProperty('--rp',['0%','34%','67%','100%'][wi%4]);sp.classList.remove('out');void sp.offsetWidth;sp.classList.add('in');},liteDevice?300:380);
 },2900);
 
 /* 3d tilt on the loan card */
