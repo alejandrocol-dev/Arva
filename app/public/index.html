@@ -119,7 +119,7 @@ nav .links a{color:rgba(255,255,255,.72)}nav .links a:hover{color:#fff}
 nav .links a::after{background:#B4A9FF}
 nav .net{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.85)}
 nav .btn-pri{background:#7366FF}
-nav.floating .nav-in{max-width:fit-content;margin-top:12px;padding:9px 10px 9px 18px;border-radius:16px;gap:26px;
+nav.floating .nav-in{max-width:1000px;margin-top:12px;padding:9px 10px 9px 18px;border-radius:16px;gap:26px;
   background-color:rgba(17,12,44,.86);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);
   border-color:rgba(180,169,255,.16);box-shadow:0 18px 44px -18px rgba(17,12,44,.55),inset 0 1px 0 rgba(255,255,255,.07)}
 nav.floating .brand img{height:26px}
@@ -741,6 +741,7 @@ nav .nav-in{overflow:hidden}
 nav .brand,nav .lang,nav .net,nav .nav-in>.btn-pri{flex:none}
 nav .links{min-width:0;overflow:hidden}
 html[lang=es] nav.floating .links{gap:18px}
+@media(min-width:1121px){nav.floating .nav-in{max-width:fit-content}}
 @media(max-width:1180px){nav .net{display:none}nav .lang{margin-left:auto}}
 @media(max-width:1120px){nav .links{display:none}}
 nav .lang{display:inline-flex;position:relative;padding:3px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);margin-left:-14px;
