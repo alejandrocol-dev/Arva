@@ -119,7 +119,7 @@ nav .links a{color:rgba(255,255,255,.72)}nav .links a:hover{color:#fff}
 nav .links a::after{background:#B4A9FF}
 nav .net{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.85)}
 nav .btn-pri{background:#7366FF}
-nav.floating .nav-in{max-width:1000px;margin-top:12px;padding:9px 10px 9px 18px;border-radius:16px;gap:26px;
+nav.floating .nav-in{max-width:fit-content;margin-top:12px;padding:9px 10px 9px 18px;border-radius:16px;gap:26px;
   background-color:rgba(17,12,44,.86);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);
   border-color:rgba(180,169,255,.16);box-shadow:0 18px 44px -18px rgba(17,12,44,.55),inset 0 1px 0 rgba(255,255,255,.07)}
 nav.floating .brand img{height:26px}
@@ -740,7 +740,6 @@ nav .links a,nav .net,nav .nav-in>.btn-pri,nav .brand b{white-space:nowrap}
 nav .nav-in{overflow:hidden}
 nav .brand,nav .lang,nav .net,nav .nav-in>.btn-pri{flex:none}
 nav .links{min-width:0;overflow:hidden}
-html[lang=es] nav.floating .nav-in{max-width:1080px}
 html[lang=es] nav.floating .links{gap:18px}
 @media(max-width:1180px){nav .net{display:none}nav .lang{margin-left:auto}}
 @media(max-width:1120px){nav .links{display:none}}
@@ -1086,7 +1085,7 @@ details[open] .ans{animation:ansIn .35s cubic-bezier(.2,.7,.2,1)}
 
 <nav id="nav" class="top"><div class="nav-in">
   <a class="brand" href="#"><img src="arva-mark-white.png" alt="Arva"><b>ARVA</b></a>
-  <div class="links"><a href="#how">How it works</a><a href="#numbers">The numbers</a><a href="#model">Business model</a><a href="#legal">Legal framework</a><a href="#trust">Transparency</a><a href="#faq">FAQ</a></div>
+  <div class="links"><a href="#how">How it works</a><a href="#model">Business model</a><a href="#legal">Legal framework</a><a href="#faq">FAQ</a></div>
   <div class="net"><span class="dot"></span>Solana Devnet</div><div class="lang" id="lang" role="group" aria-label="Language"><button type="button" data-l="en" class="on" aria-pressed="true">EN</button><button type="button" data-l="es" aria-pressed="false">ES</button></div>
   <a class="btn btn-pri btn-sm" href="/app" target="_top">Open app</a>
 <i class="nprog" id="nprog" aria-hidden="true"></i></div></nav>
